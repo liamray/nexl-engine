@@ -41,7 +41,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yevgeny-sergeyev/nexl-js.git"
+    "url": "https://github.com/yevgeny-sergeyev/nexl-engine.git"
   },
   "dependencies": {
     "esprima": "^3.1.0",

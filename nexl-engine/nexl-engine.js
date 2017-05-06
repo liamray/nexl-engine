@@ -973,8 +973,6 @@ NexlExpressionEvaluator.prototype.makeDeepResolution4String = function () {
 };
 
 NexlExpressionEvaluator.prototype.applyAction = function () {
-	//todo : 1) output log format for both console and file
-
 	switch (this.action.actionId) {
 		// . property resolution action
 		case nexlExpressionsParser.ACTIONS.PROPERTY_RESOLUTION: {

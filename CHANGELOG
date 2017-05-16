@@ -1,3 +1,7 @@
+2.1.1 | ??-???-????
+===================
+    - improved error messages related to nexl source files
+
 2.1.0 | 29-APR-2017
 ===================
     - added log management support to produce log file(s), control log levels and roll log file by size

@@ -1,6 +1,6 @@
 {
   "name": "nexl-engine",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "nexl scripting language processor",
   "main": "nexl-engine/nexl-engine.js",
   "scripts": {

@@ -19,6 +19,24 @@ const winston = j79.winston;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function buildErrMsg(ancestor, msg) {
+	var args = Array.prototype.slice.call(arguments);
+	args.shift();
+
+	if (ancestor) {
+		args[0] += '. Requested from [%s] file';
+		args.push(ancestor);
+	}
+
+	return util.format.apply(util, args);
+}
+
+function buildShortErrMsg(ancestor, msg) {
+	var args = Array.prototype.slice.call(arguments);
+	args[0] = ancestor ? path.basename(ancestor) : ancestor;
+	return buildErrMsg.apply(null, args);
+}
+
 function resolveIncludeDirectiveDom(item) {
 	if (!item.expression || item.expression["type"] != "Literal") {
 		return null;
@@ -40,11 +58,16 @@ function resolveIncludeDirectiveDom(item) {
 }
 
 // parses javascript provided as text and resolves nexl include directives ( like "@import ../../src.js"; )
-function resolveIncludeDirectives(text) {
+function resolveIncludeDirectives(text, fileName) {
 	var result = [];
 
 	// parse source code with esprima
-	var srcParsed = esprima.parse(text);
+	try {
+		var srcParsed = esprima.parse(text);
+	} catch (e) {
+		winston.error(buildErrMsg(fileName, 'Failed to parse JavaScript source code. Reason [%s]', e));
+		throw buildShortErrMsg(fileName, 'Failed to parse JavaScript source code. Reason [%s]', e)
+	}
 
 	// iterating over and looking for include directives
 	for (var key in srcParsed.body) {
@@ -106,8 +129,12 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function (asText) {
 	return result;
 };
 
-NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile) {
+NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile, ancestor) {
 	var fileName = asFile.fileName;
+
+	if (j79.isLogLevel('debug')) {
+		winston.debug(buildErrMsg(ancestor, 'Including [%s] file', fileName));
+	}
 
 	// is already included ?
 	if (this.filesRegistry.indexOf(fileName) >= 0) {
@@ -115,21 +142,19 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile) {
 		return '';
 	}
 
-	winston.debug('Including file [%s]', fileName);
-
 	// adding to registry
 	this.filesRegistry.push(fileName);
 
 	// is file exists ?
 	if (!fs.existsSync(fileName)) {
-		winston.error("The [%s] source file, doesn't exist", fileName);
-		throw util.format("The [%s] source file, doesn't exist", path.basename(fileName));
+		winston.error(buildErrMsg(ancestor, "The [%s] source file doesn't exist", fileName));
+		throw buildShortErrMsg(ancestor, "The [%s] source file doesn't exist", path.basename(fileName))
 	}
 
 	// is it file and not a directory or something else ?
 	if (!fs.lstatSync(fileName).isFile()) {
-		winston.error("The [%s] source is not a file", fileName);
-		throw util.format("The [%s] source is not a file", path.basename(fileName));
+		winston.error(buildErrMsg(ancestor, "The [%s] source is not a file", fileName));
+		throw buildShortErrMsg(ancestor, "The [%s] source is not a file", fileName);
 	}
 
 	// reading file content
@@ -138,12 +163,12 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile) {
 	try {
 		text = fs.readFileSync(fileName, "UTF-8");
 	} catch (e) {
-		winston.error("Failed to read [%s] source content , error : [%s]", fileName, e);
-		throw util.format("Failed to read [%s] source content , error : [%s]", path.basename(fileName), e);
+		winston.error(buildErrMsg(ancestor, "Failed to read [%s] file content. Reason is [%s]", fileName, e));
+		throw buildShortErrMsg(ancestor, "Failed to read [%s] file content. Reason is [%s]", path.basename(fileName), e);
 	}
 
 	// resolving include directives
-	var includeDirectives = resolveIncludeDirectives(text);
+	var includeDirectives = resolveIncludeDirectives(text, fileName);
 
 	// iterating over and processing
 	for (var index in includeDirectives) {
@@ -151,7 +176,7 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile) {
 
 		// does directive have an absolute path ?
 		if (path.isAbsolute(includeDirective)) {
-			result.push(this.assembleSourceCodeAsFile({"fileName": includeDirective}));
+			result.push(this.assembleSourceCodeAsFile({"fileName": includeDirective}, asFile.fileName));
 			continue;
 		}
 
@@ -159,7 +184,7 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile) {
 		var filePath = path.dirname(fileName);
 
 		var fullPath = path.join(filePath, includeDirective);
-		result.push(this.assembleSourceCodeAsFile({"fileName": fullPath}));
+		result.push(this.assembleSourceCodeAsFile({"fileName": fullPath}, asFile.fileName));
 	}
 
 	result = result.join('\n');
@@ -283,7 +308,18 @@ function parseAndPushSourceCodeItem(item, result) {
 
 function resolveJsVariables(nexlSource) {
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
-	var parsedCode = esprima.parse(sourceCode).body;
+
+	try {
+		var parsedCode = esprima.parse(sourceCode).body;
+	} catch (e) {
+		winston.error('Failed to parse JavaScript file. Reason : %s. nexlSource is [%s]', e, JSON.stringify(nexlSource));
+		var errMsg = util.format('Failed to parse JavaScript file. Reason : %s', e);
+		if (nexlSource.asFile.fileName) {
+			errMsg = util.format('%s. file name is [%s]', errMsg, path.basename(nexlSource.asFile.fileName1));
+		}
+		throw errMsg;
+	}
+
 	var result = [];
 
 	winston.debug('Resolving JavaScript variables for [%s] nexl source', nexlSource);

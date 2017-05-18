@@ -1,5 +1,7 @@
 2.1.1 | ??-???-????
 ===================
+    - improved include directive behaviour. Now it includes a source at its place and not globally
+    - fixed "include same nexl source" bug
     - improved error messages related to nexl source files
 
 2.1.0 | 29-APR-2017

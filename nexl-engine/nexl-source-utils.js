@@ -49,9 +49,12 @@ function resolveIncludeDirectiveDom(item) {
 	}
 
 	// regex tells : starts from quote OR single quote, @ character, one OR unlimited amount of any character, ends with the same quote which it was started
-	itemValue = itemValue.match(/^('|")@\s(.+)(\1)$/);
-	if (itemValue && itemValue.length === 4) {
-		return itemValue[2];
+	var itemContent = itemValue.match(/^('|")@\s(.+)(\1)$/);
+	if (itemContent && itemContent.length === 4) {
+		return {
+			path: itemContent[2],
+			raw: itemValue
+		};
 	} else {
 		return null;
 	}
@@ -87,7 +90,6 @@ function resolveIncludeDirectives(text, fileName) {
 
 NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function (asText) {
 	// the text
-	var result = [];
 	var text = asText.text;
 
 	// validating
@@ -98,20 +100,23 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function (asText) {
 	// resolving include directives
 	var includeDirectives = resolveIncludeDirectives(text);
 
-	// iterating over and processing
+	var includedText;
+
+	// substituting include directives
 	for (var index in includeDirectives) {
 		var includeDirective = includeDirectives[index];
 
 		// does directive have an absolute path ?
-		if (path.isAbsolute(includeDirective)) {
-			result.push(this.assembleSourceCodeAsFile({"fileName": includeDirective}));
+		if (path.isAbsolute(includeDirective.path)) {
+			includedText = this.assembleSourceCodeAsFile({"fileName": includeDirective.path});
+			text = text.replace(includeDirective.raw, includedText);
 			continue;
 		}
 
 		// directive has a relative path. is path4imports provided ?
 		if (!asText.path4imports) {
-			winston.error('Source code contains reference to [%s] file for import, but you didn\'t provide a [nexlSource.asFile.path4imports]', path.basename(includeDirective));
-			throw util.format('Source code contains reference to [%s] file for import, but you didn\'t provide a [nexlSource.asFile.path4imports]', includeDirective);
+			winston.error('Source code contains reference to [%s] file for import, but you didn\'t provide a [nexlSource.asFile.path4imports]', path.basename(includeDirective.path));
+			throw util.format('Source code contains reference to [%s] file for import, but you didn\'t provide a [nexlSource.asFile.path4imports]', includeDirective.path);
 		}
 
 		if (!fs.existsSync(asText.path4imports)) {
@@ -119,14 +124,12 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function (asText) {
 			throw util.format('Path [%s] you provided in [nexlSource.asFile.path4imports] doesn\'t exist', path.basename(asText.path4imports));
 		}
 
-		var fullPath = path.join(asText.path4imports, includeDirective);
-		result.push(this.assembleSourceCodeAsFile({"fileName": fullPath}));
+		var fullPath = path.join(asText.path4imports, includeDirective.path);
+		includedText = this.assembleSourceCodeAsFile({"fileName": fullPath});
+		text = text.replace(includeDirective.raw, includedText);
 	}
 
-	result = result.join('\n');
-	result += text;
-
-	return result;
+	return text;
 };
 
 NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile, ancestor) {
@@ -136,19 +139,27 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile, a
 		winston.debug(buildErrMsg(ancestor, 'Including [%s] file', fileName));
 	}
 
+	var fileName4Registry = j79.fixPathSlashes(fileName);
+
 	// is already included ?
-	if (this.filesRegistry.indexOf(fileName) >= 0) {
+	if (this.filesRegistry.indexOf(fileName4Registry) >= 0) {
 		winston.debug('The [%s] is already included. Skipping...', fileName);
 		return '';
 	}
 
+	// is file name specified ?
+	if (!j79.isValSet(fileName)) {
+		winston.error(buildErrMsg(ancestor, "fileName is not provided in nexl source"));
+		throw buildShortErrMsg(ancestor, "fileName is not provided in nexl source")
+	}
+
 	// adding to registry
-	this.filesRegistry.push(fileName);
+	this.filesRegistry.push(j79.fixPathSlashes(fileName4Registry));
 
 	// is file exists ?
 	if (!fs.existsSync(fileName)) {
-		winston.error(buildErrMsg(ancestor, "The [%s] source file doesn't exist", fileName));
-		throw buildShortErrMsg(ancestor, "The [%s] source file doesn't exist", path.basename(fileName))
+		winston.error(buildErrMsg(ancestor, "The [%s] nexl source file doesn't exist", fileName));
+		throw buildShortErrMsg(ancestor, "The [%s] nexl source file doesn't exist", path.basename(fileName))
 	}
 
 	// is it file and not a directory or something else ?
@@ -159,7 +170,6 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile, a
 
 	// reading file content
 	var text;
-	var result = [];
 	try {
 		text = fs.readFileSync(fileName, "UTF-8");
 	} catch (e) {
@@ -170,27 +180,28 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (asFile, a
 	// resolving include directives
 	var includeDirectives = resolveIncludeDirectives(text, fileName);
 
-	// iterating over and processing
+	var includedText;
+
+	// substituting include directives
 	for (var index in includeDirectives) {
 		var includeDirective = includeDirectives[index];
 
 		// does directive have an absolute path ?
-		if (path.isAbsolute(includeDirective)) {
-			result.push(this.assembleSourceCodeAsFile({"fileName": includeDirective}, asFile.fileName));
+		if (path.isAbsolute(includeDirective.path)) {
+			includedText = this.assembleSourceCodeAsFile({"fileName": includeDirective.path}, asFile.fileName);
+			text = text.replace(includeDirective.raw, includedText);
 			continue;
 		}
 
 		// resolve file path
 		var filePath = path.dirname(fileName);
 
-		var fullPath = path.join(filePath, includeDirective);
-		result.push(this.assembleSourceCodeAsFile({"fileName": fullPath}, asFile.fileName));
+		var fullPath = path.join(filePath, includeDirective.path);
+		includedText = this.assembleSourceCodeAsFile({"fileName": fullPath}, asFile.fileName);
+		text = text.replace(includeDirective.raw, includedText);
 	}
 
-	result = result.join('\n');
-	result += text;
-
-	return result;
+	return text;
 };
 
 NexlSourceCodeAssembler.prototype.assemble = function () {

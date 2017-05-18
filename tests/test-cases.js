@@ -2250,3 +2250,48 @@ module.exports.push({
 	expression: '${obj1|ifObject( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
+
+// testing nexl sources
+module.exports.push({
+	throwsException: true,
+	nexlSource: '...'
+});
+
+// testing nexl sources
+module.exports.push({
+	throwsException: true,
+	nexlSource: {asFile: {}, asText: {}}
+});
+
+// testing nexl sources
+module.exports.push({
+	expression: '${abc}',
+	result: 1979,
+	nexlSource: {asText: {text: 'abc=1979;'}}
+});
+
+// testing nexl sources
+module.exports.push({
+	throwsException: true,
+	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";'}}
+});
+
+// testing nexl sources
+module.exports.push({
+	expression: '${strItem}',
+	result: 'berry',
+	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";', path4imports: '.'}}
+});
+
+// testing nexl sources
+module.exports.push({
+	expression: '${y}',
+	result: 11,
+	nexlSource: {asFile: {fileName: 'nexl-sources/src1.js'}}
+});
+
+// testing nexl sources
+module.exports.push({
+	throwsException: true,
+	nexlSource: {asFile: {fileName: 'c:\\111\\222.js'}}
+});

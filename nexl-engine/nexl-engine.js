@@ -893,6 +893,11 @@ NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
 NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 	this.makeDeepResolution4String();
 
+	if (this.action.actionValue === nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.STRINGIFY) {
+		this.result = JSON.stringify(this.result);
+		return;
+	}
+
 	// not a string ? good bye
 	if (!j79.isString(this.result)) {
 		winston.debug('[actionNr=%s] is not applicable because current value is not a string. Skipping...', this.actionNr);

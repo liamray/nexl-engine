@@ -22,7 +22,7 @@ const ACTIONS = {
 	'OBJECT_KEY_REVERSE_RESOLUTION': '<',
 	'JOIN_ARRAY_ELEMENTS': '&',
 	'ELIMINATE': '-',
-	'APPEND_MERGE': '+',
+	'APPEND_MERGE_CONCAT': '+',
 	'STRING_OPERATIONS': '^', // ^U upper case, ^U1 capitalize first letter, ^L power case, ^LEN length, ^T trim, ^Z make undefined for empty string
 	'UNDEFINED_VALUE_OPERATIONS': '!',
 	'MANDATORY_VALUE_VALIDATOR': '*',

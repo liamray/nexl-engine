@@ -5,6 +5,29 @@
 // importing from nexl-sources2.js ( for test purposes )
 '@ nexl-source2.js';
 
+largestCountries = [
+	{
+		name: 'Russia',
+		capital: 'Moscow',
+		population: 144498215
+	},
+	{
+		name: 'Canada',
+		capital: 'Ottawa',
+		population: 35151728
+	},
+	{
+		name: 'USA',
+		capital: 'Washington, D.C.',
+		population: 324987000
+	},
+	{
+		name: 'China',
+		capital: 'Beijing',
+		population: 1373541278
+	}
+];
+
 HOSTS = {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

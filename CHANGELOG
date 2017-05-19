@@ -1,7 +1,12 @@
-2.1.1 | ??-???-????
+2.2.0 | ??-???-????
 ===================
+    - implemented iteration over array elements in nexl expression as []
+    - added new virtual variables to access iteration session : _item_, _index_
+    - extended + action to concat strings
+    - added new nexl system functions : setObjVal(), isGT(), isLT(), isGE(), isLE(), isNan(), ifGT(), ifLT(), ifGE(), ifLE(), ifNaN()
     - improved include directive behaviour. Now it includes a source at its place and not globally
     - fixed "include same nexl source" bug
+    - added more logs for debug level
     - improved error messages related to nexl source files
 
 2.1.0 | 29-APR-2017

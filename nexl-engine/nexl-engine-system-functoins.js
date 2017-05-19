@@ -31,6 +31,14 @@ function replaceAll4Array(entity, searchItem, replace) {
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+systemFunctions.setObjVal = function (obj, key, val) {
+	if (j79.isObject(obj)) {
+		obj[key] = val;
+	}
+
+	return obj;
+};
+
 systemFunctions.makeObj = function (key, val) {
 	var result = {};
 
@@ -84,6 +92,22 @@ systemFunctions.isEquals = function (entity1, entity2) {
 	return entity1 === entity2;
 };
 
+systemFunctions.isGT = function (entity1, entity2) {
+	return entity1 > entity2;
+};
+
+systemFunctions.isLT = function (entity1, entity2) {
+	return entity1 < entity2;
+};
+
+systemFunctions.isGE = function (entity1, entity2) {
+	return entity1 >= entity2;
+};
+
+systemFunctions.isLE = function (entity1, entity2) {
+	return entity1 <= entity2;
+};
+
 systemFunctions.isBool = function (item) {
 	return j79.isBool(item);
 };
@@ -102,6 +126,10 @@ systemFunctions.isNull = function (item) {
 
 systemFunctions.isUndefined = function (item) {
 	return item === undefined;
+};
+
+systemFunctions.isNaN = function (item) {
+	return item !== item;
 };
 
 systemFunctions.isPrimitive = function (item) {
@@ -131,6 +159,22 @@ systemFunctions.ifEquals = function (entity1, entity2, thenIf, elseIf) {
 	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
 };
 
+systemFunctions.ifGT = function (entity1, entity2, thenIf, elseIf) {
+	return entity1 > entity2 ? thenIf : elseIf;
+};
+
+systemFunctions.ifLT = function (entity1, entity2, thenIf, elseIf) {
+	return entity1 < entity2 ? thenIf : elseIf;
+};
+
+systemFunctions.ifGE = function (entity1, entity2, thenIf, elseIf) {
+	return entity1 >= entity2 ? thenIf : elseIf;
+};
+
+systemFunctions.ifLE = function (entity1, entity2, thenIf, elseIf) {
+	return entity1 <= entity2 ? thenIf : elseIf;
+};
+
 systemFunctions.ifBool = function (item, thenIf, elseIf) {
 	return systemFunctions.isBool(item) ? thenIf : elseIf;
 };
@@ -149,6 +193,10 @@ systemFunctions.ifNull = function (item, thenIf, elseIf) {
 
 systemFunctions.ifUndefined = function (item, thenIf, elseIf) {
 	return systemFunctions.isUndefined(item) ? thenIf : elseIf;
+};
+
+systemFunctions.isNaN = function (item, thenIf, elseIf) {
+	return systemFunctions.isNaN(item) ? thenIf : elseIf;
 };
 
 systemFunctions.ifPrimitive = function (item, thenIf, elseIf) {

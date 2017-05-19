@@ -23,6 +23,8 @@ const winston = j79.winston;
 
 const THIS = '_this_';
 const PARENT = '_parent_';
+const ITEM = '_item_';
+const INDEX = '_index_';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EvalAndSubstChunks
@@ -187,12 +189,14 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	// skipping undefined key
 	if (key === undefined) {
 		this.newResult.push(this.result);
+		winston.debug('Key is undefined. Skipping...');
 		return;
 	}
 
 	// not a primitive ? make result undefined
 	if (!j79.isPrimitive(key)) {
 		this.newResult.push(undefined);
+		winston.debug('Key is not a primitive. Skipping...');
 		return;
 	}
 
@@ -202,6 +206,7 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		val = val === this.context ? undefined : val;
 		this.newResult.push(val);
 		this.thisOrParentAreApplied = true;
+		winston.debug('Resolving value for key=[%s]', PARENT);
 		return;
 	}
 
@@ -209,12 +214,34 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	if (key == THIS) {
 		this.newResult.push(this.this);
 		this.thisOrParentAreApplied = true;
+		winston.debug('Resolving value for key=[%s]', THIS);
+		return;
+	}
+
+	// _item_
+	if (key == ITEM) {
+		this.newResult.push(this.objInfo.item);
+		winston.debug('Resolving value for key=[%s]', ITEM);
+		return;
+	}
+
+	// _index_
+	if (key == INDEX) {
+		this.newResult.push(this.objInfo.index);
+		winston.debug('Resolving value for key=[%s]', INDEX);
 		return;
 	}
 
 	var newResult = this.result[key];
+	winston.debug('Resolving value for key=[%s]', key);
+
 	if (newResult === undefined && this.result === this.context) {
+		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions');
 		newResult = this.try2ResolveNexlFuncs(key);
+	}
+
+	if (j79.isLogLevel('silly')) {
+		winston.debug('Resolved [%s] value for key=[%s]', newResult, key);
 	}
 
 	this.newResult.push(newResult);
@@ -791,7 +818,7 @@ NexlExpressionEvaluator.prototype.applyEliminateAction = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is not an object or array. Skipping...', this.actionNr);
+	winston.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
 };
 
 NexlExpressionEvaluator.prototype.appendArrayElements = function () {
@@ -817,7 +844,7 @@ NexlExpressionEvaluator.prototype.mergeObjects = function () {
 	this.result = nexlEngineUtils.deepMergeInner(this.result, actionValue);
 };
 
-NexlExpressionEvaluator.prototype.applyAppendMergeAction = function () {
+NexlExpressionEvaluator.prototype.applyAppendMergeConcatAction = function () {
 	this.makeDeepResolution4String();
 
 	if (j79.isArray(this.result)) {
@@ -830,7 +857,14 @@ NexlExpressionEvaluator.prototype.applyAppendMergeAction = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is not an object or array. Skipping...', this.actionNr);
+	// strings merge
+	if (j79.isString(this.result)) {
+		var actionValue = this.assembleChunks4CurrentAction();
+		this.result = this.result + actionValue;
+		return;
+	}
+
+	winston.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
 };
 
 NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
@@ -1030,17 +1064,17 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 			return;
 		}
 
-		// - eliminate array elements action
+		// - eliminate elements
 		case nexlExpressionsParser.ACTIONS.ELIMINATE: {
 			winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 			this.applyEliminateAction();
 			return;
 		}
 
-		// + append to array action
-		case nexlExpressionsParser.ACTIONS.APPEND_MERGE: {
+		// + append ( arrays, objects, primitives )
+		case nexlExpressionsParser.ACTIONS.APPEND_MERGE_CONCAT: {
 			winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
-			this.applyAppendMergeAction();
+			this.applyAppendMergeConcatAction();
 			return;
 		}
 
@@ -1138,8 +1172,60 @@ NexlExpressionEvaluator.prototype.expandObjectKeys = function () {
 NexlExpressionEvaluator.prototype.makeObjInfo = function () {
 	return {
 		this: this.objInfo.this,
-		parent: this.objInfo.parent
+		parent: this.objInfo.parent,
+		item: this.objInfo.item, // array element in iteration
+		index: this.objInfo.index // array index in iteration
 	};
+};
+
+// example : ${arr[]} ( i.e. array index action with no parameters )
+NexlExpressionEvaluator.prototype.applyIteration = function () {
+	var isIteration =
+		this.action.actionId === nexlExpressionsParser.ACTIONS.ARRAY_INDEX // current action is ARRAY_INDEX
+		&& this.action.actionValue.length < 1; // doesn't have action value
+
+	if (!isIteration) {
+		return false;
+	}
+
+	winston.debug('Evaluating iteration [] action, [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+
+	// is current value not an array ?
+	if (!j79.isArray(this.result)) {
+		winston.debug('Iteration is not applicable because current value is not an array. Skipping...');
+		return false;
+	}
+
+	if (this.actionNr + 1 >= this.nexlExpressionMD.actions.length) {
+		return false;
+	}
+
+	// starting iteration
+
+	// preparing nexl expression metadata
+	var nemd = {};
+
+	// adding all actions after [] action
+	nemd.actions = this.nexlExpressionMD.actions.slice(this.actionNr + 1);
+
+	// copying str
+	nemd.str = this.nexlExpressionMD.str;
+
+	// preparing objInfo
+	var objInfo = this.makeObjInfo();
+
+	var iterations = [];
+	// iterating over current result and evaluating each element
+	for (var i = 0; i < this.result.length; i++) {
+		objInfo.item = this.result[i];
+		objInfo.index = i;
+		var iteration = new NexlExpressionEvaluator(this.context, nemd, objInfo).eval();
+		iterations.push(iteration);
+	}
+
+	this.result = iterations;
+
+	return true;
 };
 
 NexlExpressionEvaluator.prototype.makeDeepResolution = function () {
@@ -1164,9 +1250,14 @@ NexlExpressionEvaluator.prototype.eval = function () {
 		// current action
 		this.action = this.nexlExpressionMD.actions[this.actionNr];
 
+		if (this.applyIteration()) {
+			break;
+		}
+
 		// evaluating current action
 		this.applyAction();
 
+		// if last action is evaluated to object and current result is not context, save this.result
 		if (j79.isObject(this.result) && this.result !== this.context) {
 			this.this = this.result;
 			this.lastObjResult = this.result;

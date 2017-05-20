@@ -79,6 +79,14 @@ systemFunctions.not = function (param) {
 ///////////////////////////////////////////////////////////////////////////////
 // is*
 
+systemFunctions.isMatch = function (entity, regex, flags) {
+	if (!j79.isString(entity)) {
+		return entity;
+	}
+
+	return new RegExp(regex, flags).test(entity);
+};
+
 // is string or array contains value
 systemFunctions.isContains = function (entity, item) {
 	if (j79.isArray(entity) || j79.isString(entity)) {
@@ -146,6 +154,23 @@ systemFunctions.isObject = function (item) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // if*
+
+systemFunctions.ifMatch = function (entity, regex, thenIf, elseIf) {
+	if (!j79.isString(entity)) {
+		return entity;
+	}
+
+	return systemFunctions.isMatch(entity, regex) ? thenIf : elseIf;
+};
+
+systemFunctions.ifMatchEx = function (entity, regex, flags, thenIf, elseIf) {
+	if (!j79.isString(entity)) {
+		return entity;
+	}
+
+	return systemFunctions.isMatch(entity, regex, flags) ? thenIf : elseIf;
+};
+
 
 systemFunctions.ifContains = function (entity, item, thenIf, elseIf) {
 	if (j79.isArray(entity) || j79.isString(entity)) {

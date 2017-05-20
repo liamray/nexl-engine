@@ -885,36 +885,6 @@ module.exports.push({
 	throwsException: true
 });
 
-// # string operations - ^U
-module.exports.push({
-	expression: '${longStr^U}',
-	result: 'THE DISTANCE TO THE WORK IS 155 KM'
-});
-
-// # string operations - ^U1
-module.exports.push({
-	expression: '${longStr^L^U1}',
-	result: 'The distance to the work is 155 km'
-});
-
-// # string operations - ^L
-module.exports.push({
-	expression: '${longStr^L}',
-	result: 'the distance to the work is 155 km'
-});
-
-// # string operations - ^T
-module.exports.push({
-	expression: '${strForTrim^T^L}',
-	result: 'the distance to the work is 155 km'
-});
-
-// # string operations - ^LEN
-module.exports.push({
-	expression: '${strForTrim^T^L^LEN}',
-	result: 34
-});
-
 // default expression and default args
 module.exports.push({
 	result: 25
@@ -926,49 +896,6 @@ module.exports.push({
 		test1: 'omg'
 	},
 	result: 'omg'
-});
-
-
-// types check
-module.exports.push({
-	expression: '${@1:num}',
-	result: 1
-});
-
-// types check
-module.exports.push({
-	expression: '${@1:str}',
-	result: '1'
-});
-
-// types check
-module.exports.push({
-	expression: '${@1:bool}',
-	result: undefined
-});
-
-// types check
-module.exports.push({
-	expression: '${@true:bool}',
-	result: true
-});
-
-// types check
-module.exports.push({
-	expression: '${@${intItem}:bool}',
-	result: true
-});
-
-// types check
-module.exports.push({
-	expression: '${@1:null}',
-	result: null
-});
-
-// types check
-module.exports.push({
-	expression: '${@${strItem}:undefined}',
-	result: undefined
 });
 
 // long object resolution
@@ -1246,22 +1173,6 @@ module.exports.push({
 module.exports.push({
 	expression: '${?}',
 	throwsException: true
-});
-
-// bad casting
-module.exports.push({
-	expression: '${:omg}',
-	throwsException: true
-});
-
-// casting
-module.exports.push({
-	expression: '${obj6:num}',
-	result: {
-		pack: 'good',
-		item1: 79,
-		item2: 71
-	}
 });
 
 // append to array
@@ -1955,229 +1866,194 @@ module.exports.push({
 		true]
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing system functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
 	expression: '${makeObj()}',
 	result: {}
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|makeObj()}',
 	result: {'': undefined}
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr1|intItem|makeObj()}',
 	result: {'79': 71, queen: 71, muscle: 71, false: 71}
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|not()~Y}',
 	result: 'Zhenya++'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@true:bool|nexl.functions.system.not()~Y}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|testFunc1()}',
 	result: 'testFunc1'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|nexl.functions.user.testFunc1()}',
 	result: 'user.testFunc1'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|testFunc2()}',
 	result: 'user.testFunc2'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|testFunc3()}',
 	result: 'testFunc3'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr8|isContains()}',
 	result: 'Zhenya+'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr8|nexl.functions.system.isContains(${intItem})}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr8|replaceAll( ${intItem}, ${boolItem} )|replaceAll( ${@a}, ${@101:num} )}',
 	result: [true, 10, 101, true]
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${intItem|boolItem|isEquals()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr8|intItem|@lol|@omg|ifContains()}',
 	result: 'lol'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr8|@|@lol|@omg|ifContains()}',
 	result: 'omg'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${ifContains( ${arr8}, ${intItem}, ${@ok}, ${@notOk} )}',
 	result: 'ok'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${ifContains( ${arr8}, ${strItem}, ${@ok}, ${obj1.pack} )}',
 	result: {"strong": "balance", "deer": 7}
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${ifContains( ${arr8}, ${strItem}, ${@ok}, ${obj1.pack|} )}',
 	result: undefined
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${ifContains( ${arr8}, ${strItem}, ${@ok}, ${obj1.pack~V|nexl.functions.system.isContains( ${@7:num} )} )}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${isUndefined()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|isUndefined()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|isBool()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@1:num:bool|isBool()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@1:num:bool|isStr()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|isStr()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|isPrimitive()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${:null|isNull()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${obj1|isObject()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr1|isObject()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${obj1|isArray()}',
 	result: false
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr1|isArray()}',
 	result: true
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|ifBool( ${intItem}, ${strItem} )}',
 	result: 'berry'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@true:bool|ifBool( ${intItem}, ${strItem} )}',
 	result: 71
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@true|ifStr( ${arr1}, ${arr2} )}',
 	result: ['queen', 'muscle', 79, false]
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|ifStr( ${arr1}, ${arr2} )}',
 	result: ['air', 16, 99, true, 'smooth']
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${obj1|ifNum( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${intItem|ifNum( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${intItem|ifNum( ${obj1}, ${obj2} )}',
 	result: {
@@ -2191,107 +2067,200 @@ module.exports.push({
 	}
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${intItem|ifNull( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${:null|ifNull( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|ifUndefined( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|ifUndefined( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${|ifPrimitive( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${@|ifPrimitive( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr1|ifArray( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${obj1|ifArray( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${arr1|ifObject( ${@hello}, ${@world} )}',
 	result: 'world'
 });
 
-// testing system functions
 module.exports.push({
 	expression: '${obj1|ifObject( ${@hello}, ${@world} )}',
 	result: 'hello'
 });
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing nexl sources
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
 	throwsException: true,
 	nexlSource: '...'
 });
 
-// testing nexl sources
 module.exports.push({
 	throwsException: true,
 	nexlSource: {asFile: {}, asText: {}}
 });
 
-// testing nexl sources
 module.exports.push({
 	expression: '${abc}',
 	result: 1979,
 	nexlSource: {asText: {text: 'abc=1979;'}}
 });
 
-// testing nexl sources
 module.exports.push({
 	throwsException: true,
 	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";'}}
 });
 
-// testing nexl sources
 module.exports.push({
 	expression: '${strItem}',
 	result: 'berry',
 	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";', path4imports: '.'}}
 });
 
-// testing nexl sources
 module.exports.push({
 	expression: '${y}',
 	result: 11,
 	nexlSource: {asFile: {fileName: 'nexl-sources/src1.js'}}
 });
 
-// testing nexl sources
 module.exports.push({
 	throwsException: true,
 	nexlSource: {asFile: {fileName: 'c:\\111\\222.js'}}
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// testing typecast
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${:omg}',
+	throwsException: true
+});
+
+// casting
+module.exports.push({
+	expression: '${obj6:num}',
+	result: {
+		pack: 'good',
+		item1: 79,
+		item2: 71
+	}
+});
+
+module.exports.push({
+	expression: '${@1:num}',
+	result: 1
+});
+
+module.exports.push({
+	expression: '${@1:str}',
+	result: '1'
+});
+
+module.exports.push({
+	expression: '${@1:bool}',
+	result: undefined
+});
+
+module.exports.push({
+	expression: '${@true:bool}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@${intItem}:bool}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@1:null}',
+	result: null
+});
+
+module.exports.push({
+	expression: '${@${strItem}:undefined}',
+	result: undefined
+});
+
+module.exports.push({
+	expression: '${@1:n}',
+	result: null
+});
+
+module.exports.push({
+	expression: '${@${strItem}:u}',
+	result: undefined
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// # string operations
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${longStr^U}',
+	result: 'THE DISTANCE TO THE WORK IS 155 KM'
+});
+
+module.exports.push({
+	expression: '${longStr^L^U1}',
+	result: 'The distance to the work is 155 km'
+});
+
+module.exports.push({
+	expression: '${longStr^L}',
+	result: 'the distance to the work is 155 km'
+});
+
+module.exports.push({
+	expression: '${strForTrim^T^L}',
+	result: 'the distance to the work is 155 km'
+});
+
+module.exports.push({
+	expression: '${strForTrim^T^L^LEN}',
+	result: 34
+});
+
+module.exports.push({
+	expression: '${strItem^S}',
+	result: '"berry"'
+});
+
+module.exports.push({
+	expression: '${arr1^S}',
+	result: '["queen","muscle",79,false]'
+});
+
+module.exports.push({
+	expression: '${obj1^S}',
+	result: '{"beneficial":"mint","test":"righteous","()":"trick","disturbed":46,"price":true,"pack":{"strong":"balance","deer":7},"71":"berry"}'
 });

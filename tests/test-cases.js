@@ -2117,6 +2117,129 @@ module.exports.push({
 	result: 'hello'
 });
 
+module.exports.push({
+	expression: '${@a|@b|isEq()}',
+	result: false
+});
+
+module.exports.push({
+	expression: '${@b|@b|isEq()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@b|@b|isGT()}',
+	result: false
+});
+
+module.exports.push({
+	expression: '${@c|@b|isGT()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@c|@b|isLT()}',
+	result: false
+});
+
+module.exports.push({
+	expression: '${@a|@b|isLT()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@b|@b|isLE()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@c|@b|isLE()}',
+	result: false
+});
+
+module.exports.push({
+	expression: '${@b|@b|isGE()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${@a|@b|isGE()}',
+	result: false
+});
+
+module.exports.push({
+	expression: '${@b|@b|ifGT( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@c|@b|ifGT( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${@c|@b|ifLT( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@a|@b|ifLT( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${@b|@b|ifLE( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${@c|@b|ifLE( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@b|@b|ifGE( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${@a|@b|ifGE( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+// setObjVal
+module.exports.push({
+	expression: '${obj1|@price|@99:num|setObjVal()}',
+	result: {
+		"71": "berry",
+		"beneficial": "mint",
+		"test": "righteous",
+		"()": "trick",
+		"disturbed": 46,
+		"price": 99,
+		"pack": {"strong": "balance", "deer": 7}
+	}
+});
+
+module.exports.push({
+	expression: '${longStr|@distance\\.\\*km|isMatch()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${longStr|@Distance\\.\\*km|@i|isMatch()}',
+	result: true
+});
+
+module.exports.push({
+	expression: '${longStr|@distance\\.\\*km|ifMatch( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${longStr|@Distance\\.\\*km|@i|ifMatchEx( ${intItem}, ${strItem} )}',
+	result: 71
+});
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing nexl sources

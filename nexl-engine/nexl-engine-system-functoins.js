@@ -100,6 +100,10 @@ systemFunctions.isEquals = function (entity1, entity2) {
 	return entity1 === entity2;
 };
 
+systemFunctions.isEq = function (entity1, entity2) {
+	return entity1 === entity2;
+};
+
 systemFunctions.isGT = function (entity1, entity2) {
 	return entity1 > entity2;
 };
@@ -181,6 +185,10 @@ systemFunctions.ifContains = function (entity, item, thenIf, elseIf) {
 };
 
 systemFunctions.ifEquals = function (entity1, entity2, thenIf, elseIf) {
+	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
+};
+
+systemFunctions.ifEq = function (entity1, entity2, thenIf, elseIf) {
 	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
 };
 

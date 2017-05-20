@@ -9,6 +9,7 @@
     - fixed "include same nexl source" bug
     - added more logs for debug level
     - improved error messages related to nexl source files
+    - added short names for :undefined and :null nexl type -> :u and :n
 
 2.1.0 | 29-APR-2017
 ===================

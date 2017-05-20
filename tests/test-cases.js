@@ -1175,52 +1175,6 @@ module.exports.push({
 	throwsException: true
 });
 
-// append to array
-module.exports.push({
-	expression: '${arr1+test&,}',
-	result: 'queen,muscle,79,false,test'
-});
-
-// append to array
-module.exports.push({
-	expression: '${arr1+${obj1~K}-price&,}',
-	result: 'queen,muscle,79,false,71,beneficial,test,(),disturbed,pack'
-});
-
-// append to array
-module.exports.push({
-	expression: '${arr1+\\\\\\${&\\${}',
-	result: 'queen${muscle${79${false${${'
-});
-
-// append to array
-module.exports.push({
-	expression: '${arr1+${intItem}}',
-	result: ['queen', 'muscle', 79, false, 71]
-});
-
-// append to array
-module.exports.push({
-	expression: '${arr1+\\\\\\${intItem\\}}',
-	result: ['queen', 'muscle', 79, false, '${intItem}']
-});
-
-// merge objects
-module.exports.push({
-	expression: '${obj1+${obj6}}',
-	result: {
-		'71': 'berry',
-		beneficial: 'mint',
-		test: 'righteous',
-		'()': 'trick',
-		disturbed: 46,
-		price: true,
-		pack: 'good',
-		item1: 79,
-		item2: 71
-	}
-});
-
 // this
 module.exports.push({
 	expression: '${__this__.intItem}',
@@ -2346,7 +2300,7 @@ module.exports.push({
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// # string operations
+// string operations
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
 	expression: '${longStr^U}',
@@ -2386,4 +2340,52 @@ module.exports.push({
 module.exports.push({
 	expression: '${obj1^S}',
 	result: '{"beneficial":"mint","test":"righteous","()":"trick","disturbed":46,"price":true,"pack":{"strong":"balance","deer":7},"71":"berry"}'
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// append to array, merge objects, concat strings
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${arr1+test&,}',
+	result: 'queen,muscle,79,false,test'
+});
+
+module.exports.push({
+	expression: '${arr1+${obj1~K}-price&,}',
+	result: 'queen,muscle,79,false,71,beneficial,test,(),disturbed,pack'
+});
+
+module.exports.push({
+	expression: '${arr1+\\\\\\${&\\${}',
+	result: 'queen${muscle${79${false${${'
+});
+
+module.exports.push({
+	expression: '${arr1+${intItem}}',
+	result: ['queen', 'muscle', 79, false, 71]
+});
+
+module.exports.push({
+	expression: '${arr1+\\\\\\${intItem\\}}',
+	result: ['queen', 'muscle', 79, false, '${intItem}']
+});
+
+module.exports.push({
+	expression: '${obj1+${obj6}}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: 'good',
+		item1: 79,
+		item2: 71
+	}
+});
+
+module.exports.push({
+	expression: '${strItem+\\-+${strItem}+${intItem}}',
+	result: 'berry-berry71'
 });

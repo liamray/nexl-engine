@@ -2195,6 +2195,76 @@ module.exports.push({
 	result: 71
 });
 
+module.exports.push({
+	expression: '${@hello world 2017|@\\d$|ifNMatch( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@hello world 2017|@World|@i|ifNMatchEx( ${intItem}, ${strItem} )}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@I love Japan|@Tokyo|ifNContains( ${intItem}, ${strItem} )}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${intItem|@25:num|ifNEquals( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${intItem|@25:num|ifNEq( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${intItem|ifNBool( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${obj1|ifNStr( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNNum( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNNull( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNUndefined( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNNaN( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNPrimitive( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNArray( ${@true}, ${@false} )}',
+	result: 'false'
+});
+
+module.exports.push({
+	expression: '${arr1|ifNObject( ${@true}, ${@false} )}',
+	result: 'true'
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing nexl sources
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -167,6 +167,10 @@ systemFunctions.ifMatch = function (entity, regex, thenIf, elseIf) {
 	return systemFunctions.isMatch(entity, regex) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNMatch = function (entity, regex, thenIf, elseIf) {
+	return systemFunctions.ifMatch(entity, regex, elseIf, thenIf);
+};
+
 systemFunctions.ifMatchEx = function (entity, regex, flags, thenIf, elseIf) {
 	if (!j79.isString(entity)) {
 		return entity;
@@ -175,6 +179,9 @@ systemFunctions.ifMatchEx = function (entity, regex, flags, thenIf, elseIf) {
 	return systemFunctions.isMatch(entity, regex, flags) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNMatchEx = function (entity, regex, flags, thenIf, elseIf) {
+	return systemFunctions.ifMatchEx(entity, regex, flags, elseIf, thenIf);
+};
 
 systemFunctions.ifContains = function (entity, item, thenIf, elseIf) {
 	if (j79.isArray(entity) || j79.isString(entity)) {
@@ -184,12 +191,24 @@ systemFunctions.ifContains = function (entity, item, thenIf, elseIf) {
 	return entity;
 };
 
+systemFunctions.ifNContains = function (entity, item, thenIf, elseIf) {
+	return systemFunctions.ifContains(entity, item, elseIf, thenIf);
+};
+
 systemFunctions.ifEquals = function (entity1, entity2, thenIf, elseIf) {
 	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNEquals = function (entity1, entity2, thenIf, elseIf) {
+	return systemFunctions.ifEquals(entity1, entity2, elseIf, thenIf);
+};
+
 systemFunctions.ifEq = function (entity1, entity2, thenIf, elseIf) {
 	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
+};
+
+systemFunctions.ifNEq = function (entity1, entity2, thenIf, elseIf) {
+	return systemFunctions.ifEq(entity1, entity2, elseIf, thenIf);
 };
 
 systemFunctions.ifGT = function (entity1, entity2, thenIf, elseIf) {
@@ -212,36 +231,72 @@ systemFunctions.ifBool = function (item, thenIf, elseIf) {
 	return systemFunctions.isBool(item) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNBool = function (item, thenIf, elseIf) {
+	return systemFunctions.ifBool(item, elseIf, thenIf);
+};
+
 systemFunctions.ifStr = function (item, thenIf, elseIf) {
 	return systemFunctions.isStr(item) ? thenIf : elseIf;
+};
+
+systemFunctions.ifNStr = function (item, thenIf, elseIf) {
+	return systemFunctions.ifStr(item, elseIf, thenIf);
 };
 
 systemFunctions.ifNum = function (item, thenIf, elseIf) {
 	return systemFunctions.isNum(item) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNNum = function (item, thenIf, elseIf) {
+	return systemFunctions.ifNum(item, elseIf, thenIf);
+};
+
 systemFunctions.ifNull = function (item, thenIf, elseIf) {
 	return systemFunctions.isNull(item) ? thenIf : elseIf;
+};
+
+systemFunctions.ifNNull = function (item, thenIf, elseIf) {
+	return systemFunctions.ifNull(item, elseIf, thenIf);
 };
 
 systemFunctions.ifUndefined = function (item, thenIf, elseIf) {
 	return systemFunctions.isUndefined(item) ? thenIf : elseIf;
 };
 
-systemFunctions.isNaN = function (item, thenIf, elseIf) {
+systemFunctions.ifNUndefined = function (item, thenIf, elseIf) {
+	return systemFunctions.ifUndefined(item, elseIf, thenIf);
+};
+
+systemFunctions.ifNaN = function (item, thenIf, elseIf) {
 	return systemFunctions.isNaN(item) ? thenIf : elseIf;
+};
+
+systemFunctions.ifNNaN = function (item, thenIf, elseIf) {
+	return systemFunctions.ifNaN(item, elseIf, thenIf);
 };
 
 systemFunctions.ifPrimitive = function (item, thenIf, elseIf) {
 	return systemFunctions.isPrimitive(item) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNPrimitive = function (item, thenIf, elseIf) {
+	return systemFunctions.ifPrimitive(item, elseIf, thenIf);
+};
+
 systemFunctions.ifArray = function (item, thenIf, elseIf) {
 	return systemFunctions.isArray(item) ? thenIf : elseIf;
 };
 
+systemFunctions.ifNArray = function (item, thenIf, elseIf) {
+	return systemFunctions.ifArray(item, elseIf, thenIf);
+};
+
 systemFunctions.ifObject = function (item, thenIf, elseIf) {
 	return systemFunctions.isObject(item) ? thenIf : elseIf;
+};
+
+systemFunctions.ifNObject = function (item, thenIf, elseIf) {
+	return systemFunctions.ifObject(item, elseIf, thenIf);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////

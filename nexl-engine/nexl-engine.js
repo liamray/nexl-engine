@@ -175,13 +175,16 @@ NexlExpressionEvaluator.prototype.retrieveEvaluateAsUndefinedAction = function (
 
 NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 	if (this.context.nexl.functions.user[key] !== undefined) {
+		winston.debug('Resolved nexl user function for key=[%s]', key);
 		return this.context.nexl.functions.user[key];
 	}
 
 	if (this.context.nexl.functions.system[key] !== undefined) {
+		winston.debug('Resolved nexl system function for key=[%s]', key);
 		return this.context.nexl.functions.system[key];
 	}
 
+	winston.debug('Nothing found in nexl user/system functions for key=[%s]', key);
 	return undefined;
 };
 
@@ -236,7 +239,7 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	winston.debug('Resolving value for key=[%s]', key);
 
 	if (newResult === undefined && this.result === this.context) {
-		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions');
+		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions', key);
 		newResult = this.try2ResolveNexlFuncs(key);
 	}
 

@@ -2497,3 +2497,8 @@ module.exports.push({
 	expression: '${arr1[0..1]${_item_:str^LEN}&}',
 	result: '56'
 });
+
+module.exports.push({
+	expression: '${arr1[${@\\^}..0]${_item_:str^LEN}&}',
+	result: 'queen'
+});

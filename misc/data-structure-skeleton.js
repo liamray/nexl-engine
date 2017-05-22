@@ -35,12 +35,15 @@ var NEXL_EXPRESSION_DEFINITION = {
 
 		{
 			actionId: '[', // for array indexes
-			actionValue: [
-				{
-					min: MIN,
-					max: MAX // where MIN|MAX can be : primitive (negative) number, ^, $, nexl expression
-				}
-			]
+			actionValue: {
+				iterationExpression: 'NEXL_EXPRESSION_DEFINITION', // nexl expression for iteration. optional
+				arrayIndexes: [
+					{
+						min: MIN,
+						max: MAX // where MIN|MAX can be : primitive (negative) number, ^, $, nexl expression
+					}
+				]
+			}
 		},
 
 		{

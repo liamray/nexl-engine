@@ -2464,31 +2464,36 @@ module.exports.push({
 // iteration tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
-	expression: '${largestCountries[]._item_.name}',
+	expression: '${largestCountries[]${_item_.name}}',
 	result: ["Russia", "Canada", "USA", "China"]
 });
 
 module.exports.push({
-	expression: '${largestCountries[]._index_:str+\\-+${_item_.name}+,+${_item_.population}+,+${_item_.capital}}',
+	expression: '${largestCountries[]${_index_:str+\\-+${_item_.name}+,+${_item_.population}+,+${_item_.capital}}}',
 	result: ["0-Russia,144498215,Moscow", "1-Canada,35151728,Ottawa", "2-USA,324987000,Washington, D.C.", "3-China,1373541278,Beijing"]
 });
 
 module.exports.push({
-	expression: '${@${@${largestCountries[]._item_.capital|@a|_item_|ifMatch()}-${}[]._item_~P&}&\n}',
+	expression: '${largestCountries[]${_item_.capital|@a|_item_|ifMatch()}-${}[]${_item_~P&}&\n}',
 	result: 'name=Canada\ncapital=Ottawa\npopulation=35151728\nname=USA\ncapital=Washington, D.C.\npopulation=324987000'
 });
 
 module.exports.push({
-	expression: '${arr1[]._item_+OMG}',
+	expression: '${arr1[]${_item_+OMG}}',
 	result: ["queenOMG", "muscleOMG", 79, false]
 });
 
 module.exports.push({
-	expression: '${@${arr1[]._item_|ifStr( ${_item_} )}-${}}',
+	expression: '${arr1[]${_item_|ifStr( ${_item_} )}-${}}',
 	result: ["queen", "muscle"]
 });
 
 module.exports.push({
-	expression: '${@${arr1[]._item_:str[0]}&,+\n+${arr1&,}}',
+	expression: '${arr1[]${_item_:str[0]}&,+\n+${arr1&,}}',
 	result: 'q,m,7,f\nqueen,muscle,79,false'
+});
+
+module.exports.push({
+	expression: '${arr1[0..1]${_item_:str^LEN}&}',
+	result: '56'
 });

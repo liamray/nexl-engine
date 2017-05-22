@@ -11,7 +11,6 @@ var externalArgs = {
 };
 
 var result;
-result = ne.nexlize(nexlSource, '${obj7+${obj8}}', externalArgs);
-
+result = ne.nexlize(nexlSource, '${arr1[]${_index_}}', externalArgs);
 console.log(result);
 console.log('\ntype = ' + j79.getType(result));

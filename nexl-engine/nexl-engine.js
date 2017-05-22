@@ -378,19 +378,14 @@ NexlExpressionEvaluator.prototype.resolveArrayRange = function (item) {
 	};
 };
 
-NexlExpressionEvaluator.prototype.evalArrayIndexesAction4Array = function () {
-	// skipping if there is no indexes
-	if (this.action.actionValue.length < 1) {
-		return;
-	}
-
+NexlExpressionEvaluator.prototype.evalArrayIndexesAction4ArrayInner = function () {
 	this.makeDeepResolution();
 
 	var newResult = [];
 
 	// iterating over arrayIndexes
-	for (var index in this.action.actionValue) {
-		var item = this.action.actionValue[index];
+	for (var index in this.action.actionValue.arrayIndexes) {
+		var item = this.action.actionValue.arrayIndexes[index];
 		var range = this.resolveArrayRange(item);
 
 		for (var i = range.min; i <= Math.min(range.max, this.result.length - 1); i++) {
@@ -412,6 +407,45 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4Array = function () {
 	this.result = newResult;
 };
 
+NexlExpressionEvaluator.prototype.applyIterationIfApplicable = function () {
+	var iterationExpression = this.action.actionValue.iterationExpression;
+	if (iterationExpression === undefined) {
+		return;
+	}
+	winston.debug('Evaluating iteration [] action, [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+
+	// is current value not an array ?
+	if (!j79.isArray(this.result)) {
+		winston.debug('Iteration is not applicable because current value is not an array. Skipping...');
+		return false;
+	}
+
+	// todo : makeDeepResolution() is called from applyIterationIfApplicable() and evalArrayIndexesAction4ArrayInner() function. might be optimized
+	this.makeDeepResolution();
+
+	// preparing objInfo
+	var objInfo = this.makeObjInfo();
+	var iterations = [];
+
+	// iterating over current result and evaluating each element
+	for (var i = 0; i < this.result.length; i++) {
+		objInfo.item = this.result[i];
+		objInfo.index = i;
+		var iteration = new NexlExpressionEvaluator(this.context, iterationExpression, objInfo).eval();
+		iterations.push(iteration);
+	}
+
+	this.result = iterations;
+};
+
+NexlExpressionEvaluator.prototype.evalArrayIndexesAction4Array = function () {
+	// apply array indexes if not empty
+	if (this.action.actionValue.arrayIndexes.length > 0) {
+		this.evalArrayIndexesAction4ArrayInner();
+	}
+
+	this.applyIterationIfApplicable();
+};
 NexlExpressionEvaluator.prototype.evalArrayIndexesAction4String = function () {
 	// skipping if there is no indexes for substring
 	if (this.action.actionValue.length < 1) {
@@ -421,8 +455,8 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4String = function () {
 	var newResult = [];
 
 	// iterating over arrayIndexes
-	for (var index in this.action.actionValue) {
-		var item = this.action.actionValue[index];
+	for (var index in this.action.actionValue.arrayIndexes) {
+		var item = this.action.actionValue.arrayIndexes[index];
 		var range = this.resolveArrayRange(item);
 
 		var subStr = this.result.substring(range.min, range.max + 1);
@@ -1186,56 +1220,6 @@ NexlExpressionEvaluator.prototype.makeObjInfo = function () {
 	};
 };
 
-// example : ${arr[]} ( i.e. array index action with no parameters )
-NexlExpressionEvaluator.prototype.applyIteration = function () {
-	var isIteration =
-		this.action.actionId === nexlExpressionsParser.ACTIONS.ARRAY_INDEX // current action is ARRAY_INDEX
-		&& this.action.actionValue.length < 1; // doesn't have action value
-
-	if (!isIteration) {
-		return false;
-	}
-
-	winston.debug('Evaluating iteration [] action, [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
-
-	// is current value not an array ?
-	if (!j79.isArray(this.result)) {
-		winston.debug('Iteration is not applicable because current value is not an array. Skipping...');
-		return false;
-	}
-
-	if (this.actionNr + 1 >= this.nexlExpressionMD.actions.length) {
-		return false;
-	}
-
-	// starting iteration
-
-	// preparing nexl expression metadata
-	var nemd = {};
-
-	// adding all actions after [] action
-	nemd.actions = this.nexlExpressionMD.actions.slice(this.actionNr + 1);
-
-	// copying str
-	nemd.str = this.nexlExpressionMD.str;
-
-	// preparing objInfo
-	var objInfo = this.makeObjInfo();
-
-	var iterations = [];
-	// iterating over current result and evaluating each element
-	for (var i = 0; i < this.result.length; i++) {
-		objInfo.item = this.result[i];
-		objInfo.index = i;
-		var iteration = new NexlExpressionEvaluator(this.context, nemd, objInfo).eval();
-		iterations.push(iteration);
-	}
-
-	this.result = iterations;
-
-	return true;
-};
-
 NexlExpressionEvaluator.prototype.makeDeepResolution = function () {
 	if (this.needDeepResolution4NextActions) {
 		var oi = {
@@ -1257,10 +1241,6 @@ NexlExpressionEvaluator.prototype.eval = function () {
 	for (this.actionNr = 0; this.actionNr < this.nexlExpressionMD.actions.length; this.actionNr++) {
 		// current action
 		this.action = this.nexlExpressionMD.actions[this.actionNr];
-
-		if (this.applyIteration()) {
-			break;
-		}
 
 		// evaluating current action
 		this.applyAction();

@@ -295,6 +295,18 @@ ParseArrayIndexes.prototype.resolveIndexes = function () {
 	// adding
 	this.push(min, max);
 };
+ParseArrayIndexes.prototype.parseIterationExpressionIfPresent = function () {
+	// is ${ characters are not present at lastSearchPos + 1 ?
+	if (this.str.indexOf(NEXL_EXPRESSION_OPEN, this.lastSearchPos + 1) !== this.lastSearchPos + 1) {
+		return;
+	}
+
+	// got iteration expression followed by []
+	// for example : []${_item_.name}
+	this.lastSearchPos;
+	this.result.iterationExpression = new ParseNexlExpression(this.str, this.lastSearchPos + 1).parse();
+	this.lastSearchPos += this.result.iterationExpression.length;
+};
 
 ParseArrayIndexes.prototype.parseArrayIndexesInner = function () {
 	// skipping redundant spaces
@@ -315,11 +327,12 @@ ParseArrayIndexes.prototype.parseArrayIndexesInner = function () {
 	}
 
 	if (charsAtPos === ARRAY_INDEX_CLOSE) {
+		this.parseIterationExpressionIfPresent();
 		this.isFinished = true;
 		return;
 	}
 
-	throw util.format('Invalid nexl expression. Expecting %s or %s at [%s] position in [%s] expression, but found a %s character', COMMA, ARRAY_INDEX_CLOSE, this.lastSearchPos, this.str, charsAtPos);
+	throw util.format('Invalid nexl expression. Expecting for [%s] or [%s] characters at [%s] position in [%s] expression, but found a [%s] character', COMMA, ARRAY_INDEX_CLOSE, this.lastSearchPos, this.str, charsAtPos);
 };
 
 ParseArrayIndexes.prototype.parse = function () {
@@ -459,7 +472,7 @@ ParseNexlExpression.prototype.parseNexlExpressionInner = function () {
 	if (this.currentAction === ACTIONS.ARRAY_INDEX) {
 		// returns : length, arrayIndexes
 		parsed = new ParseArrayIndexes(this.str, this.lastSearchPos).parse();
-		this.createArrOrFuncAction(parsed.arrayIndexes, parsed.length);
+		this.createArrOrFuncAction(parsed, parsed.length);
 		return;
 	}
 

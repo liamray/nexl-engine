@@ -4,7 +4,7 @@
     - added new virtual variables to access iteration session : _item_, _index_
     - extended + action to concat strings
     - added stringify action ^S
-    - added new nexl system functions : setObjVal(), isEq(), isGT(), isLT(), isGE(), isLE(), isNan(), ifEq(), ifGT(), ifLT(), ifGE(), ifLE(), ifNaN(), isMatch(), ifMatch(), ifMatchEx(), ifNMatch(), ifNMatchEx(), ifNContains(), ifNEquals(), ifNEq(), ifNBool(), ifNStr(), ifNNum(), ifNNull(), ifNUndefined(), ifNNaN(), ifNPrimitive(), ifNArray(), ifNObject()
+    - added new nexl system functions : setObjVal(), isEq(), isGT(), isLT(), isGE(), isLE(), isNan(), ifEq(), ifGT(), ifLT(), ifGE(), ifLE(), ifNaN(), isMatch(), ifMatch(), ifMatchEx(), ifNMatch(), ifNMatchEx(), ifNContains(), ifNEquals(), ifNEq(), ifNBool(), ifNStr(), ifNNum(), ifNNull(), ifNUndefined(), ifNNaN(), ifNPrimitive(), ifNArray(), ifNObject(), inc(), dec(), div(), mult(), mod()
     - improved include directive behaviour. Now it includes a source at its place and not globally
     - fixed "include same nexl source" bug
     - added more logs for debug level

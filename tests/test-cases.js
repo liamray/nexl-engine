@@ -2266,6 +2266,55 @@ module.exports.push({
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// math functions tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${intItem|inc()}',
+	result: 72
+});
+
+module.exports.push({
+	expression: '${intItem|inc( ${@99:num} )}',
+	result: 170
+});
+
+module.exports.push({
+	expression: '${intItem|dec()}',
+	result: 70
+});
+
+module.exports.push({
+	expression: '${intItem|dec( ${@99:num} )}',
+	result: -28
+});
+
+module.exports.push({
+	expression: '${intItem|div()}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${@100:num|@25:num|div()}',
+	result: 4
+});
+
+module.exports.push({
+	expression: '${@9:num|@4:num|div()}',
+	result: 2.25
+});
+
+module.exports.push({
+	expression: '${@9:num|@4:num|mod()}',
+	result: 1
+});
+
+module.exports.push({
+	expression: '${strItem|inc()}',
+	result: 'berry'
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing nexl sources
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
@@ -2460,6 +2509,16 @@ module.exports.push({
 	result: 'berry-berry71'
 });
 
+module.exports.push({
+	expression: '${intItem+intItem}',
+	result: '71intItem'
+});
+
+module.exports.push({
+	expression: '${boolItem+${intItem}}',
+	result: 'true71'
+});
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // iteration tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2480,7 +2539,7 @@ module.exports.push({
 
 module.exports.push({
 	expression: '${arr1[]${_item_+OMG}}',
-	result: ["queenOMG", "muscleOMG", 79, false]
+	result: ["queenOMG", "muscleOMG", '79OMG', 'falseOMG']
 });
 
 module.exports.push({

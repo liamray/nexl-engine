@@ -299,6 +299,48 @@ systemFunctions.ifNObject = function (item, thenIf, elseIf) {
 	return systemFunctions.ifObject(item, elseIf, thenIf);
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// math funcs
+systemFunctions.inc = function (number, val) {
+	if (j79.isNumber(number)) {
+		return number + (val ? val : 1);
+	}
+
+	return number;
+};
+
+systemFunctions.dec = function (number, val) {
+	if (j79.isNumber(number)) {
+		return number - (val ? val : 1);
+	}
+
+	return number;
+};
+
+systemFunctions.div = function (number, val) {
+	if (j79.isNumber(number) && j79.isNumber(val)) {
+		return number / val;
+	}
+
+	return number;
+};
+
+systemFunctions.mult = function (number, val) {
+	if (j79.isNumber(number) && j79.isNumber(val)) {
+		return number * val;
+	}
+
+	return number;
+};
+
+systemFunctions.mod = function (number, val) {
+	if (j79.isNumber(number) && j79.isNumber(val)) {
+		return number % val;
+	}
+
+	return number;
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 // assigning system functions to nexl context
 ///////////////////////////////////////////////////////////////////////////////////////////

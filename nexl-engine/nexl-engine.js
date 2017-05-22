@@ -895,9 +895,9 @@ NexlExpressionEvaluator.prototype.applyAppendMergeConcatAction = function () {
 	}
 
 	// strings merge
-	if (j79.isString(this.result)) {
+	if (j79.isPrimitive(this.result)) {
 		var actionValue = this.assembleChunks4CurrentAction();
-		this.result = this.result + actionValue;
+		this.result = '' + this.result + actionValue;
 		return;
 	}
 

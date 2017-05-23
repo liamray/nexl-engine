@@ -39,6 +39,16 @@ systemFunctions.setObjVal = function (obj, key, val) {
 	return obj;
 };
 
+systemFunctions.setObjKey = function (obj, currentKey, newKey) {
+	if (j79.isObject(obj)) {
+		var val = obj[currentKey];
+		delete obj[currentKey];
+		obj[newKey] = val;
+	}
+
+	return obj;
+};
+
 systemFunctions.makeObj = function (key, val) {
 	var result = {};
 

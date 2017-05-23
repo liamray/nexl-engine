@@ -2176,6 +2176,19 @@ module.exports.push({
 });
 
 module.exports.push({
+	expression: '${obj1|@71|strItem|setObjKey()}',
+	result: {
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: {strong: 'balance', deer: 7},
+		berry: 'berry'
+	}
+});
+
+module.exports.push({
 	expression: '${longStr|@distance\\.\\*km|isMatch()}',
 	result: true
 });

@@ -1,6 +1,6 @@
 2.2.0 | ??-???-????
 ===================
-    - implemented iteration over array elements in nexl expression as []
+    - implemented iteration over array elements and object fields in nexl expression as []
     - added new virtual variables to access iteration session : _item_, _index_
     - extended + action to concat strings
     - added stringify action ^S

@@ -5,6 +5,13 @@
 // importing from nexl-sources2.js ( for test purposes )
 '@ nexl-source2.js';
 
+cars = [
+	{name: 'Bugatti Veyron', speed: 268},
+	{name: 'McLaren F1', speed: 231},
+	{name: 'Ferrari LaFerrari', speed: 217}
+];
+
+
 largestCountries = [
 	{
 		name: 'Russia',

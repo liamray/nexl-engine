@@ -25,6 +25,8 @@ const THIS = '_this_';
 const PARENT = '_parent_';
 const ITEM = '_item_';
 const INDEX = '_index_';
+const KEY = '_key_';
+const VALUE = '_value_';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EvalAndSubstChunks
@@ -235,6 +237,20 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		return;
 	}
 
+	// _key_
+	if (key == KEY) {
+		this.newResult.push(this.objInfo.key);
+		winston.debug('Resolving value for key=[%s]', KEY);
+		return;
+	}
+
+	// _value_
+	if (key == VALUE) {
+		this.newResult.push(this.objInfo.value);
+		winston.debug('Resolving value for key=[%s]', VALUE);
+		return;
+	}
+
 	var newResult = this.result[key];
 	winston.debug('Resolving value for key=[%s]', key);
 
@@ -407,12 +423,13 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4ArrayInner = function (
 	this.result = newResult;
 };
 
-NexlExpressionEvaluator.prototype.applyIterationIfApplicable = function () {
+NexlExpressionEvaluator.prototype.applyArrayIterationIfApplicable = function () {
 	var iterationExpression = this.action.actionValue.iterationExpression;
 	if (iterationExpression === undefined) {
 		return;
 	}
-	winston.debug('Evaluating iteration [] action, [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+
+	winston.debug('Iterating over array elements. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 
 	// is current value not an array ?
 	if (!j79.isArray(this.result)) {
@@ -420,7 +437,6 @@ NexlExpressionEvaluator.prototype.applyIterationIfApplicable = function () {
 		return false;
 	}
 
-	// todo : makeDeepResolution() is called from applyIterationIfApplicable() and evalArrayIndexesAction4ArrayInner() function. might be optimized
 	this.makeDeepResolution();
 
 	// preparing objInfo
@@ -444,7 +460,7 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4Array = function () {
 		this.evalArrayIndexesAction4ArrayInner();
 	}
 
-	this.applyIterationIfApplicable();
+	this.applyArrayIterationIfApplicable();
 };
 NexlExpressionEvaluator.prototype.evalArrayIndexesAction4String = function () {
 	// skipping if there is no indexes for substring
@@ -466,6 +482,31 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4String = function () {
 	this.result = j79.unwrapFromArrayIfPossible(newResult);
 };
 
+NexlExpressionEvaluator.prototype.applyObjectIteration = function () {
+	var iterationExpression = this.action.actionValue.iterationExpression;
+	if (iterationExpression === undefined) {
+		winston.debug('Iteration expression is not specified for object. Skipping...');
+		return;
+	}
+
+	winston.debug('Iterating over object fields. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+
+	this.makeDeepResolution();
+
+	// preparing objInfo
+	var objInfo = this.makeObjInfo();
+	var iterations = [];
+
+	// iterating over current result and evaluating each element
+	for (var key in this.result) {
+		objInfo.key = key;
+		objInfo.value = this.result[key];
+		var iteration = new NexlExpressionEvaluator(this.context, this.action.actionValue.iterationExpression, objInfo).eval();
+		iterations.push(iteration);
+	}
+
+	this.result = iterations;
+};
 
 NexlExpressionEvaluator.prototype.applyArrayIndexesAction = function () {
 	this.makeDeepResolution4String();
@@ -480,7 +521,14 @@ NexlExpressionEvaluator.prototype.applyArrayIndexesAction = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is not an array or string. Skipping...', this.actionNr);
+	if (j79.isObject(this.result)) {
+		this.applyObjectIteration();
+		return;
+	}
+
+	if (j79.isLogLevel('debug')) {
+		winston.debug('[actionNr=%s] is not applicable because current value %s is not if array/string/object type. Skipping...', this.actionNr, j79.getType(this.result));
+	}
 };
 
 NexlExpressionEvaluator.prototype.applyDefaultValueAction = function () {
@@ -1216,7 +1264,9 @@ NexlExpressionEvaluator.prototype.makeObjInfo = function () {
 		this: this.objInfo.this,
 		parent: this.objInfo.parent,
 		item: this.objInfo.item, // array element in iteration
-		index: this.objInfo.index // array index in iteration
+		index: this.objInfo.index, // array index in iteration
+		key: this.objInfo.key, // key in object iteration
+		value: this.objInfo.value // value in object iteration
 	};
 };
 

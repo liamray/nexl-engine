@@ -2574,3 +2574,23 @@ module.exports.push({
 	expression: '${arr1[${@\\^}..0]${_item_:str^LEN}&}',
 	result: 'queen'
 });
+
+module.exports.push({
+	expression: '${arr1[]}',
+	result: ["queen", "muscle", 79, false]
+});
+
+module.exports.push({
+	expression: '${obj6[]}',
+	result: {"pack": "good", "item1": 79, "item2": 71}
+});
+
+module.exports.push({
+	expression: '${obj6[]${_key_+\\.\\.${_value_}}&\n}',
+	result: 'pack..good\nitem1..79\nitem2..71'
+});
+
+module.exports.push({
+	expression: '${intItem[]${}}',
+	result: 71
+});

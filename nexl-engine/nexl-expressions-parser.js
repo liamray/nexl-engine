@@ -115,8 +115,7 @@ const ACTION_POSSIBLE_VALUES = {
 	'~': j79.getObjectValues(OBJECT_OPERATIONS_OPTIONS),
 	'#': j79.getObjectValues(ARRAY_OPERATIONS_OPTIONS),
 	'^': j79.getObjectValues(STRING_OPERATIONS_OPTIONS),
-	'!': j79.getObjectValues(UNDEFINED_VALUE_OPERATIONS_OPTIONS),
-	'?': ['']
+	'!': j79.getObjectValues(UNDEFINED_VALUE_OPERATIONS_OPTIONS)
 };
 
 const ARRAY_INDEX_CLOSE = ']';

@@ -1824,6 +1824,11 @@ module.exports.push({
 // testing system functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
+	expression: '${intItem|@ |strItem|concat()}',
+	result: '71 berry'
+});
+
+module.exports.push({
 	expression: '${makeObj()}',
 	result: {}
 });

@@ -31,6 +31,15 @@ function replaceAll4Array(entity, searchItem, replace) {
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+systemFunctions.concat = function () {
+	var result = '';
+	for (var index in arguments) {
+		result += arguments[index];
+	}
+
+	return result;
+};
+
 systemFunctions.setObjVal = function (obj, key, val) {
 	if (j79.isObject(obj)) {
 		obj[key] = val;

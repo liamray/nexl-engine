@@ -150,3 +150,7 @@ function discoverInstance(ifc) {
 
 	return null;
 }
+
+iterationBody1 = '${_item_^U}';
+iterationBody2 = '${_key_^U}';
+iterationBody3 = '${_value_^U}';

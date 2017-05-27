@@ -2599,3 +2599,18 @@ module.exports.push({
 	expression: '${intItem[]${}}',
 	result: 71
 });
+
+module.exports.push({
+	expression: '${arr1[]${iterationBody1}}',
+	result: ["QUEEN", "MUSCLE", 79, false]
+});
+
+module.exports.push({
+	expression: '${obj1[]${iterationBody2}}',
+	result: ["71", "BENEFICIAL", "TEST", "()", "DISTURBED", "PRICE", "PACK"]
+});
+
+module.exports.push({
+	expression: '${obj1[]${iterationBody3}}',
+	result: ["BERRY", "MINT", "RIGHTEOUS", "TRICK", 46, true, {"strong": "balance", "deer": 7}]
+});

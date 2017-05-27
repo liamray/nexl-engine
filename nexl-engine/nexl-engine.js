@@ -1271,14 +1271,15 @@ NexlExpressionEvaluator.prototype.makeObjInfo = function () {
 };
 
 NexlExpressionEvaluator.prototype.makeDeepResolution = function () {
-	if (this.needDeepResolution4NextActions) {
-		var oi = {
-			this: this.lastObjResult,
-			parent: this.lastObjResult === undefined ? this.objInfo.parent : this.lastObjResult[PARENT]
-		};
-
-		this.result = new NexlEngine(this.context, this.isEvaluateAsUndefined).processItem(this.result, oi);
+	if (!this.needDeepResolution4NextActions) {
+		return;
 	}
+
+	var objInfo = this.makeObjInfo();
+	objInfo.this = this.lastObjResult;
+	objInfo.parent = this.lastObjResult === undefined ? this.objInfo.parent : this.lastObjResult[PARENT];
+
+	this.result = new NexlEngine(this.context, this.isEvaluateAsUndefined).processItem(this.result, objInfo);
 };
 
 NexlExpressionEvaluator.prototype.eval = function () {

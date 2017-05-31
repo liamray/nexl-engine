@@ -9,6 +9,8 @@
  **************************************************************************************/
 
 const j79 = require('j79-utils');
+const deepMerge = require('deepmerge');
+
 var systemFunctions = {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -31,13 +33,79 @@ function replaceAll4Array(entity, searchItem, replace) {
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-systemFunctions.concat = function () {
+function concatPrimitives(arguments) {
 	var result = '';
+
 	for (var index in arguments) {
-		result += arguments[index];
+		var item = arguments[index];
+
+		if (!j79.isPrimitive(item)) {
+			return undefined;
+		}
+
+		result += item;
 	}
 
 	return result;
+}
+
+function concatArrays(arguments) {
+	var result = [];
+
+	for (var index in arguments) {
+		var item = arguments[index];
+
+		if (!j79.isArray(item)) {
+			return undefined;
+		}
+
+		result = result.concat(item);
+	}
+
+	return result;
+}
+
+function concatObjects(arguments) {
+	var result = {};
+
+	for (var index in arguments) {
+		var item = arguments[index];
+
+		if (!j79.isObject(item)) {
+			return undefined;
+		}
+
+		result = deepMerge(result, item);
+	}
+
+	return result;
+}
+
+systemFunctions.concat = function () {
+	if (arguments.length < 1) {
+		return;
+	}
+
+	var firstArgType = j79.getType(arguments[0]);
+	if (j79.isPrimitiveType(firstArgType)) {
+		firstArgType = j79.TYPE_STRING;
+	}
+
+	switch (firstArgType) {
+		case j79.TYPE_STRING: {
+			return concatPrimitives(arguments);
+		}
+
+		case j79.TYPE_ARRAY: {
+			return concatArrays(arguments);
+		}
+
+		case j79.TYPE_OBJECT: {
+			return concatObjects(arguments);
+		}
+	}
+
+	return undefined;
 };
 
 systemFunctions.setObjVal = function (obj, key, val) {

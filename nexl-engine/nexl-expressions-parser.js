@@ -27,12 +27,14 @@ const ACTIONS = {
 	'UNDEFINED_VALUE_OPERATIONS': '!',
 	'MANDATORY_VALUE_VALIDATOR': '*',
 	'PUSH_FUNCTION_PARAM': '|',
+	'ASSIGN_VARIABLE': '=',
+	'SEPARATOR': ';',
 
 	// the following actions are reserved for future usage
-	'RESERVED2': '%',
+	'RESERVED1': '%',
+	'RESERVED2': '`',
 	'RESERVED3': '>',
-	'RESERVED4': '=',
-	'RESERVED5': '?'
+	'RESERVED4': '?'
 };
 
 const ACTIONS_DESC = {
@@ -302,7 +304,6 @@ ParseArrayIndexes.prototype.parseIterationExpressionIfPresent = function () {
 
 	// got iteration expression followed by []
 	// for example : []${_item_.name}
-	this.lastSearchPos;
 	this.result.iterationExpression = new ParseNexlExpression(this.str, this.lastSearchPos + 1).parse();
 	this.lastSearchPos += this.result.iterationExpression.length;
 };
@@ -425,8 +426,24 @@ ParseNexlExpression.prototype.throwBadValueException = function (actionValue, ex
 	throw util.format('The [%s] action in [%s] expression must have %s, but has %s value', this.currentAction, this.str, expected, real);
 };
 
+ParseNexlExpression.prototype.validateAndSetAssignVarValue = function (parsed) {
+	// should be the constant string value for variable name
+	if (parsed.chunks.length === 1 && parsed.chunks[0] !== null) {
+		this.createAndAddAction(parsed.chunks[0]);
+		return;
+	}
+
+	throw util.format('Assign variable action value cannot contain nexl expression(s)');
+};
+
 // parsed contains chunks and chunksSubstitutions
 ParseNexlExpression.prototype.validateAndSetActionValue = function (parsed) {
+	// validating assign variable value action
+	if (this.currentAction === ACTIONS.ASSIGN_VARIABLE) {
+		this.validateAndSetAssignVarValue(parsed);
+		return;
+	}
+
 	// resolving must have value
 	var expectedValue = ACTION_POSSIBLE_VALUES[this.currentAction];
 
@@ -475,8 +492,8 @@ ParseNexlExpression.prototype.parseNexlExpressionInner = function () {
 		return;
 	}
 
-	// it's special action which doesn't have ACTION_VALUE and this action resets this.result chain
-	if (this.currentAction === ACTIONS.PUSH_FUNCTION_PARAM) {
+	// special actions which don't have ACTION_VALUE and they reset this.result chain value
+	if (this.currentAction === ACTIONS.PUSH_FUNCTION_PARAM || this.currentAction === ACTIONS.SEPARATOR) {
 		this.createAndAddAction();
 		this.currentAction = ACTIONS.PROPERTY_RESOLUTION;
 	}

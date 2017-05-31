@@ -1165,7 +1165,7 @@ module.exports.push({
 
 // reserved actions
 module.exports.push({
-	expression: '${=}',
+	expression: '${`}',
 	throwsException: true
 });
 

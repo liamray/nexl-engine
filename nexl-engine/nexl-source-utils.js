@@ -247,6 +247,7 @@ function createContext(nexlSource) {
 	context.nexl.functions = {};
 	context.nexl.functions.system = {};
 	context.nexl.functions.user = {};
+	context.nexl.vars = {};
 
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
 

@@ -290,3 +290,5 @@ deepThisTest = {
 		g: '${_this_._parent_.b|isEquals( ${_parent_.d[2]} )}'
 	}
 };
+
+'@ examples/example.js';

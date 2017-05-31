@@ -254,9 +254,16 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	var newResult = this.result[key];
 	winston.debug('Resolving value for key=[%s]', key);
 
+	// trying to resolve system and user functions from context
 	if (newResult === undefined && this.result === this.context) {
 		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions', key);
 		newResult = this.try2ResolveNexlFuncs(key);
+	}
+
+	// trying to resolve nexl.vars
+	if (newResult === undefined && this.result === this.context) {
+		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from nexl.vars', key);
+		newResult = this.context.nexl.vars[key];
 	}
 
 	if (j79.isLogLevel('silly')) {
@@ -1096,6 +1103,14 @@ NexlExpressionEvaluator.prototype.makeDeepResolution4String = function () {
 	this.needDeepResolution4NextActions = false;
 };
 
+NexlExpressionEvaluator.prototype.applyAssignVarAction = function () {
+	this.context.nexl.vars[this.action.actionValue] = this.result;
+};
+
+NexlExpressionEvaluator.prototype.applySeparatorAction = function () {
+	this.init(this.actionNr + 1);
+};
+
 NexlExpressionEvaluator.prototype.applyAction = function () {
 	switch (this.action.actionId) {
 		// . property resolution action
@@ -1200,6 +1215,20 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 		case nexlExpressionsParser.ACTIONS.PUSH_FUNCTION_PARAM: {
 			winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 			this.applyPushFunctionParamAction();
+			return;
+		}
+
+		// assign variable value action
+		case nexlExpressionsParser.ACTIONS.ASSIGN_VARIABLE: {
+			winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+			this.applyAssignVarAction();
+			return;
+		}
+
+		//
+		case nexlExpressionsParser.ACTIONS.SEPARATOR: {
+			winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+			this.applySeparatorAction();
 			return;
 		}
 	}

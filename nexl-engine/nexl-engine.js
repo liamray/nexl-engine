@@ -267,7 +267,9 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	}
 
 	if (j79.isLogLevel('silly')) {
-		winston.debug('Resolved [%s] value for key=[%s]', newResult, key);
+		if (!j79.isFunction(newResult)) {
+			winston.debug('Resolved [%s] value for key=[%s]', newResult, key);
+		}
 	}
 
 	this.newResult.push(newResult);

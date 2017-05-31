@@ -28,11 +28,6 @@ function replaceAll4Array(entity, searchItem, replace) {
 	return entity;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////
-// functions to assign to context
-///////////////////////////////////////////////////////////////////////////////////////////
-
 function concatPrimitives(arguments) {
 	var result = '';
 
@@ -80,6 +75,31 @@ function concatObjects(arguments) {
 
 	return result;
 }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// functions to assign to context
+///////////////////////////////////////////////////////////////////////////////////////////
+
+// makes obj from arguments
+systemFunctions.obj = function () {
+	var result = {};
+	for (var index = 0; index < arguments.length / 2; index++) {
+		var key = arguments[index * 2];
+		var val = arguments[index * 2 + 1];
+		result[key] = val;
+	}
+	return result;
+};
+
+// makes array from arguments
+systemFunctions.arr = function () {
+	var result = [];
+	for (var index in arguments) {
+		result.push(arguments[index]);
+	}
+	return result;
+};
 
 systemFunctions.concat = function () {
 	if (arguments.length < 1) {

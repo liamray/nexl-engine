@@ -4,6 +4,7 @@
     - added separator action
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
     - fixed nexl expressions deep resolution bug ( affects to iterations )
+    - added obj(), arr() nexl system functions
 
 2.2.1 | 26-MAY-2017
 ===================

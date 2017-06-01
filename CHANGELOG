@@ -3,6 +3,7 @@
     - added assign variables action. Now it's possible to use variables in nexl expressions
     - added separator action
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
+    - added keys() and vals() functions to retrieve keys and values from object at specified level
     - fixed nexl expressions deep resolution bug ( affects to iterations )
     - added obj(), arr() nexl system functions
 

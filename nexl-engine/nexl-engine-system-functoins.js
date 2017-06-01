@@ -81,6 +81,53 @@ function concatObjects(arguments) {
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+// resolves key set from "obj" at "level" level
+systemFunctions.keys = function (obj, level) {
+	if (!j79.isObject(obj)) {
+		return obj;
+	}
+
+	level = (level === undefined) ? 0 : parseInt(level);
+
+	if (level === 0 || !j79.isNumber(level)) {
+		return Object.keys(obj);
+	}
+
+	var result = [];
+	for (var key in obj) {
+		var val = obj[key];
+		if (j79.isObject(val)) {
+			var tmp = systemFunctions.keys(val, level - 1);
+			result = result.concat(tmp);
+		}
+	}
+
+	return result;
+};
+
+// resolves values from "obj" at "level" level
+systemFunctions.vals = function (obj, level) {
+	if (!j79.isObject(obj)) {
+		return obj;
+	}
+	level = (level === undefined) ? 0 : parseInt(level);
+
+	if (level === 0 || !j79.isNumber(level)) {
+		return j79.getObjectValues(obj);
+	}
+
+	var result = [];
+	for (var key in obj) {
+		var val = obj[key];
+		if (j79.isObject(val)) {
+			var tmp = systemFunctions.vals(val, level - 1);
+			result = result.concat(tmp);
+		}
+	}
+
+	return result;
+};
+
 // makes obj from arguments
 systemFunctions.obj = function () {
 	var result = {};

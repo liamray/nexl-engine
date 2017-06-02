@@ -292,3 +292,15 @@ deepThisTest = {
 };
 
 '@ examples/example.js';
+
+deepObject = {
+	cars: {name: 'AYS'},
+	countries: {
+		USA: {
+			California: 1,
+			Florida: 'test',
+			Alabama: {}
+		},
+		Australia: 'hello'
+	}
+};

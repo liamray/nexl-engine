@@ -2283,6 +2283,67 @@ module.exports.push({
 	result: 'true'
 });
 
+module.exports.push({
+	expression: '${deepObject|@0|nexl.functions.system.keys()}',
+	result: ['cars', 'countries']
+});
+
+module.exports.push({
+	expression: '${deepObject|@0:num|nexl.functions.system.keys()}',
+	result: ['cars', 'countries']
+});
+
+module.exports.push({
+	expression: '${deepObject|@1|nexl.functions.system.keys()}',
+	result: ['name', 'USA', 'Australia']
+});
+
+module.exports.push({
+	expression: '${deepObject|@2|nexl.functions.system.keys()}',
+	result: ['California', 'Florida', 'Alabama']
+});
+
+module.exports.push({
+	expression: '${deepObject|@3|nexl.functions.system.keys()}',
+	result: []
+});
+
+module.exports.push({
+	expression: '${deepObject|@0|nexl.functions.system.vals()}',
+	result: [{name: 'AYS'},
+		{
+			USA: {California: 1, Florida: 'test', Alabama: {}},
+			Australia: 'hello'
+		}]
+});
+
+module.exports.push({
+	expression: '${deepObject|@0:num|nexl.functions.system.vals()}',
+	result: [{name: 'AYS'},
+		{
+			USA: {California: 1, Florida: 'test', Alabama: {}},
+			Australia: 'hello'
+		}]
+});
+
+module.exports.push({
+	expression: '${deepObject|@1|nexl.functions.system.vals()}',
+	result: ['AYS',
+		{California: 1, Florida: 'test', Alabama: {}},
+		'hello']
+});
+
+module.exports.push({
+	expression: '${deepObject|@2|nexl.functions.system.vals()}',
+	result: [1, 'test', {}]
+});
+
+module.exports.push({
+	expression: '${deepObject|@3|nexl.functions.system.vals()}',
+	result: []
+});
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // math functions tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

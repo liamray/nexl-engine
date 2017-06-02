@@ -244,9 +244,13 @@ function createContext(nexlSource) {
 
 	context.nexl = {};
 
-	context.nexl.functions = {};
-	context.nexl.functions.system = {};
-	context.nexl.functions.user = {};
+	context.nexl.funcs = {};
+	context.nexl.functions = context.nexl.funcs;
+	context.nexl.funcs.sys = {};
+	context.nexl.funcs.system = context.nexl.funcs.sys;
+	context.nexl.funcs.usr = {};
+	context.nexl.funcs.user = context.nexl.funcs.usr;
+
 	context.nexl.vars = {};
 
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();

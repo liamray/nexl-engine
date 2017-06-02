@@ -455,44 +455,79 @@ systemFunctions.ifNObject = function (item, thenIf, elseIf) {
 
 ///////////////////////////////////////////////////////////////////////////////
 // math funcs
-systemFunctions.inc = function (number, val) {
-	if (j79.isNumber(number)) {
-		return number + (val ? val : 1);
+
+// accepts multiple arguments
+systemFunctions.inc = function (number) {
+	if (!j79.isNumber(number)) {
+		return number;
 	}
 
-	return number;
+	if (arguments.length < 2) {
+		return number + 1;
+	}
+
+	var result = number;
+	for (var index = 1; index < arguments.length; index++) {
+		result += arguments[index];
+	}
+
+	return result;
 };
 
 systemFunctions.dec = function (number, val) {
-	if (j79.isNumber(number)) {
-		return number - (val ? val : 1);
+	if (!j79.isNumber(number)) {
+		return number;
 	}
 
-	return number;
+	if (arguments.length < 2) {
+		return number - 1;
+	}
+
+	var result = number;
+	for (var index = 1; index < arguments.length; index++) {
+		result -= arguments[index];
+	}
+
+	return result;
 };
 
 systemFunctions.div = function (number, val) {
-	if (j79.isNumber(number) && j79.isNumber(val)) {
-		return number / val;
+	if (!j79.isNumber(number)) {
+		return number;
 	}
 
-	return number;
+	var result = number;
+	for (var index = 1; index < arguments.length; index++) {
+		result /= arguments[index];
+	}
+
+	return result;
 };
 
 systemFunctions.mult = function (number, val) {
-	if (j79.isNumber(number) && j79.isNumber(val)) {
-		return number * val;
+	if (!j79.isNumber(number)) {
+		return number;
 	}
 
-	return number;
+	var result = number;
+	for (var index = 1; index < arguments.length; index++) {
+		result *= arguments[index];
+	}
+
+	return result;
 };
 
 systemFunctions.mod = function (number, val) {
-	if (j79.isNumber(number) && j79.isNumber(val)) {
-		return number % val;
+	if (!j79.isNumber(number)) {
+		return number;
 	}
 
-	return number;
+	var result = number;
+	for (var index = 1; index < arguments.length; index++) {
+		result %= arguments[index];
+	}
+
+	return result;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -500,6 +535,6 @@ systemFunctions.mod = function (number, val) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 module.exports.assign = function (context) {
 	for (var item in systemFunctions) {
-		context.nexl.functions.system[item] = systemFunctions[item];
+		context.nexl.funcs.sys[item] = systemFunctions[item];
 	}
 };

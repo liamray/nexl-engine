@@ -2284,32 +2284,32 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${deepObject|@0|nexl.functions.system.keys()}',
+	expression: '${deepObject|@0|nexl.funcs.sys.keys()}',
 	result: ['cars', 'countries']
 });
 
 module.exports.push({
-	expression: '${deepObject|@0:num|nexl.functions.system.keys()}',
+	expression: '${deepObject|@0:num|nexl.funcs.sys.keys()}',
 	result: ['cars', 'countries']
 });
 
 module.exports.push({
-	expression: '${deepObject|@1|nexl.functions.system.keys()}',
+	expression: '${deepObject|@1|nexl.funcs.sys.keys()}',
 	result: ['name', 'USA', 'Australia']
 });
 
 module.exports.push({
-	expression: '${deepObject|@2|nexl.functions.system.keys()}',
+	expression: '${deepObject|@2|nexl.funcs.sys.keys()}',
 	result: ['California', 'Florida', 'Alabama']
 });
 
 module.exports.push({
-	expression: '${deepObject|@3|nexl.functions.system.keys()}',
+	expression: '${deepObject|@3|nexl.funcs.sys.keys()}',
 	result: []
 });
 
 module.exports.push({
-	expression: '${deepObject|@0|nexl.functions.system.vals()}',
+	expression: '${deepObject|@0|nexl.funcs.sys.vals()}',
 	result: [{name: 'AYS'},
 		{
 			USA: {California: 1, Florida: 'test', Alabama: {}},
@@ -2318,7 +2318,7 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${deepObject|@0:num|nexl.functions.system.vals()}',
+	expression: '${deepObject|@0:num|vals()}',
 	result: [{name: 'AYS'},
 		{
 			USA: {California: 1, Florida: 'test', Alabama: {}},
@@ -2327,19 +2327,19 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${deepObject|@1|nexl.functions.system.vals()}',
+	expression: '${deepObject|@1|vals()}',
 	result: ['AYS',
 		{California: 1, Florida: 'test', Alabama: {}},
 		'hello']
 });
 
 module.exports.push({
-	expression: '${deepObject|@2|nexl.functions.system.vals()}',
+	expression: '${deepObject|@2|vals()}',
 	result: [1, 'test', {}]
 });
 
 module.exports.push({
-	expression: '${deepObject|@3|nexl.functions.system.vals()}',
+	expression: '${deepObject|@3|vals()}',
 	result: []
 });
 
@@ -2353,6 +2353,11 @@ module.exports.push({
 });
 
 module.exports.push({
+	expression: '${intItem|intItem|intItem|intItem|nexl.funcs.sys.inc()}',
+	result: 284
+});
+
+module.exports.push({
 	expression: '${intItem|inc( ${@99:num} )}',
 	result: 170
 });
@@ -2363,6 +2368,11 @@ module.exports.push({
 });
 
 module.exports.push({
+	expression: '${intItem|intItem|intItem|intItem|dec()}',
+	result: -142
+});
+
+module.exports.push({
 	expression: '${intItem|dec( ${@99:num} )}',
 	result: -28
 });
@@ -2370,6 +2380,11 @@ module.exports.push({
 module.exports.push({
 	expression: '${intItem|div()}',
 	result: 71
+});
+
+module.exports.push({
+	expression: '${@27:num|@3:num|@3:num|div()}',
+	result: 3
 });
 
 module.exports.push({
@@ -2385,6 +2400,11 @@ module.exports.push({
 module.exports.push({
 	expression: '${@9:num|@4:num|mod()}',
 	result: 1
+});
+
+module.exports.push({
+	expression: '${@15:num|@4:num|@3:num|mod()}',
+	result: 0
 });
 
 module.exports.push({

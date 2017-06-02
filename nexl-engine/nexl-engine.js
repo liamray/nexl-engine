@@ -176,14 +176,14 @@ NexlExpressionEvaluator.prototype.retrieveEvaluateAsUndefinedAction = function (
 };
 
 NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
-	if (this.context.nexl.functions.user[key] !== undefined) {
+	if (this.context.nexl.funcs.usr[key] !== undefined) {
 		winston.debug('Resolved nexl user function for key=[%s]', key);
-		return this.context.nexl.functions.user[key];
+		return this.context.nexl.funcs.usr[key];
 	}
 
-	if (this.context.nexl.functions.system[key] !== undefined) {
+	if (this.context.nexl.funcs.sys[key] !== undefined) {
 		winston.debug('Resolved nexl system function for key=[%s]', key);
-		return this.context.nexl.functions.system[key];
+		return this.context.nexl.funcs.sys[key];
 	}
 
 	winston.debug('Nothing found in nexl user/system functions for key=[%s]', key);

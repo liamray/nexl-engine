@@ -1,11 +1,14 @@
 2.3.0 | ??-???-????
 ===================
-    - added assign variables action. Now it's possible to use variables in nexl expressions
-    - added separator action
+    - nexl.functions.system renamed to nexl.funcs.sys ( nexl.functions.system is left for backward compatibility )
+    - nexl.functions.user renamed to nexl.funcs.usr ( nexl.functions.user is left for backward compatibility )
+    - added assign variables action = .Now it's possible to use runtime variables inside nexl expressions
+    - added separator action ;
+    - inc(), dec(), div(), mult(), mod() now can accept multiple arguments
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
     - added keys() and vals() functions to retrieve keys and values from object at specified level
+    - added obj() ( creates object from multiple arguments ), arr() ( creates array from multiple arguments ) nexl system functions
     - fixed nexl expressions deep resolution bug ( affects to iterations )
-    - added obj(), arr() nexl system functions
 
 2.2.1 | 26-MAY-2017
 ===================

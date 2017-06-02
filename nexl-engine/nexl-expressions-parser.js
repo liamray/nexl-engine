@@ -53,9 +53,12 @@ const ACTIONS_DESC = {
 	'!': 'Undefined value operations',
 	'*': 'Mandatory value validator',
 	'|': 'Push current value to stack',
+	';': 'Actions separator',
+	'=': 'Assign variables',
+
 	'%': 'RESERVED',
+	'`': 'RESERVED',
 	'>': 'RESERVED',
-	'=': 'RESERVED',
 	'?': 'RESERVED'
 };
 

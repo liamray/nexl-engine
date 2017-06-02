@@ -242,20 +242,27 @@ function NexlSourceCodeAssembler(nexlSource) {
 function createContext(nexlSource) {
 	var context = {};
 
+	// nexl object
 	context.nexl = {};
 
+	// system and user functions
 	context.nexl.funcs = {};
-	context.nexl.functions = context.nexl.funcs;
 	context.nexl.funcs.sys = {};
-	context.nexl.funcs.system = context.nexl.funcs.sys;
 	context.nexl.funcs.usr = {};
-	context.nexl.funcs.user = context.nexl.funcs.usr;
 
+	// nexl.functions.system and nexl.functions.user are deprecated and left for backward compatibility, probably will be removed in future versions, right for JUN-2017 )
+	context.nexl.functions = context.nexl.funcs;
+	context.nexl.functions.system = context.nexl.funcs.sys;
+	context.nexl.functions.user = context.nexl.funcs.usr;
+
+	// runtime variables from inside nexl expressions
 	context.nexl.vars = {};
 
+	// assembling source code from JavaScript files
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
 
 	try {
+		// assigning source code to context
 		vm.runInNewContext(sourceCode, context);
 	} catch (e) {
 		throw "Got a problem with a nexl source : " + e;

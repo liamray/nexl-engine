@@ -2343,6 +2343,21 @@ module.exports.push({
 	result: []
 });
 
+module.exports.push({
+	expression: '${intItem|strItem|@hello|arr()}',
+	result: [71, 'berry', 'hello']
+});
+
+module.exports.push({
+	expression: '${intItem|strItem|@hello|obj()}',
+	result: {71: 'berry', 'hello': undefined}
+});
+
+module.exports.push({
+	expression: '${~O|@123|obj()}',
+	throwsException: true
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // math functions tests

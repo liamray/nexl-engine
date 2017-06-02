@@ -9,6 +9,7 @@
  **************************************************************************************/
 
 const j79 = require('j79-utils');
+const util = require('util');
 const deepMerge = require('deepmerge');
 
 var systemFunctions = {};
@@ -133,6 +134,9 @@ systemFunctions.obj = function () {
 	var result = {};
 	for (var index = 0; index < arguments.length / 2; index++) {
 		var key = arguments[index * 2];
+		if (!j79.isPrimitive(key)) {
+			throw util.format('Object key must be a primitive type at [%s] position', index * 2);
+		}
 		var val = arguments[index * 2 + 1];
 		result[key] = val;
 	}

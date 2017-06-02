@@ -6,7 +6,7 @@
     - added separator action ;
     - inc(), dec(), div(), mult(), mod() now can accept multiple arguments
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
-    - added keys() and vals() functions to retrieve keys and values from object at specified level
+    - added keys() and vals() nexl system functions to retrieve keys and values from object at specified level
     - added obj() ( creates object from multiple arguments ), arr() ( creates array from multiple arguments ) nexl system functions
     - fixed nexl expressions deep resolution bug ( affects to iterations )
 

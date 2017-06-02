@@ -36,7 +36,8 @@ function concatPrimitives(arguments) {
 		var item = arguments[index];
 
 		if (!j79.isPrimitive(item)) {
-			return undefined;
+			j79.winston.debug('Skipping non-primitive value in concat() function');
+			continue;
 		}
 
 		result += item;
@@ -52,7 +53,8 @@ function concatArrays(arguments) {
 		var item = arguments[index];
 
 		if (!j79.isArray(item)) {
-			return undefined;
+			j79.winston.debug('Skipping non-array value in concat() function');
+			continue;
 		}
 
 		result = result.concat(item);
@@ -68,7 +70,8 @@ function concatObjects(arguments) {
 		var item = arguments[index];
 
 		if (!j79.isObject(item)) {
-			return undefined;
+			j79.winston.debug('Skipping non-object value in concat() function');
+			continue;
 		}
 
 		result = deepMerge(result, item);

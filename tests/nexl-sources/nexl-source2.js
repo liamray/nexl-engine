@@ -17,6 +17,7 @@ var arr6 = [];
 var arr7 = ['hello', undefined, null, undefined, 21, true, 'test'];
 var arr8 = ['${intItem}', 10, 'a', true];
 var arr9 = ['${obj1}', 10, 'a', true];
+var arr10 = [84, 73, 47, 61, 64, 61, 14, 13, 88, 31, 17, 74];
 
 obj1PropName = '()';
 
@@ -304,3 +305,5 @@ deepObject = {
 		Australia: 'hello'
 	}
 };
+
+assignVars1 = '${var1}';

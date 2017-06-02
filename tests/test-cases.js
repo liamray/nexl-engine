@@ -2710,3 +2710,49 @@ module.exports.push({
 	expression: '${obj1[]${iterationBody3}}',
 	result: ["BERRY", "MINT", "RIGHTEOUS", "TRICK", 46, true, {"strong": "balance", "deer": 7}]
 });
+
+module.exports.push({
+	expression: '${~O=result;fruits2[]${_index_|_item_|obj()|result|concat()=result;};result}',
+	result: {
+		'0': 'Mango',
+		'1': 'Banana',
+		'2': 'Orange',
+		'3': 'Annona',
+		'4': 'Grape'
+	}
+});
+
+module.exports.push({
+	expression: '${@=result;fruits2[]${_index_|@\\=|_item_|@\n|result|concat()=result;};result}',
+	result: '4=Grape\n3=Annona\n2=Orange\n1=Banana\n0=Mango\n'
+});
+
+// find min value in array
+module.exports.push({
+	expression: '${arr10[0]=result;arr10[]${_item_|result|Math.min()=result;};result}',
+	result: 13
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// assign variable action = tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${intItem|strItem|obj()=objA;intItem|objA|obj()}',
+	result: {'71': {'71': 'berry'}}
+});
+
+module.exports.push({
+	expression: '${intItem=strItem;nexl.vars.strItem}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${intItem=strItem;strItem}',
+	result: 'berry'
+});
+
+module.exports.push({
+	expression: '${@hello=var1;assignVars1}',
+	result: 'hello'
+});

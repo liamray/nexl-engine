@@ -314,7 +314,11 @@ NexlExpressionEvaluator.prototype.assembleChunks4CurrentAction = function () {
 };
 
 NexlExpressionEvaluator.prototype.logActionWithValue = function () {
-	winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, this.action.actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	if (j79.isLogLevel('silly')) {
+		winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, JSON.stringify(this.action.actionValue), ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	} else {
+		winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, this.action.actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	}
 };
 
 NexlExpressionEvaluator.prototype.logActionWithoutValue = function () {

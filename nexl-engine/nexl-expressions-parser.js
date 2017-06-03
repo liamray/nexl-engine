@@ -29,10 +29,10 @@ const ACTIONS = {
 	'PUSH_FUNCTION_PARAM': '|',
 	'ASSIGN_VARIABLE': '=',
 	'SEPARATOR': ';',
+	'OBJ_KEY_VALUE_RESOLUTION': '`',
+	'INVERTED_PROPERTY_RESOLUTION': '%',
 
 	// the following actions are reserved for future usage
-	'RESERVED1': '%',
-	'RESERVED2': '`',
 	'RESERVED3': '>',
 	'RESERVED4': '?'
 };
@@ -55,9 +55,9 @@ const ACTIONS_DESC = {
 	'|': 'Push current value to stack',
 	';': 'Actions separator',
 	'=': 'Assign variables',
+	'`': 'Object key-value resolution',
+	'%': 'Inverted property resolution',
 
-	'%': 'RESERVED',
-	'`': 'RESERVED',
 	'>': 'RESERVED',
 	'?': 'RESERVED'
 };

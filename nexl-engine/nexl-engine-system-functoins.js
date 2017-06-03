@@ -200,7 +200,7 @@ systemFunctions.setObjKey = function (obj, currentKey, newKey) {
 	return obj;
 };
 
-systemFunctions.makeObj = function (key, val) {
+systemFunctions.makeObj = function (key, val) { // <---- DEPRECATED ! Use obj() function instead
 	var result = {};
 
 	if (j79.isPrimitive(key)) {

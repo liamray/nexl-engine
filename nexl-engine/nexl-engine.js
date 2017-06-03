@@ -1139,6 +1139,8 @@ NexlExpressionEvaluator.prototype.applyObjKeyValueResolution = function () {
 		return;
 	}
 
+	this.expandObjectKeys();
+
 	var keys = j79.wrapWithArrayIfNeeded(key);
 	var result = {};
 
@@ -1165,13 +1167,6 @@ NexlExpressionEvaluator.prototype.applyInvertedPropertyResolution = function () 
 
 	// resolving key
 	var key = this.assembleChunks4CurrentAction();
-
-	// validating key. it must be either primitive or array
-	if (!j79.isPrimitive(key) && !j79.isArray(key)) {
-		winston.debug('actionValue for actionNr = [%s] is not of a primitive type or array. Applying empty array', this.actionNr);
-		this.result = [];
-		return;
-	}
 
 	var keys = j79.wrapWithArrayIfNeeded(key);
 	var result = [];

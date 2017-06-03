@@ -1159,18 +1159,6 @@ module.exports.push({
 
 // reserved actions
 module.exports.push({
-	expression: '${%}',
-	throwsException: true
-});
-
-// reserved actions
-module.exports.push({
-	expression: '${`}',
-	throwsException: true
-});
-
-// reserved actions
-module.exports.push({
 	expression: '${?}',
 	throwsException: true
 });
@@ -2166,9 +2154,9 @@ module.exports.push({
 	result: 'berry'
 });
 
-// setObjVal
+// setVal
 module.exports.push({
-	expression: '${obj1|@price|@99:num|setObjVal()}',
+	expression: '${obj1|@price|@99:num|setVal()}',
 	result: {
 		"71": "berry",
 		"beneficial": "mint",
@@ -2181,7 +2169,7 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${obj1|@71|strItem|setObjKey()}',
+	expression: '${obj1|@71|strItem|setKey()}',
 	result: {
 		beneficial: 'mint',
 		test: 'righteous',
@@ -2755,4 +2743,126 @@ module.exports.push({
 module.exports.push({
 	expression: '${@hello=var1;assignVars1}',
 	result: 'hello'
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// object key value resolution ` tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${obj1`price}',
+	result: {price: true}
+});
+
+module.exports.push({
+	expression: '${obj1`${UNITED_KEY_DEF.price+pack}}',
+	result: {
+		price: true,
+		disturbed: 46,
+		beneficial: 'mint',
+		pack: {strong: 'balance', deer: 7}
+	}
+});
+
+module.exports.push({
+	expression: '${obj1`${obj1}}',
+	result: {}
+});
+
+module.exports.push({
+	expression: '${obj9`${#A+parent3+home}}',
+	result: {
+		parent3: {
+			level: 2,
+			a1: '/home/nexl',
+			a2: '/home/nexl',
+			a3: '/home/nexl',
+			a4: undefined,
+			x: 10,
+			inner: {level: 3, b1: 10, b2: 10, b3: '/home/nexl'}
+		},
+		home: '/home/nexl'
+	}
+});
+
+module.exports.push({
+	expression: '${obj1`71`71`71}',
+	result: {'71': 'berry'}
+});
+
+module.exports.push({
+	expression: '${obj1`${@71:num}}',
+	result: {'71': 'berry'}
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// inverted property resolution % tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${obj1%name}',
+	result: ['berry',
+		'mint',
+		'righteous',
+		'trick',
+		46,
+		true,
+		{strong: 'balance', deer: 7}]
+});
+
+module.exports.push({
+	expression: '${obj9%parent3}',
+	result: [1,
+		'/home/nexl',
+		undefined,
+		undefined,
+		'/home/nexl',
+		'/home/nexl']
+});
+
+module.exports.push({
+	expression: '${obj9%${arr1}}',
+	result: [1,
+		'/home/nexl',
+		undefined,
+		undefined,
+		'/home/nexl',
+		'/home/nexl',
+		{
+			level: 2,
+			a1: undefined,
+			a2: undefined,
+			a3: undefined,
+			a4: undefined,
+			x: 10,
+			inner: {level: 3, b1: 10, b2: 10, b3: undefined}
+		}]
+});
+
+module.exports.push({
+	expression: '${obj9%${obj1}}',
+	result: [1,
+		'/home/nexl',
+		undefined,
+		undefined,
+		'/home/nexl',
+		'/home/nexl',
+		{
+			level: 2,
+			a1: undefined,
+			a2: undefined,
+			a3: undefined,
+			a4: undefined,
+			x: 10,
+			inner: {level: 3, b1: 10, b2: 10, b3: undefined}
+		}]
+});
+
+module.exports.push({
+	expression: '${obj1%${@71:num}}',
+	result: ['mint',
+		'righteous',
+		'trick',
+		46,
+		true,
+		{strong: 'balance', deer: 7}]
 });

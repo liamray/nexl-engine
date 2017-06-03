@@ -182,7 +182,7 @@ systemFunctions.concat = function () {
 	return undefined;
 };
 
-systemFunctions.setObjVal = function (obj, key, val) {
+systemFunctions.setVal = function (obj, key, val) {
 	if (j79.isObject(obj)) {
 		obj[key] = val;
 	}
@@ -190,7 +190,7 @@ systemFunctions.setObjVal = function (obj, key, val) {
 	return obj;
 };
 
-systemFunctions.setObjKey = function (obj, currentKey, newKey) {
+systemFunctions.setKey = function (obj, currentKey, newKey) {
 	if (j79.isObject(obj)) {
 		var val = obj[currentKey];
 		delete obj[currentKey];

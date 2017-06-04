@@ -86,7 +86,7 @@ function concatObjects(arguments) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 systemFunctions.setArr = function (arr, val, index) {
 	index = parseInt(index);
-	if (index !== index || !j79.isNumber(index) || index < 0) {
+	if (index !== index || index < 0) {
 		return arr;
 	}
 
@@ -102,7 +102,7 @@ systemFunctions.keys = function (obj, level) {
 
 	level = (level === undefined) ? 0 : parseInt(level);
 
-	if (level === 0 || !j79.isNumber(level) || level !== level) {
+	if (level === 0 || level !== level) {
 		return Object.keys(obj);
 	}
 
@@ -125,7 +125,7 @@ systemFunctions.vals = function (obj, level) {
 	}
 	level = (level === undefined) ? 0 : parseInt(level);
 
-	if (level === 0 || !j79.isNumber(level) || level !== level) {
+	if (level === 0 || level !== level) {
 		return j79.getObjectValues(obj);
 	}
 

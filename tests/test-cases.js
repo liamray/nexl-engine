@@ -2272,6 +2272,11 @@ module.exports.push({
 });
 
 module.exports.push({
+	expression: '${obj1|@asd|nexl.funcs.sys.keys()}',
+	result: ['71', 'beneficial', 'test', '()', 'disturbed', 'price', 'pack']
+});
+
+module.exports.push({
 	expression: '${deepObject|@0|nexl.funcs.sys.keys()}',
 	result: ['cars', 'countries']
 });
@@ -2303,6 +2308,17 @@ module.exports.push({
 			USA: {California: 1, Florida: 'test', Alabama: {}},
 			Australia: 'hello'
 		}]
+});
+
+module.exports.push({
+	expression: '${obj1|@asd|vals()}',
+	result: ['berry',
+		'mint',
+		'righteous',
+		'trick',
+		46,
+		true,
+		{strong: 'balance', deer: 7}]
 });
 
 module.exports.push({
@@ -2346,9 +2362,14 @@ module.exports.push({
 	throwsException: true
 });
 
+module.exports.push({
+	expression: '${arr1|@hello|@bye|setArr()}',
+	result: ['queen', 'muscle', 79, false]
+});
+
 // swapping first and second array element
 module.exports.push({
-	expression: '${arr1[0]=tmp;arr1|@0|arr1[1]|setArr()|@1|tmp|setArr()}',
+	expression: '${arr1[0]=tmp;arr1|arr1[1]|@0|setArr()|tmp|@1|setArr()}',
 	result: ['muscle', 'queen', 79, false]
 });
 

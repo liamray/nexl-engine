@@ -260,12 +260,6 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		newResult = this.try2ResolveNexlFuncs(key);
 	}
 
-	// trying to resolve nexl.vars
-	if (newResult === undefined && this.result === this.context) {
-		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from nexl.vars', key);
-		newResult = this.context.nexl.vars[key];
-	}
-
 	if (j79.isLogLevel('silly')) {
 		if (!j79.isFunction(newResult)) {
 			winston.debug('Resolved [%s] value for key=[%s]', newResult, key);
@@ -1118,7 +1112,7 @@ NexlExpressionEvaluator.prototype.makeDeepResolution4String = function () {
 };
 
 NexlExpressionEvaluator.prototype.applyAssignVarAction = function () {
-	this.context.nexl.vars[this.action.actionValue] = this.result;
+	this.context[this.action.actionValue] = this.result;
 };
 
 NexlExpressionEvaluator.prototype.applySeparatorAction = function () {

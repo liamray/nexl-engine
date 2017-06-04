@@ -255,9 +255,6 @@ function createContext(nexlSource) {
 	context.nexl.functions.system = context.nexl.funcs.sys;
 	context.nexl.functions.user = context.nexl.funcs.usr;
 
-	// runtime variables from inside nexl expressions
-	context.nexl.vars = {};
-
 	// assembling source code from JavaScript files
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
 

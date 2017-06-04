@@ -2731,13 +2731,13 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${intItem=strItem;nexl.vars.strItem}',
+	expression: '${intItem=strItem;strItem}',
 	result: 71
 });
 
 module.exports.push({
-	expression: '${intItem=strItem;strItem}',
-	result: 'berry'
+	expression: '${intItem=obj1;obj1}',
+	result: 71
 });
 
 module.exports.push({

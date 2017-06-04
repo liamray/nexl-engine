@@ -1,6 +1,6 @@
 2.3.0 | ??-???-????
 ===================
-    - added assign variables action = .Now it's possible to use runtime variables inside nexl expressions
+    - added assign variables action = .Now it's possible to assign and override variables inside nexl expressions
     - added separator action ;
     - added object key-value pairs resolution action `
     - added inverted object property resolution action %

@@ -6,10 +6,11 @@
     - added inverted object property resolution action %
     - nexl.functions.system renamed to nexl.funcs.sys ( nexl.functions.system is left for backward compatibility )
     - nexl.functions.user renamed to nexl.funcs.usr ( nexl.functions.user is left for backward compatibility )
-    - inc(), dec(), div(), mult(), mod() now can accept multiple arguments
+    - inc(), dec(), div(), mult(), mod() functions now can accept multiple arguments
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
+    - added setArr() nexl system function to change array value by index
     - added keys() and vals() nexl system functions to retrieve keys and values from object at specified level
-    - added obj() ( creates object from multiple arguments ), arr() ( creates array from multiple arguments ) nexl system functions
+    - added obj() and arr() nexl system functions to create objects and array from multiple arguments
     - setObjKey() function renamed to setKey()
     - setObjVal() function renamed to setVal()
     - fixed nexl expressions deep resolution bug ( affects to iterations )

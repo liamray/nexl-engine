@@ -84,6 +84,15 @@ function concatObjects(arguments) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
+systemFunctions.setArr = function (arr, index, value) {
+	index = parseInt(index);
+	if (!j79.isNumber(index) || index < 0) {
+		return arr;
+	}
+
+	arr[index] = value;
+	return arr;
+};
 
 // resolves key set from "obj" at "level" level
 systemFunctions.keys = function (obj, level) {

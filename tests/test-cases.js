@@ -2346,6 +2346,12 @@ module.exports.push({
 	throwsException: true
 });
 
+// swapping first and second array element
+module.exports.push({
+	expression: '${arr1[0]=tmp;arr1|@0|arr1[1]|setArr()|@1|tmp|setArr()}',
+	result: ['muscle', 'queen', 79, false]
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // math functions tests

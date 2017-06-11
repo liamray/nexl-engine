@@ -84,6 +84,33 @@ function concatObjects(arguments) {
 ///////////////////////////////////////////////////////////////////////////////////////////
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
+systemFunctions.keyVals = function (obj, key) {
+	if (!j79.isObject(obj)) {
+		j79.winston.debug('The keyVal() function is not applicable because first parameter is not an object. Skipping...');
+		return obj;
+	}
+
+	// validating key. it must be either primitive or array
+	if (!j79.isPrimitive(key) && !j79.isArray(key)) {
+		j79.winston.debug('The keyVal() function is not applicable because second parameter must be a primitive or array, but got a parameters of [%s] type', j79.getType(key));
+		return undefined;
+	}
+
+	var result = {};
+	var keys = j79.wrapWithArrayIfNeeded(key);
+
+	// iteration over keys
+	for (var index in keys) {
+		key = keys[index];
+		if (j79.isPrimitive(key)) {
+			result[key] = obj[key];
+		}
+	}
+
+	return result;
+};
+
+
 systemFunctions.setArr = function (arr, val, index) {
 	index = parseInt(index);
 	if (index !== index || index < 0) {
@@ -123,6 +150,7 @@ systemFunctions.vals = function (obj, level) {
 	if (!j79.isObject(obj)) {
 		return obj;
 	}
+
 	level = (level === undefined) ? 0 : parseInt(level);
 
 	if (level === 0 || level !== level) {

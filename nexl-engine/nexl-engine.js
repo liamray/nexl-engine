@@ -1119,40 +1119,6 @@ NexlExpressionEvaluator.prototype.applySeparatorAction = function () {
 	this.init(this.actionNr + 1);
 };
 
-NexlExpressionEvaluator.prototype.applyObjKeyValueResolution = function () {
-	this.makeDeepResolution4String();
-
-	if (!j79.isObject(this.result)) {
-		winston.debug('actionNr = [%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
-		return;
-	}
-
-	// resolving key
-	var key = this.assembleChunks4CurrentAction();
-
-	// validating key. it must be either primitive or array
-	if (!j79.isPrimitive(key) && !j79.isArray(key)) {
-		winston.debug('actionValue for actionNr = [%s] is not of a primitive type or array. Applying empty object', this.actionNr);
-		this.result = {};
-		return;
-	}
-
-	this.expandObjectKeys();
-
-	var keys = j79.wrapWithArrayIfNeeded(key);
-	var result = {};
-
-	// iteration over keys
-	for (var index in keys) {
-		key = keys[index];
-		if (j79.isPrimitive(key)) {
-			result[key] = this.result[key];
-		}
-	}
-
-	this.result = result;
-};
-
 NexlExpressionEvaluator.prototype.applyInvertedPropertyResolution = function () {
 	this.makeDeepResolution4String();
 
@@ -1303,13 +1269,6 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 		case nexlExpressionsParser.ACTIONS.SEPARATOR: {
 			this.logActionWithoutValue();
 			this.applySeparatorAction();
-			return;
-		}
-
-		// ` object key-value pairs resolution
-		case nexlExpressionsParser.ACTIONS.OBJ_KEY_VALUE_RESOLUTION: {
-			this.logActionWithoutValue();
-			this.applyObjKeyValueResolution();
 			return;
 		}
 

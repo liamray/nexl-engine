@@ -2373,6 +2373,58 @@ module.exports.push({
 	result: ['muscle', 'queen', 79, false]
 });
 
+// keyVals() function tests
+module.exports.push({
+	expression: '${obj1|@price|keyVals()}',
+	result: {price: true}
+});
+
+module.exports.push({
+	expression: '${obj1|UNITED_KEY_DEF.price+pack|keyVals()}',
+	result: {
+		price: true,
+		disturbed: 46,
+		beneficial: 'mint',
+		pack: {strong: 'balance', deer: 7}
+	}
+});
+
+module.exports.push({
+	expression: '${obj1|obj|keyVals()}',
+	result: undefined
+});
+
+module.exports.push({
+	expression: '${obj9|#A+parent3+home|keyVals()}',
+	result: {
+		parent3: {
+			level: 2,
+			a1: '/home/nexl',
+			a2: '/home/nexl',
+			a3: '/home/nexl',
+			a4: undefined,
+			x: 10,
+			inner: {level: 3, b1: 10, b2: 10, b3: '/home/nexl'}
+		},
+		home: '/home/nexl'
+	}
+});
+
+module.exports.push({
+	expression: '${obj1|@71|keyVals()|@71|keyVals()|@71|keyVals()}',
+	result: {'71': 'berry'}
+});
+
+module.exports.push({
+	expression: '${obj1|@71:num|keyVals()}',
+	result: {'71': 'berry'}
+});
+
+module.exports.push({
+	expression: '${intItem|@1|keyVals()}',
+	result: 71
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // math functions tests
@@ -2770,55 +2822,6 @@ module.exports.push({
 module.exports.push({
 	expression: '${@hello=var1;assignVars1}',
 	result: 'hello'
-});
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// object key value resolution ` tests
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-module.exports.push({
-	expression: '${obj1`price}',
-	result: {price: true}
-});
-
-module.exports.push({
-	expression: '${obj1`${UNITED_KEY_DEF.price+pack}}',
-	result: {
-		price: true,
-		disturbed: 46,
-		beneficial: 'mint',
-		pack: {strong: 'balance', deer: 7}
-	}
-});
-
-module.exports.push({
-	expression: '${obj1`${obj1}}',
-	result: {}
-});
-
-module.exports.push({
-	expression: '${obj9`${#A+parent3+home}}',
-	result: {
-		parent3: {
-			level: 2,
-			a1: '/home/nexl',
-			a2: '/home/nexl',
-			a3: '/home/nexl',
-			a4: undefined,
-			x: 10,
-			inner: {level: 3, b1: 10, b2: 10, b3: '/home/nexl'}
-		},
-		home: '/home/nexl'
-	}
-});
-
-module.exports.push({
-	expression: '${obj1`71`71`71}',
-	result: {'71': 'berry'}
-});
-
-module.exports.push({
-	expression: '${obj1`${@71:num}}',
-	result: {'71': 'berry'}
 });
 
 

@@ -2,11 +2,11 @@
 ===================
     - added assign variables action = .Now it's possible to assign and override variables inside nexl expressions
     - added separator action ;
-    - added object key-value pairs resolution action `
     - added inverted object property resolution action %
     - nexl.functions.system renamed to nexl.funcs.sys ( nexl.functions.system is left for backward compatibility )
     - nexl.functions.user renamed to nexl.funcs.usr ( nexl.functions.user is left for backward compatibility )
     - inc(), dec(), div(), mult(), mod() functions now can accept multiple arguments
+    - added keyVals() nexl system function to resolve key+value pairs from object
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
     - added setArr() nexl system function to change array value by index
     - added keys() and vals() nexl system functions to retrieve keys and values from object at specified level

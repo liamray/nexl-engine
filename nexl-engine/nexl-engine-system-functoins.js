@@ -582,3 +582,5 @@ module.exports.assign = function (context) {
 		context.nexl.funcs.sys[item] = systemFunctions[item];
 	}
 };
+
+module.exports.nexlSystemFuncs = systemFunctions;

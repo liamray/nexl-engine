@@ -8,7 +8,7 @@
     - inc(), dec(), div(), mult(), mod() functions now can accept multiple arguments
     - added keyVals() nexl system function to resolve key+value pairs from object
     - added concat() nexl system function to concat primitives, array and objects. Function accepts multiple arguments
-    - added updAt(), insAt(), delAt() nexl system function to update/insert/delete array element
+    - added updAt(), insAt(), delAt() nexl system function to update/insert/delete array elements
     - added keys() and vals() nexl system functions to retrieve keys and values from object at specified level
     - added obj() and arr() nexl system functions to create objects and array from multiple arguments
     - setObjKey() function renamed to setKey()

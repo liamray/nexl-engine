@@ -307,3 +307,5 @@ deepObject = {
 };
 
 assignVars1 = '${var1}';
+
+undefArr = ['hello', '${intItem}', '${undefinedVar!U} hello'];

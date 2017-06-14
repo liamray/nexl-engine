@@ -994,6 +994,7 @@ NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 	this.makeDeepResolution4String();
 
 	if (this.action.actionValue === nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.STRINGIFY) {
+		this.makeDeepResolution();
 		this.result = JSON.stringify(this.result);
 		return;
 	}
@@ -1412,6 +1413,7 @@ NexlEngine.prototype.processArrayItem = function (arr, objInfo) {
 
 		// !U UNDEFINED_VALUE_OPERATIONS
 		if (item === undefined && this.isEvaluateAsUndefined) {
+			result.push(undefined);
 			continue;
 		}
 

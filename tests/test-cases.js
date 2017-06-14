@@ -1,6 +1,43 @@
 module.exports = [];
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// !U tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${evaluateAsUndefined2!U}',
+	result: undefined
+});
 
+// evaluate as undefined action -> array
+module.exports.push({
+	expression: '${evaluateAsUndefined1!U&,} ${evaluateAsUndefined1&,}',
+	result: 'disconnect,24,,,false disconnect,24,,,false'
+});
+
+// evaluate as undefined action -> object
+module.exports.push({
+	expression: '${obj3!U}',
+	result: {
+		item1: 'test',
+		item3: 34
+	}
+});
+
+// evaluate as undefined action -> array
+module.exports.push({
+	expression: '${undefArr}',
+	throwsException: true
+});
+
+// evaluate as undefined action -> array
+module.exports.push({
+	expression: '${undefArr!U}',
+	result: ['hello', 71, undefined]
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // key is nexl expression
 module.exports.push({
 	expression: '${obj1.71}',
@@ -353,27 +390,6 @@ module.exports.push({
 	result: '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8790',
 	args: {
 		IS_DEBUG_ON: 'on'
-	}
-});
-
-// evaluate as undefined action -> string
-module.exports.push({
-	expression: '${evaluateAsUndefined2!U}',
-	result: undefined
-});
-
-// evaluate as undefined action -> array
-module.exports.push({
-	expression: '${evaluateAsUndefined1!U&,} ${evaluateAsUndefined1&,}',
-	result: 'disconnect,24,,false disconnect,24,,,false'
-});
-
-// evaluate as undefined action -> object
-module.exports.push({
-	expression: '${obj3!U}',
-	result: {
-		item1: 'test',
-		item3: 34
 	}
 });
 
@@ -2639,7 +2655,7 @@ module.exports.push({
 
 module.exports.push({
 	expression: '${obj1^S}',
-	result: '{"beneficial":"mint","test":"righteous","()":"trick","disturbed":46,"price":true,"pack":{"strong":"balance","deer":7},"71":"berry"}'
+	result: '{\"71\":\"berry\",\"beneficial\":\"mint\",\"test\":\"righteous\",\"()\":\"trick\",\"disturbed\":46,\"price\":true,\"pack\":{\"strong\":\"balance\",\"deer\":7}}'
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

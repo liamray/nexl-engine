@@ -2379,16 +2379,78 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${arr1|@hello|@bye|setArr()}',
+	expression: '${arr1|@hello|@bye|updAt()}',
 	result: ['queen', 'muscle', 79, false]
 });
 
 // swapping first and second array element
 module.exports.push({
-	expression: '${arr1[0]=tmp;arr1|arr1[1]|@0|setArr()|tmp|@1|setArr()}',
+	expression: '${arr1[0]=tmp;arr1|arr1[1]|@0|updAt()|tmp|@1|updAt()}',
 	result: ['muscle', 'queen', 79, false]
 });
+///////////////////////////////////////////////////
+// insAt()
+module.exports.push({
+	expression: '${fruits|@lol|@0|insAt()}',
+	result: ['lol', 'Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
+});
 
+module.exports.push({
+	expression: '${fruits|@lol|@\\-1|insAt()}',
+	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
+});
+
+module.exports.push({
+	expression: '${fruits|fruits|@100|insAt()}',
+	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined, 'Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
+});
+
+module.exports.push({
+	expression: '${fruits|obj1|@100|insAt()}',
+	result: ['Mango',
+		'Lemon',
+		'Banana',
+		'Apple',
+		null,
+		undefined,
+		null,
+		undefined,
+		{
+			'71': 'berry',
+			beneficial: 'mint',
+			test: 'righteous',
+			'()': 'trick',
+			disturbed: 46,
+			price: true,
+			pack: {strong: 'balance', deer: 7}
+		}]
+});
+
+// delAt()
+module.exports.push({
+	expression: '${fruits|@${fruits#LEN|dec()}|delAt()}',
+	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null]
+});
+
+// delAt()
+module.exports.push({
+	expression: '${fruits|@0|delAt()}',
+	result: ['Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
+});
+
+// delAt()
+module.exports.push({
+	expression: '${fruits|@1000|delAt()}',
+	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
+});
+
+// delAt()
+module.exports.push({
+	expression: '${fruits|@1|@100|delAt()}',
+	result: ['Mango']
+});
+
+/////////////////////////////////////////////
 // keyVals() function tests
 module.exports.push({
 	expression: '${obj1|@price|keyVals()}',

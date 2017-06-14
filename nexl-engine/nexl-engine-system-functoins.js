@@ -110,14 +110,52 @@ systemFunctions.keyVals = function (obj, key) {
 	return result;
 };
 
+systemFunctions.updAt = function (arr, val, index) {
+	if (!j79.isArray(arr)) {
+		return arr;
+	}
 
-systemFunctions.setArr = function (arr, val, index) {
 	index = parseInt(index);
+
+	if (index === index && index >= 0) {
+		arr[index] = val;
+	}
+
+	return arr;
+};
+
+systemFunctions.insAt = function (arr, val, index) {
+	if (!j79.isArray(arr)) {
+		return arr;
+	}
+
+	index = parseInt(index);
+
+	if (index === index && index >= 0) {
+		arr.splice(index, 0, val);
+	}
+
+	return arr;
+};
+
+systemFunctions.delAt = function (arr, index, cnt) {
+	if (!j79.isArray(arr)) {
+		return arr;
+	}
+
+	index = parseInt(index);
+	cnt = parseInt(cnt);
+
 	if (index !== index || index < 0) {
 		return arr;
 	}
 
-	arr[index] = val;
+	if (cnt !== cnt || cnt < 0) {
+		cnt = 1;
+	}
+
+	arr.splice(index, cnt);
+
 	return arr;
 };
 

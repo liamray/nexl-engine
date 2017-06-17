@@ -2378,6 +2378,8 @@ module.exports.push({
 	throwsException: true
 });
 
+///////////////////////////////////////////////////
+// updAt()
 module.exports.push({
 	expression: '${arr1|@hello|@bye|updAt()}',
 	result: ['queen', 'muscle', 79, false]
@@ -2388,6 +2390,17 @@ module.exports.push({
 	expression: '${arr1[0]=tmp;arr1|arr1[1]|@0|updAt()|tmp|@1|updAt()}',
 	result: ['muscle', 'queen', 79, false]
 });
+
+module.exports.push({
+	expression: '${@hello|@a|@1|updAt()}',
+	result: 'hallo'
+});
+
+module.exports.push({
+	expression: '${@hello|obj1|@1|updAt()}',
+	result: 'hello'
+});
+
 ///////////////////////////////////////////////////
 // insAt()
 module.exports.push({
@@ -2426,28 +2439,51 @@ module.exports.push({
 		}]
 });
 
+module.exports.push({
+	expression: '${intItem|@hello|@0|insAt()}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${intItem:str|@hello|@0|insAt()}',
+	result: 'hello71'
+});
+
+module.exports.push({
+	expression: '${@hello|obj1|@0|insAt()}',
+	result: 'hello'
+});
+
+///////////////////////////////////////////////////
 // delAt()
 module.exports.push({
 	expression: '${fruits|@${fruits#LEN|dec()}|delAt()}',
 	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null]
 });
 
-// delAt()
 module.exports.push({
 	expression: '${fruits|@0|delAt()}',
 	result: ['Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
 });
 
-// delAt()
 module.exports.push({
 	expression: '${fruits|@1000|delAt()}',
 	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
 });
 
-// delAt()
 module.exports.push({
 	expression: '${fruits|@1|@100|delAt()}',
 	result: ['Mango']
+});
+
+module.exports.push({
+	expression: '${strItem|@0|delAt()}',
+	result: 'erry'
+});
+
+module.exports.push({
+	expression: '${@hello|@1|@2|delAt()}',
+	result: 'hlo'
 });
 
 /////////////////////////////////////////////

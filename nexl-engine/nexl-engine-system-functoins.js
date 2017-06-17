@@ -80,10 +80,86 @@ function concatObjects(arguments) {
 	return result;
 }
 
+function isPositiveNr(nr) {
+	return nr === nr && nr >= 0;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+systemFunctions.updAt = function (arrOrStr, val, index) {
+	var type = j79.getType(arrOrStr);
+	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
+		return arrOrStr;
+	}
+
+	index = parseInt(index);
+	if (!isPositiveNr(index)) {
+		return arrOrStr;
+	}
+
+	if (type === j79.TYPE_ARRAY) {
+		arrOrStr[index] = val;
+	}
+
+	if (type === j79.TYPE_STRING && j79.isPrimitive(val)) {
+		arrOrStr = arrOrStr.substr(0, index) + val + arrOrStr.substr(index + 1);
+	}
+
+	return arrOrStr;
+};
+
+systemFunctions.insAt = function (arrOrStr, val, index) {
+	var type = j79.getType(arrOrStr);
+	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
+		return arrOrStr;
+	}
+
+	index = parseInt(index);
+	if (!isPositiveNr(index)) {
+		return arrOrStr;
+	}
+
+	if (type === j79.TYPE_ARRAY) {
+		arrOrStr.splice(index, 0, val);
+	}
+
+	if (type === j79.TYPE_STRING && j79.isPrimitive(val)) {
+		arrOrStr = arrOrStr.substr(0, index) + val + arrOrStr.substr(index);
+	}
+
+	return arrOrStr;
+};
+
+systemFunctions.delAt = function (arrOrStr, index, cnt) {
+	var type = j79.getType(arrOrStr);
+	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
+		return arrOrStr;
+	}
+
+	index = parseInt(index);
+	if (!isPositiveNr(index)) {
+		return arrOrStr;
+	}
+
+	cnt = parseInt(cnt);
+	if (!isPositiveNr(cnt)) {
+		cnt = 1;
+	}
+
+	if (type === j79.TYPE_ARRAY) {
+		arrOrStr.splice(index, cnt);
+	}
+
+	if (type === j79.TYPE_STRING) {
+		arrOrStr = arrOrStr.substr(0, index) + arrOrStr.substr(index + cnt);
+	}
+
+	return arrOrStr;
+};
+
 systemFunctions.keyVals = function (obj, key) {
 	if (!j79.isObject(obj)) {
 		j79.winston.debug('The keyVal() function is not applicable because first parameter is not an object. Skipping...');
@@ -108,55 +184,6 @@ systemFunctions.keyVals = function (obj, key) {
 	}
 
 	return result;
-};
-
-systemFunctions.updAt = function (arrOrStr, val, index) {
-	if (!j79.isArray(arrOrStr)) {
-		return arrOrStr;
-	}
-
-	index = parseInt(index);
-
-	if (index === index && index >= 0) {
-		arrOrStr[index] = val;
-	}
-
-	return arrOrStr;
-};
-
-systemFunctions.insAt = function (arrOrStr, val, index) {
-	if (!j79.isArray(arrOrStr)) {
-		return arrOrStr;
-	}
-
-	index = parseInt(index);
-
-	if (index === index && index >= 0) {
-		arrOrStr.splice(index, 0, val);
-	}
-
-	return arrOrStr;
-};
-
-systemFunctions.delAt = function (arrOrStr, index, cnt) {
-	if (!j79.isArray(arrOrStr)) {
-		return arrOrStr;
-	}
-
-	index = parseInt(index);
-	cnt = parseInt(cnt);
-
-	if (index !== index || index < 0) {
-		return arrOrStr;
-	}
-
-	if (cnt !== cnt || cnt < 0) {
-		cnt = 1;
-	}
-
-	arrOrStr.splice(index, cnt);
-
-	return arrOrStr;
 };
 
 // resolves key set from "obj" at "level" level

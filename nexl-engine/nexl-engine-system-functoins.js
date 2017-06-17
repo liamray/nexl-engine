@@ -110,53 +110,53 @@ systemFunctions.keyVals = function (obj, key) {
 	return result;
 };
 
-systemFunctions.updAt = function (arr, val, index) {
-	if (!j79.isArray(arr)) {
-		return arr;
+systemFunctions.updAt = function (arrOrStr, val, index) {
+	if (!j79.isArray(arrOrStr)) {
+		return arrOrStr;
 	}
 
 	index = parseInt(index);
 
 	if (index === index && index >= 0) {
-		arr[index] = val;
+		arrOrStr[index] = val;
 	}
 
-	return arr;
+	return arrOrStr;
 };
 
-systemFunctions.insAt = function (arr, val, index) {
-	if (!j79.isArray(arr)) {
-		return arr;
+systemFunctions.insAt = function (arrOrStr, val, index) {
+	if (!j79.isArray(arrOrStr)) {
+		return arrOrStr;
 	}
 
 	index = parseInt(index);
 
 	if (index === index && index >= 0) {
-		arr.splice(index, 0, val);
+		arrOrStr.splice(index, 0, val);
 	}
 
-	return arr;
+	return arrOrStr;
 };
 
-systemFunctions.delAt = function (arr, index, cnt) {
-	if (!j79.isArray(arr)) {
-		return arr;
+systemFunctions.delAt = function (arrOrStr, index, cnt) {
+	if (!j79.isArray(arrOrStr)) {
+		return arrOrStr;
 	}
 
 	index = parseInt(index);
 	cnt = parseInt(cnt);
 
 	if (index !== index || index < 0) {
-		return arr;
+		return arrOrStr;
 	}
 
 	if (cnt !== cnt || cnt < 0) {
 		cnt = 1;
 	}
 
-	arr.splice(index, cnt);
+	arrOrStr.splice(index, cnt);
 
-	return arr;
+	return arrOrStr;
 };
 
 // resolves key set from "obj" at "level" level
@@ -257,19 +257,19 @@ systemFunctions.concat = function () {
 	return undefined;
 };
 
-systemFunctions.setVal = function (obj, key, val) {
-	if (j79.isObject(obj)) {
-		obj[key] = val;
-	}
-
-	return obj;
-};
-
 systemFunctions.setKey = function (obj, currentKey, newKey) {
 	if (j79.isObject(obj)) {
 		var val = obj[currentKey];
 		delete obj[currentKey];
 		obj[newKey] = val;
+	}
+
+	return obj;
+};
+
+systemFunctions.setVal = function (obj, key, val) {
+	if (j79.isObject(obj)) {
+		obj[key] = val;
 	}
 
 	return obj;
@@ -292,16 +292,16 @@ systemFunctions.makeObj = function (key, val) { // <---- DEPRECATED ! Use obj() 
 };
 
 // replaces items in array or string
-systemFunctions.replaceAll = function (entity, searchItem, replace) {
-	if (j79.isArray(entity)) {
-		return replaceAll4Array(entity, searchItem, replace);
+systemFunctions.replaceAll = function (arrOrStr, searchItem, replace) {
+	if (j79.isArray(arrOrStr)) {
+		return replaceAll4Array(arrOrStr, searchItem, replace);
 	}
 
-	if (j79.isString(entity)) {
-		return entity.replace(new RegExp(searchItem, 'g'), replace);
+	if (j79.isString(arrOrStr)) {
+		return arrOrStr.replace(new RegExp(searchItem, 'g'), replace);
 	}
 
-	return entity;
+	return arrOrStr;
 };
 
 systemFunctions.not = function (param) {
@@ -315,45 +315,45 @@ systemFunctions.not = function (param) {
 ///////////////////////////////////////////////////////////////////////////////
 // is*
 
-systemFunctions.isMatch = function (entity, regex, flags) {
-	if (!j79.isString(entity)) {
-		return entity;
+systemFunctions.isMatch = function (str, regex, flags) {
+	if (!j79.isString(str)) {
+		return str;
 	}
 
-	return new RegExp(regex, flags).test(entity);
+	return new RegExp(regex, flags).test(str);
 };
 
 // is string or array contains value
-systemFunctions.isContains = function (entity, item) {
-	if (j79.isArray(entity) || j79.isString(entity)) {
-		return entity.indexOf(item) >= 0;
+systemFunctions.isContains = function (arrOrStr, item) {
+	if (j79.isArray(arrOrStr) || j79.isString(arrOrStr)) {
+		return arrOrStr.indexOf(item) >= 0;
 	}
 
-	return entity;
+	return arrOrStr;
 };
 
-systemFunctions.isEquals = function (entity1, entity2) {
-	return entity1 === entity2;
+systemFunctions.isEquals = function (item1, item2) {
+	return item1 === item2;
 };
 
-systemFunctions.isEq = function (entity1, entity2) {
-	return entity1 === entity2;
+systemFunctions.isEq = function (item1, item2) {
+	return item1 === item2;
 };
 
-systemFunctions.isGT = function (entity1, entity2) {
-	return entity1 > entity2;
+systemFunctions.isGT = function (item1, item2) {
+	return item1 > item2;
 };
 
-systemFunctions.isLT = function (entity1, entity2) {
-	return entity1 < entity2;
+systemFunctions.isLT = function (item1, item2) {
+	return item1 < item2;
 };
 
-systemFunctions.isGE = function (entity1, entity2) {
-	return entity1 >= entity2;
+systemFunctions.isGE = function (item1, item2) {
+	return item1 >= item2;
 };
 
-systemFunctions.isLE = function (entity1, entity2) {
-	return entity1 <= entity2;
+systemFunctions.isLE = function (item1, item2) {
+	return item1 <= item2;
 };
 
 systemFunctions.isBool = function (item) {
@@ -395,72 +395,72 @@ systemFunctions.isObject = function (item) {
 ///////////////////////////////////////////////////////////////////////////////
 // if*
 
-systemFunctions.ifMatch = function (entity, regex, thenIf, elseIf) {
-	if (!j79.isString(entity)) {
-		return entity;
+systemFunctions.ifMatch = function (str, regex, thenIf, elseIf) {
+	if (!j79.isString(str)) {
+		return str;
 	}
 
-	return systemFunctions.isMatch(entity, regex) ? thenIf : elseIf;
+	return systemFunctions.isMatch(str, regex) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNMatch = function (entity, regex, thenIf, elseIf) {
-	return systemFunctions.ifMatch(entity, regex, elseIf, thenIf);
+systemFunctions.ifNMatch = function (str, regex, thenIf, elseIf) {
+	return systemFunctions.ifMatch(str, regex, elseIf, thenIf);
 };
 
-systemFunctions.ifMatchEx = function (entity, regex, flags, thenIf, elseIf) {
-	if (!j79.isString(entity)) {
-		return entity;
+systemFunctions.ifMatchEx = function (str, regex, flags, thenIf, elseIf) {
+	if (!j79.isString(str)) {
+		return str;
 	}
 
-	return systemFunctions.isMatch(entity, regex, flags) ? thenIf : elseIf;
+	return systemFunctions.isMatch(str, regex, flags) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNMatchEx = function (entity, regex, flags, thenIf, elseIf) {
-	return systemFunctions.ifMatchEx(entity, regex, flags, elseIf, thenIf);
+systemFunctions.ifNMatchEx = function (str, regex, flags, thenIf, elseIf) {
+	return systemFunctions.ifMatchEx(str, regex, flags, elseIf, thenIf);
 };
 
-systemFunctions.ifContains = function (entity, item, thenIf, elseIf) {
-	if (j79.isArray(entity) || j79.isString(entity)) {
-		return entity.indexOf(item) >= 0 ? thenIf : elseIf;
+systemFunctions.ifContains = function (arrOrStr, item, thenIf, elseIf) {
+	if (j79.isArray(arrOrStr) || j79.isString(arrOrStr)) {
+		return arrOrStr.indexOf(item) >= 0 ? thenIf : elseIf;
 	}
 
-	return entity;
+	return arrOrStr;
 };
 
-systemFunctions.ifNContains = function (entity, item, thenIf, elseIf) {
-	return systemFunctions.ifContains(entity, item, elseIf, thenIf);
+systemFunctions.ifNContains = function (arrOrStr, item, thenIf, elseIf) {
+	return systemFunctions.ifContains(arrOrStr, item, elseIf, thenIf);
 };
 
-systemFunctions.ifEquals = function (entity1, entity2, thenIf, elseIf) {
-	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
+systemFunctions.ifEquals = function (item1, item2, thenIf, elseIf) {
+	return systemFunctions.isEquals(item1, item2) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNEquals = function (entity1, entity2, thenIf, elseIf) {
-	return systemFunctions.ifEquals(entity1, entity2, elseIf, thenIf);
+systemFunctions.ifNEquals = function (item1, item2, thenIf, elseIf) {
+	return systemFunctions.ifEquals(item1, item2, elseIf, thenIf);
 };
 
-systemFunctions.ifEq = function (entity1, entity2, thenIf, elseIf) {
-	return systemFunctions.isEquals(entity1, entity2) ? thenIf : elseIf;
+systemFunctions.ifEq = function (item1, item2, thenIf, elseIf) {
+	return systemFunctions.isEquals(item1, item2) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNEq = function (entity1, entity2, thenIf, elseIf) {
-	return systemFunctions.ifEq(entity1, entity2, elseIf, thenIf);
+systemFunctions.ifNEq = function (item1, item2, thenIf, elseIf) {
+	return systemFunctions.ifEq(item1, item2, elseIf, thenIf);
 };
 
-systemFunctions.ifGT = function (entity1, entity2, thenIf, elseIf) {
-	return entity1 > entity2 ? thenIf : elseIf;
+systemFunctions.ifGT = function (item1, item2, thenIf, elseIf) {
+	return item1 > item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifLT = function (entity1, entity2, thenIf, elseIf) {
-	return entity1 < entity2 ? thenIf : elseIf;
+systemFunctions.ifLT = function (item1, item2, thenIf, elseIf) {
+	return item1 < item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifGE = function (entity1, entity2, thenIf, elseIf) {
-	return entity1 >= entity2 ? thenIf : elseIf;
+systemFunctions.ifGE = function (item1, item2, thenIf, elseIf) {
+	return item1 >= item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifLE = function (entity1, entity2, thenIf, elseIf) {
-	return entity1 <= entity2 ? thenIf : elseIf;
+systemFunctions.ifLE = function (item1, item2, thenIf, elseIf) {
+	return item1 <= item2 ? thenIf : elseIf;
 };
 
 systemFunctions.ifBool = function (item, thenIf, elseIf) {
@@ -556,7 +556,7 @@ systemFunctions.inc = function (number) {
 	return result;
 };
 
-systemFunctions.dec = function (number, val) {
+systemFunctions.dec = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -573,7 +573,7 @@ systemFunctions.dec = function (number, val) {
 	return result;
 };
 
-systemFunctions.div = function (number, val) {
+systemFunctions.div = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -586,7 +586,7 @@ systemFunctions.div = function (number, val) {
 	return result;
 };
 
-systemFunctions.mult = function (number, val) {
+systemFunctions.mult = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -599,7 +599,7 @@ systemFunctions.mult = function (number, val) {
 	return result;
 };
 
-systemFunctions.mod = function (number, val) {
+systemFunctions.mod = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}

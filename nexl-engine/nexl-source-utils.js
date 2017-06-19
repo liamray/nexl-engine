@@ -301,8 +301,13 @@ function parseAndPushExpressionItem(item, result) {
 function parseAndPushFunctionItem(item, result) {
 	var variableInfo = {
 		type: item.type,
-		name: item.id.name
+		name: item.id.name,
+		params: []
 	};
+
+	for (var param in item.params) {
+		variableInfo.params.push(item.params[param].name);
+	}
 
 	result.push(variableInfo);
 }

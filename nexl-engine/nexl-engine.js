@@ -873,6 +873,8 @@ NexlExpressionEvaluator.prototype.applyEliminateArrayElements = function () {
 
 	// wrapping with array
 	actionValue = j79.wrapWithArrayIfNeeded(actionValue);
+	// making array copy because of self bug : ${arr-${arr}}
+	actionValue = actionValue.concat();
 
 	// iterating over actionValue and eliminating array elements
 	for (var index in actionValue) {
@@ -1405,27 +1407,29 @@ function NexlExpressionEvaluator(context, nexlExpressionMD, objInfo) {
 
 
 NexlEngine.prototype.processArrayItem = function (arr, objInfo) {
-	var result = [];
+	var arrCopy = arr.concat();
+	arr.length = 0;
 
-	for (var index in arr) {
-		var arrItem = arr[index];
+	for (var index in arrCopy) {
+		var arrItem = arrCopy[index];
 		var item = this.processItem(arrItem, objInfo);
 
 		// !U UNDEFINED_VALUE_OPERATIONS
 		if (item === undefined && this.isEvaluateAsUndefined) {
-			result.push(undefined);
+			arr.push(undefined);
 			continue;
 		}
 
 		if (j79.isArray(item)) {
-			result = result.concat(item)
+			arr.push.apply(arr, item);
 		} else {
-			result.push(item);
+			arr.push(item);
 		}
 	}
 
-	return result;
+	return arr;
 };
+
 
 NexlEngine.prototype.processObjectItem = function (obj, objInfo) {
 	// cloning obj object as result object because we need to know his computable values

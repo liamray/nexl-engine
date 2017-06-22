@@ -52,12 +52,13 @@ function concatArrays(arguments) {
 	for (var index in arguments) {
 		var item = arguments[index];
 
-		if (!j79.isArray(item)) {
-			j79.winston.debug('Skipping non-array value in concat() function');
-			continue;
+		if (j79.isArray(item)) {
+			result = result.concat(item);
+		} else {
+			result.push(item);
 		}
 
-		result = result.concat(item);
+
 	}
 
 	return result;

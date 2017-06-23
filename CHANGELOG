@@ -16,6 +16,7 @@
     - fixed nexl expressions deep resolution bug ( affects to iterations )
     - fixed bug in ^S action. Expression deep resolution was missed
     - fixed bug in !U action for arrays. Undefined value was eliminated instead just be undefined
+    - fixed arrays and objects resolution bug ( every time was created a new instance of arrays and objects )
 
 2.2.1 | 26-MAY-2017
 ===================

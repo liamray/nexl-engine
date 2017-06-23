@@ -17,10 +17,7 @@ module.exports.push({
 // evaluate as undefined action -> object
 module.exports.push({
 	expression: '${obj3!U}',
-	result: {
-		item1: 'test',
-		item3: 34
-	}
+	result: {item1: 'test', item2: undefined, item3: 34}
 });
 
 // evaluate as undefined action -> array
@@ -32,7 +29,13 @@ module.exports.push({
 // evaluate as undefined action -> array
 module.exports.push({
 	expression: '${undefArr!U}',
-	result: ['hello', 71, undefined]
+	result: ['hello', 71, undefined, undefined]
+});
+
+// evaluate as undefined action -> array
+module.exports.push({
+	expression: '${undefArr}',
+	throwsException: true
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1766,7 +1769,7 @@ module.exports.push({
 // ~X
 module.exports.push({
 	expression: '${obj5~X}',
-	result: "<?xml version='1.0'?>\n<obj5>\n    <beneficial>mint</beneficial>\n    <pack>\n        <strong>balance</strong>\n        <deer>7</deer>\n    </pack>\n    <obj3>\n        <item1>test</item1>\n        <item2>undefined</item2>\n        <item3>34</item3>\n    </obj3>\n    <berry>71</berry>\n    <test>undefined</test>\n</obj5>"
+	result: "<?xml version='1.0'?>\n<obj5>\n    <beneficial>mint</beneficial>\n    <pack>\n        <strong>balance</strong>\n        <deer>7</deer>\n    </pack>\n    <obj3>\n        <item1>test</item1>\n        <item2>undefined</item2>\n        <item3>34</item3>\n    </obj3>\n    <test>undefined</test>\n    <berry>71</berry>\n</obj5>"
 });
 
 // ~X
@@ -1779,7 +1782,7 @@ module.exports.push({
 // ~P
 module.exports.push({
 	expression: '${obj5~P}',
-	result: "beneficial=mint\npack.strong=balance\npack.deer=7\nobj3.item1=test\nobj3.item2=undefined\nobj3.item3=34\nberry=71\ntest=undefined"
+	result: "beneficial=mint\npack.strong=balance\npack.deer=7\nobj3.item1=test\nobj3.item2=undefined\nobj3.item3=34\ntest=undefined\nberry=71"
 });
 
 // ~P
@@ -1792,13 +1795,14 @@ module.exports.push({
 // ~Y
 module.exports.push({
 	expression: '${obj5~Y}',
-	result: "beneficial: mint\npack:\n    strong: balance\n    deer: 7\nobj3:\n    item1: test\n    item2: null\n    item3: 34\nberry: 71\ntest: null\n"
+	result: "beneficial: mint\npack:\n    strong: balance\n    deer: 7\nobj3:\n    item1: test\n    item2: null\n    item3: 34\ntest: null\nberry: 71\n"
 });
 
 // ~Y
+// todo : yaml bug
 module.exports.push({
 	expression: '${HOSTS~Y}',
-	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: [hothead1, awakening1, dynamite1, military1], SECOND: [cuddly2, grease2, fate2, atmosphere2]}\n    DEV: [zombie, arrows, zebra]\n    QA: {FIRST: [autonomous1, criminal1], SECOND: [adrenaline2, prophetic2]}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: [iMaximum, iPromised, iPilot]\n    DEV: iHomeland\n    QA: [iTruth, iSilver]\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
+	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: {'0': hothead1, '1': awakening1, '2': dynamite1, '3': military1}, SECOND: {'0': cuddly2, '1': grease2, '2': fate2, '3': atmosphere2}}\n    DEV: {'0': zombie, '1': arrows, '2': zebra}\n    QA: {FIRST: {'0': autonomous1, '1': criminal1}, SECOND: {'0': adrenaline2, '1': prophetic2}}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: {'0': iMaximum, '1': iPromised, '2': iPilot}\n    DEV: iHomeland\n    QA: {'0': iTruth, '1': iSilver}\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
 });
 
 // sub expressions

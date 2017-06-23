@@ -1414,12 +1414,6 @@ NexlEngine.prototype.processArrayItem = function (arr, objInfo) {
 		var arrItem = arrCopy[index];
 		var item = this.processItem(arrItem, objInfo);
 
-		// !U UNDEFINED_VALUE_OPERATIONS
-		if (item === undefined && this.isEvaluateAsUndefined) {
-			arr.push(undefined);
-			continue;
-		}
-
 		if (j79.isArray(item)) {
 			arr.push.apply(arr, item);
 		} else {
@@ -1432,26 +1426,21 @@ NexlEngine.prototype.processArrayItem = function (arr, objInfo) {
 
 
 NexlEngine.prototype.processObjectItem = function (obj, objInfo) {
-	// cloning obj object as result object because we need to know his computable values
-	// for example : { a:'1', b:'${__this__.b}', inner: {c:'${__parent__.b}'} } will not work for inner.c if obj is not cloned
-	var result = nexlEngineUtils.deepMergeInner({}, obj);
-
-	// copying a __parent__ property
 	var parent = obj[PARENT] === undefined ? objInfo.parent : obj[PARENT];
-	nexlEngineUtils.setReadOnlyProperty(result, PARENT, parent);
+	nexlEngineUtils.setReadOnlyProperty(obj, PARENT, parent);
 
 	// result keys
-	var keys = Object.keys(result);
+	var keys = Object.keys(obj);
 
 	// this object info is applied for sub objects
 	var parent4Objects = {
-		parent: result
+		parent: obj
 	};
 
 	// this object info is applied for non object, for example for strings
 	var parent4Others = {
-		this: result,
-		parent: result[PARENT]
+		this: obj,
+		parent: obj[PARENT]
 	};
 
 	// iterating over over keys and evaluating
@@ -1460,8 +1449,8 @@ NexlEngine.prototype.processObjectItem = function (obj, objInfo) {
 		var evaluatedKey = this.processItem(key, parent4Others);
 
 		// !U UNDEFINED_VALUE_OPERATIONS
-		if (evaluatedKey === undefined && this.isEvaluateAsUndefined) {
-			delete result[key];
+		if (evaluatedKey === undefined) {
+			delete obj[key];
 			continue;
 		}
 
@@ -1470,19 +1459,18 @@ NexlEngine.prototype.processObjectItem = function (obj, objInfo) {
 			throw util.format('Cannot assemble JavaScript object. The [%s] key is evaluated to a non-primitive data type %s', key, j79.getType(evaluatedKey));
 		}
 
-		var value = result[key];
-		value = this.processItem(value, j79.isObject(value) ? parent4Objects : parent4Others);
-		delete result[key];
+		var value = obj[key];
 
-		// !U UNDEFINED_VALUE_OPERATIONS
-		if (value === undefined && this.isEvaluateAsUndefined) {
-			continue;
+		// has got new key ? delete the old one
+		if (key != evaluatedKey) {
+			delete obj[key];
 		}
 
-		result[evaluatedKey] = value;
+		value = this.processItem(value, j79.isObject(value) ? parent4Objects : parent4Others);
+		obj[evaluatedKey] = value;
 	}
 
-	return result;
+	return obj;
 };
 
 NexlEngine.prototype.processStringItem = function (str, objInfo) {

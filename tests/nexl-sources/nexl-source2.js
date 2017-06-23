@@ -93,8 +93,10 @@ function returnsArrayOfObjects() {
 
 obj3 = {
 	item1: 'test',
-	item2: '${undefinedVar}',
-	item3: 34
+	item2: '${undefinedVar} asd',
+	item3: 34,
+	'${undefinedVar}': 'test',
+	'${undefinedVar} asd': 'test'
 };
 
 longStr = 'The distance to the work is 155 km';
@@ -117,7 +119,7 @@ obj5 = {
 		strong: 'balance',
 		deer: 7
 	},
-	obj3: '${obj3}',
+	obj3: '${obj3!U}',
 	'${strItem}': '${intItem}',
 	'test': '${undefinedVariable}'
 };
@@ -308,4 +310,4 @@ deepObject = {
 
 assignVars1 = '${var1}';
 
-undefArr = ['hello', '${intItem}', '${undefinedVar!U} hello'];
+undefArr = ['hello', '${intItem}', '${undefinedVar!U} hello', undefined];

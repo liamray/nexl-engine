@@ -2188,6 +2188,49 @@ module.exports.push({
 	}
 });
 
+// setVal
+module.exports.push({
+	expression: '${obj1|@new|@79:num|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: {strong: 'balance', deer: 7},
+		new: 79
+	}
+});
+
+// setVal
+module.exports.push({
+	expression: '${obj1|@pack|@79:num|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: 79
+	}
+});
+
+// setKey()
+module.exports.push({
+	expression: '${obj1|@71|@72|setKey();obj1}',
+	result: {
+		'72': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: {strong: 'balance', deer: 7}
+	}
+});
+
 module.exports.push({
 	expression: '${obj1|@71|strItem|setKey()}',
 	result: {
@@ -2387,6 +2430,20 @@ module.exports.push({
 module.exports.push({
 	expression: '${arr1|@hello|@bye|updAt()}',
 	result: ['queen', 'muscle', 79, false]
+});
+
+// updAt()
+module.exports.push({
+	expression: '${fruits|@${Math.PI}#A+lol|@0|updAt();fruits}',
+	result: [3.141592653589793,
+		'lol',
+		'Lemon',
+		'Banana',
+		'Apple',
+		null,
+		undefined,
+		null,
+		undefined]
 });
 
 // swapping first and second array element

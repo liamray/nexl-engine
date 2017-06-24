@@ -1,7 +1,7 @@
 module.exports = [];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// !U tests
+// ! miscellaneous operations tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
 	expression: '${evaluateToUndefined2!U}',
@@ -37,6 +37,39 @@ module.exports.push({
 	expression: '${undefArr}',
 	throwsException: true
 });
+
+// !CL
+module.exports.push({
+	expression: '${arr1!CL-queen-muscle;arr1}',
+	result: ['queen', 'muscle', 79, false]
+});
+
+module.exports.push({
+	expression: '${obj1!CL|@pack|@lol|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: {strong: 'balance', deer: 7}
+	}
+});
+
+module.exports.push({
+	expression: '${obj1|@pack|@lol|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: 'lol'
+	}
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -2929,32 +2962,6 @@ module.exports.push({
 // ~ object operations tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
-	expression: '${obj1~CL|@pack|@lol|setVal();obj1}',
-	result: {
-		'71': 'berry',
-		beneficial: 'mint',
-		test: 'righteous',
-		'()': 'trick',
-		disturbed: 46,
-		price: true,
-		pack: {strong: 'balance', deer: 7}
-	}
-});
-
-module.exports.push({
-	expression: '${obj1|@pack|@lol|setVal();obj1}',
-	result: {
-		'71': 'berry',
-		beneficial: 'mint',
-		test: 'righteous',
-		'()': 'trick',
-		disturbed: 46,
-		price: true,
-		pack: 'lol'
-	}
-});
-
-module.exports.push({
 	expression: 'KEYS=[${obj1~K&,}] VALUES=[${obj1~V&,}]',
 	result: 'KEYS=[71,beneficial,test,(),disturbed,price,pack] VALUES=[berry,mint,righteous,trick,46,true,balance,7]'
 });
@@ -3153,12 +3160,6 @@ module.exports.push({
 module.exports.push({
 	expression: '${arr1-${arr1}}',
 	result: []
-});
-
-// #CL
-module.exports.push({
-	expression: '${arr1#CL-queen-muscle;arr1}',
-	result: ['queen', 'muscle', 79, false]
 });
 
 //

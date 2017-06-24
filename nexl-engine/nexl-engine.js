@@ -712,12 +712,6 @@ NexlExpressionEvaluator.prototype.applyObjectOperationsAction = function () {
 			this.produceYAML();
 			return;
 		}
-
-		// ~CL clone object
-		case nexlExpressionsParser.OBJECT_OPERATIONS.CLONE_OBJECT : {
-			this.result = nexlEngineUtils.deepMergeInner({}, this.result);
-			return;
-		}
 	}
 };
 
@@ -875,12 +869,6 @@ NexlExpressionEvaluator.prototype.applyArrayOperationsAction = function () {
 		// #F
 		case nexlExpressionsParser.ARRAY_OPERATIONS.GET_FIRST_OR_NOTHING: {
 			this.result = this.result.length === 1 ? this.result[0] : undefined;
-			return;
-		}
-
-		// #CL - clone array
-		case nexlExpressionsParser.ARRAY_OPERATIONS.CLONE_ARRAY: {
-			this.result = this.result.slice(0);
 			return;
 		}
 	}
@@ -1070,14 +1058,7 @@ NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 	}
 };
 
-NexlExpressionEvaluator.prototype.undefinedValueOperations = function () {
-	// empty values
-	if (this.action.actionValue !== nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.MAKE_EMPTY_ITEMS_UNDEFINED) {
-		return;
-	}
-
-	this.makeDeepResolution4String();
-
+NexlExpressionEvaluator.prototype.makeEmptyItemsUndefined = function () {
 	// converting empty array to undefined
 	if (j79.isArray(this.result)) {
 		this.result = this.result.length < 1 ? undefined : this.result;
@@ -1097,6 +1078,39 @@ NexlExpressionEvaluator.prototype.undefinedValueOperations = function () {
 	}
 
 	winston.debug('[actionNr=%s] is not applicable because current value is not an empty string/array/object. Skipping...', this.actionNr);
+};
+
+NexlExpressionEvaluator.prototype.clone = function () {
+	if (j79.isArray(this.result)) {
+		this.result = this.result.slice(0);
+		return;
+	}
+
+	if (j79.isObject(this.result)) {
+		this.result = nexlEngineUtils.deepMergeInner({}, this.result);
+		return;
+	}
+};
+
+NexlExpressionEvaluator.prototype.miscellaneousOperations = function () {
+	// empty values
+	if (this.action.actionValue === nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.EVALUATE_TO_UNDEFINED) {
+		return;
+	}
+
+	this.makeDeepResolution4String();
+
+	switch (this.action.actionValue) {
+		case nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.MAKE_EMPTY_ITEMS_UNDEFINED: {
+			this.makeEmptyItemsUndefined();
+			return;
+		}
+
+		case nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.CLONE: {
+			this.clone();
+			return;
+		}
+	}
 };
 
 NexlExpressionEvaluator.prototype.applyMandatoryValueValidatorAction = function () {
@@ -1268,10 +1282,10 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 			return;
 		}
 
-		// !E, !U unedfined value operations
+		// !E, !U miscellaneous value operations
 		case nexlExpressionsParser.ACTIONS.MISCELLANEOUS_OPERATIONS: {
 			this.logActionWithValue();
-			this.undefinedValueOperations();
+			this.miscellaneousOperations();
 			return;
 		}
 

@@ -82,7 +82,7 @@ EvalAndSubstChunks.prototype.evalAndSubstChunksInner = function () {
 		// chunkValue must be a primitive or array of primitives. can't be object|function or array of objects|functions|arrays
 		var chunkValue = new NexlExpressionEvaluator(this.context, chunk2Substitute, this.data.objInfo).eval();
 
-		// !U UNDEFINED_VALUE_OPERATIONS action
+		// !U MISCELLANEOUS_OPERATIONS action
 		if (chunkValue === undefined && this.isEvaluateToUndefined) {
 			return undefined;
 		}
@@ -166,7 +166,7 @@ NexlExpressionEvaluator.prototype.retrieveEvaluateToUndefinedAction = function (
 	// iterating over actions
 	for (var index in this.nexlExpressionMD.actions) {
 		var action = this.nexlExpressionMD.actions[index];
-		if (action.actionId === nexlExpressionsParser.ACTIONS.UNDEFINED_VALUE_OPERATIONS && action.actionValue === nexlExpressionsParser.UNDEFINED_VALUE_OPERATIONS_OPTIONS.EVALUATE_TO_UNDEFINED) {
+		if (action.actionId === nexlExpressionsParser.ACTIONS.MISCELLANEOUS_OPERATIONS && action.actionValue === nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.EVALUATE_TO_UNDEFINED) {
 			this.isEvaluateToUndefined = true;
 			return;
 		}
@@ -667,43 +667,43 @@ NexlExpressionEvaluator.prototype.applyObjectOperationsAction = function () {
 
 	switch (actionValue) {
 		// ~O
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.CONVERT_TO_OBJECT : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.CONVERT_TO_OBJECT : {
 			this.convert2Object();
 			return;
 		}
 
 		// ~K
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.RESOLVE_KEYS : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.RESOLVE_KEYS : {
 			this.resolveObjectKeys();
 			return;
 		}
 
 		// ~V
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.RESOLVE_VALUES : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.RESOLVE_VALUES : {
 			this.resolveObjectValues();
 			return;
 		}
 
 		// ~P
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.PRODUCE_KEY_VALUE_PAIRS : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.PRODUCE_KEY_VALUE_PAIRS : {
 			this.produceKeyValuesPairs();
 			return;
 		}
 
 		// ~X
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.PRODUCE_XML : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.PRODUCE_XML : {
 			this.produceXML();
 			return;
 		}
 
 		// ~Y
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.PRODUCE_YAML : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.PRODUCE_YAML : {
 			this.produceYAML();
 			return;
 		}
 
 		// ~CL clone object
-		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.CLONE_OBJECT : {
+		case nexlExpressionsParser.OBJECT_OPERATIONS.CLONE_OBJECT : {
 			this.result = nexlEngineUtils.deepMergeInner({}, this.result);
 			return;
 		}
@@ -816,7 +816,7 @@ NexlExpressionEvaluator.prototype.applyArrayOperationsAction = function () {
 	this.makeDeepResolution4String();
 
 	// is convert to array ?
-	if (this.action.actionValue === nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.CONVERT_TO_ARRAY) {
+	if (this.action.actionValue === nexlExpressionsParser.ARRAY_OPERATIONS.CONVERT_TO_ARRAY) {
 		this.convert2Array();
 		return;
 	}
@@ -831,44 +831,44 @@ NexlExpressionEvaluator.prototype.applyArrayOperationsAction = function () {
 
 	switch (this.action.actionValue) {
 		// #S
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.SORT_ASC: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.SORT_ASC: {
 			this.result = this.result.sort();
 			return;
 		}
 
 		// #s
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.SORT_DESC: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.SORT_DESC: {
 			this.result = this.result.sort();
 			this.result = this.result.reverse();
 			return;
 		}
 
 		// #U
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.UNIQUE: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.UNIQUE: {
 			this.makeUniq();
 			return;
 		}
 
 		// #D
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.DUPLICATES: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.DUPLICATES: {
 			this.makeDuplicates();
 			return;
 		}
 
 		// #LEN
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.LENGTH: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.LENGTH: {
 			this.result = this.result.length;
 			return;
 		}
 
 		// #F
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.GET_FIRST_OR_NOTHING: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.GET_FIRST_OR_NOTHING: {
 			this.result = this.result.length === 1 ? this.result[0] : undefined;
 			return;
 		}
 
 		// #CL - clone array
-		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.CLONE_ARRAY: {
+		case nexlExpressionsParser.ARRAY_OPERATIONS.CLONE_ARRAY: {
 			this.result = this.result.slice(0);
 			return;
 		}
@@ -1012,7 +1012,7 @@ NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
 NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 	this.makeDeepResolution4String();
 
-	if (this.action.actionValue === nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.STRINGIFY) {
+	if (this.action.actionValue === nexlExpressionsParser.STRING_OPERATIONS.STRINGIFY) {
 		this.makeDeepResolution();
 		this.result = JSON.stringify(this.result);
 		return;
@@ -1028,31 +1028,31 @@ NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 
 	switch (this.action.actionValue) {
 		// ^U
-		case nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.UPPERCASE: {
+		case nexlExpressionsParser.STRING_OPERATIONS.UPPERCASE: {
 			this.result = this.result.toUpperCase();
 			return;
 		}
 
 		// ^U1
-		case nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.CAPITALIZE_FIRST_LETTER: {
+		case nexlExpressionsParser.STRING_OPERATIONS.CAPITALIZE_FIRST_LETTER: {
 			this.result = this.result.charAt(0).toUpperCase() + this.result.slice(1);
 			return;
 		}
 
 		// ^L
-		case nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.LOWERCASE: {
+		case nexlExpressionsParser.STRING_OPERATIONS.LOWERCASE: {
 			this.result = this.result.toLowerCase();
 			return;
 		}
 
 		// ^LEN
-		case nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.LENGTH: {
+		case nexlExpressionsParser.STRING_OPERATIONS.LENGTH: {
 			this.result = this.result.length;
 			return;
 		}
 
 		// ^T
-		case nexlExpressionsParser.STRING_OPERATIONS_OPTIONS.TRIM: {
+		case nexlExpressionsParser.STRING_OPERATIONS.TRIM: {
 			this.result = this.result.trim();
 			return;
 		}
@@ -1061,7 +1061,7 @@ NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 
 NexlExpressionEvaluator.prototype.undefinedValueOperations = function () {
 	// empty values
-	if (this.action.actionValue !== nexlExpressionsParser.UNDEFINED_VALUE_OPERATIONS_OPTIONS.MAKE_EMPTY_ITEMS_UNDEFINED) {
+	if (this.action.actionValue !== nexlExpressionsParser.MISCELLANEOUS_OPERATIONS.MAKE_EMPTY_ITEMS_UNDEFINED) {
 		return;
 	}
 
@@ -1258,7 +1258,7 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 		}
 
 		// !E, !U unedfined value operations
-		case nexlExpressionsParser.ACTIONS.UNDEFINED_VALUE_OPERATIONS: {
+		case nexlExpressionsParser.ACTIONS.MISCELLANEOUS_OPERATIONS: {
 			this.logActionWithValue();
 			this.undefinedValueOperations();
 			return;
@@ -1472,7 +1472,7 @@ NexlEngine.prototype.processObjectItem = function (obj, objInfo) {
 		var key = keys[index];
 		var evaluatedKey = this.processItem(key, parent4Others);
 
-		// !U UNDEFINED_VALUE_OPERATIONS
+		// !U MISCELLANEOUS_OPERATIONS
 		if (evaluatedKey === undefined) {
 			delete obj[key];
 			continue;

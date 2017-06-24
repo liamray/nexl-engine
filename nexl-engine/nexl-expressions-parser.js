@@ -24,7 +24,7 @@ const ACTIONS = {
 	'ELIMINATE': '-',
 	'APPEND_MERGE_CONCAT': '+',
 	'STRING_OPERATIONS': '^', // ^U upper case, ^U1 capitalize first letter, ^L power case, ^LEN length, ^T trim, ^Z make undefined for empty string
-	'UNDEFINED_VALUE_OPERATIONS': '!',
+	'MISCELLANEOUS_OPERATIONS': '!',
 	'MANDATORY_VALUE_VALIDATOR': '*',
 	'PUSH_FUNCTION_PARAM': '|',
 	'ASSIGN_VARIABLE': '=',
@@ -49,7 +49,7 @@ const ACTIONS_DESC = {
 	'-': 'Eliminate items from arrays or objects',
 	'+': 'Add items to array or merge objects',
 	'^': 'String operations',
-	'!': 'Undefined value operations',
+	'!': 'Miscellaneous operations',
 	'*': 'Mandatory value validator',
 	'|': 'Push current value to stack',
 	';': 'Actions separator',
@@ -80,7 +80,7 @@ const NEXL_TYPES = {
 	'u': JS_PRIMITIVE_TYPES.UNDEFINED
 };
 
-const OBJECT_OPERATIONS_OPTIONS = {
+const OBJECT_OPERATIONS = {
 	'RESOLVE_KEYS': 'K',
 	'RESOLVE_VALUES': 'V',
 	'CONVERT_TO_OBJECT': 'O',
@@ -90,7 +90,7 @@ const OBJECT_OPERATIONS_OPTIONS = {
 	'CLONE_OBJECT': 'CL'
 };
 
-const ARRAY_OPERATIONS_OPTIONS = {
+const ARRAY_OPERATIONS = {
 	'SORT_ASC': 'S',
 	'SORT_DESC': 's',
 	'UNIQUE': 'U',
@@ -101,7 +101,7 @@ const ARRAY_OPERATIONS_OPTIONS = {
 	'CLONE_ARRAY': 'CL'
 };
 
-const STRING_OPERATIONS_OPTIONS = {
+const STRING_OPERATIONS = {
 	'UPPERCASE': 'U',
 	'CAPITALIZE_FIRST_LETTER': 'U1',
 	'LOWERCASE': 'L',
@@ -110,17 +110,17 @@ const STRING_OPERATIONS_OPTIONS = {
 	'STRINGIFY': 'S'
 };
 
-const MISC_OPERATIONS_OPTIONS = {
+const MISCELLANEOUS_OPERATIONS = {
 	'EVALUATE_TO_UNDEFINED': 'U',
 	'MAKE_EMPTY_ITEMS_UNDEFINED': 'E'
 };
 
 const ACTION_POSSIBLE_VALUES = {
 	':': Object.keys(NEXL_TYPES),
-	'~': j79.getObjectValues(OBJECT_OPERATIONS_OPTIONS),
-	'#': j79.getObjectValues(ARRAY_OPERATIONS_OPTIONS),
-	'^': j79.getObjectValues(STRING_OPERATIONS_OPTIONS),
-	'!': j79.getObjectValues(MISC_OPERATIONS_OPTIONS)
+	'~': j79.getObjectValues(OBJECT_OPERATIONS),
+	'#': j79.getObjectValues(ARRAY_OPERATIONS),
+	'^': j79.getObjectValues(STRING_OPERATIONS),
+	'!': j79.getObjectValues(MISCELLANEOUS_OPERATIONS)
 };
 
 const ARRAY_INDEX_CLOSE = ']';
@@ -696,10 +696,10 @@ function ParseStr(str, stopAt) {
 
 module.exports.JS_PRIMITIVE_TYPES = JS_PRIMITIVE_TYPES;
 module.exports.NEXL_TYPES = NEXL_TYPES;
-module.exports.OBJECT_OPERATIONS_OPTIONS = OBJECT_OPERATIONS_OPTIONS;
-module.exports.ARRAY_OPERATIONS_OPTIONS = ARRAY_OPERATIONS_OPTIONS;
-module.exports.STRING_OPERATIONS_OPTIONS = STRING_OPERATIONS_OPTIONS;
-module.exports.UNDEFINED_VALUE_OPERATIONS_OPTIONS = MISC_OPERATIONS_OPTIONS;
+module.exports.OBJECT_OPERATIONS = OBJECT_OPERATIONS;
+module.exports.ARRAY_OPERATIONS = ARRAY_OPERATIONS;
+module.exports.STRING_OPERATIONS = STRING_OPERATIONS;
+module.exports.MISCELLANEOUS_OPERATIONS = MISCELLANEOUS_OPERATIONS;
 module.exports.ACTIONS = ACTIONS;
 module.exports.ACTIONS_DESC = ACTIONS_DESC;
 

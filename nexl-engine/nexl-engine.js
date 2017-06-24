@@ -186,6 +186,11 @@ NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 		return this.context.nexl.funcs.sys[key];
 	}
 
+	if (this.context.Math[key] !== undefined) {
+		winston.debug('Resolved Math function for key=[%s]', key);
+		return this.context.Math[key];
+	}
+
 	winston.debug('Nothing found in nexl user/system functions for key=[%s]', key);
 	return undefined;
 };

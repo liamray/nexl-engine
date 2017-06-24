@@ -694,6 +694,18 @@ module.exports.push({
 	result: 1
 });
 
+// Math.round() test
+module.exports.push({
+	expression: '${round(${@1\\.1:num})}',
+	result: 1
+});
+
+// Math.round() test
+module.exports.push({
+	expression: '${PI|inc()|round()}',
+	result: 4
+});
+
 // parseInt() test
 module.exports.push({
 	expression: '${parseInt(${@123:num})}',

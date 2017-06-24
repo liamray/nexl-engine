@@ -2719,6 +2719,18 @@ module.exports.push({
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // iteration tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// find max number
+module.exports.push({
+	expression: '${arr10[0]=max;arr10[1..$]${max|_item_|Math.max()=max;};max}',
+	result: 88
+});
+
+// buuble sort
+module.exports.push({
+	expression: '${arr10[]${arr10[^..-1]${_index_|inc()=nindex;arr10[ ${nindex} ]=nitem;_item_|nitem|arr10|ifGT()=tmpArr;arr10[${_index_}]=tmp;updAt( ${tmpArr}, ${nitem}, ${_index_} );updAt( ${tmpArr}, ${tmp}, ${nindex} );};};arr10}',
+	result: [13, 14, 17, 31, 47, 61, 61, 64, 73, 74, 84, 88]
+});
+
 module.exports.push({
 	expression: '${largestCountries[]${_item_.name}}',
 	result: ["Russia", "Canada", "USA", "China"]

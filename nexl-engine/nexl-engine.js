@@ -382,6 +382,9 @@ NexlExpressionEvaluator.prototype.evalFunctionAction = function () {
 	}
 
 	this.result = this.result.apply(this.context, params);
+	if (j79.isLogLevel('silly')) {
+		winston.debug('Function returned [%s] value', this.result);
+	}
 	this.needDeepResolution4NextActions = true;
 };
 

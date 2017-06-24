@@ -195,6 +195,14 @@ NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 	return undefined;
 };
 
+NexlExpressionEvaluator.prototype.logSilly = function (key, val) {
+	if (j79.isLogLevel('silly')) {
+		winston.debug('Resolved value=[%s] for key=[%s]', val, key);
+	} else {
+		winston.debug('Resolved value for key=[%s]', key);
+	}
+};
+
 NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	// skipping undefined key
 	if (key === undefined) {
@@ -216,7 +224,7 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		val = val === this.context ? undefined : val;
 		this.newResult.push(val);
 		this.thisOrParentAreApplied = true;
-		winston.debug('Resolving value for key=[%s]', PARENT);
+		this.logSilly(PARENT, val);
 		return;
 	}
 
@@ -224,35 +232,35 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	if (key == THIS) {
 		this.newResult.push(this.this);
 		this.thisOrParentAreApplied = true;
-		winston.debug('Resolving value for key=[%s]', THIS);
+		this.logSilly(THIS, this.this);
 		return;
 	}
 
 	// _item_
 	if (key == ITEM) {
 		this.newResult.push(this.objInfo.item);
-		winston.debug('Resolving value for key=[%s]', ITEM);
+		this.logSilly(ITEM, this.objInfo.item);
 		return;
 	}
 
 	// _index_
 	if (key == INDEX) {
 		this.newResult.push(this.objInfo.index);
-		winston.debug('Resolving value for key=[%s]', INDEX);
+		this.logSilly(INDEX, this.objInfo.index);
 		return;
 	}
 
 	// _key_
 	if (key == KEY) {
 		this.newResult.push(this.objInfo.key);
-		winston.debug('Resolving value for key=[%s]', KEY);
+		this.logSilly(KEY, this.objInfo.key);
 		return;
 	}
 
 	// _value_
 	if (key == VALUE) {
 		this.newResult.push(this.objInfo.value);
-		winston.debug('Resolving value for key=[%s]', VALUE);
+		this.logSilly(VALUE, this.objInfo.value);
 		return;
 	}
 

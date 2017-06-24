@@ -83,7 +83,7 @@ EvalAndSubstChunks.prototype.evalAndSubstChunksInner = function () {
 		var chunkValue = new NexlExpressionEvaluator(this.context, chunk2Substitute, this.data.objInfo).eval();
 
 		// !U UNDEFINED_VALUE_OPERATIONS action
-		if (chunkValue === undefined && this.isEvaluateAsUndefined) {
+		if (chunkValue === undefined && this.isEvaluateToUndefined) {
 			return undefined;
 		}
 
@@ -152,9 +152,9 @@ EvalAndSubstChunks.prototype.evalAndSubstChunks = function () {
 	return this.evalAndSubstChunksInner();
 };
 
-function EvalAndSubstChunks(context, isEvaluateAsUndefined, data) {
+function EvalAndSubstChunks(context, isEvaluateToUndefined, data) {
 	this.context = context;
-	this.isEvaluateAsUndefined = isEvaluateAsUndefined;
+	this.isEvaluateToUndefined = isEvaluateToUndefined;
 	this.data = data;
 }
 
@@ -162,17 +162,17 @@ function EvalAndSubstChunks(context, isEvaluateAsUndefined, data) {
 // NexlExpressionEvaluator
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-NexlExpressionEvaluator.prototype.retrieveEvaluateAsUndefinedAction = function () {
+NexlExpressionEvaluator.prototype.retrieveEvaluateToUndefinedAction = function () {
 	// iterating over actions
 	for (var index in this.nexlExpressionMD.actions) {
 		var action = this.nexlExpressionMD.actions[index];
 		if (action.actionId === nexlExpressionsParser.ACTIONS.UNDEFINED_VALUE_OPERATIONS && action.actionValue === nexlExpressionsParser.UNDEFINED_VALUE_OPERATIONS_OPTIONS.EVALUATE_TO_UNDEFINED) {
-			this.isEvaluateAsUndefined = true;
+			this.isEvaluateToUndefined = true;
 			return;
 		}
 	}
 
-	this.isEvaluateAsUndefined = false;
+	this.isEvaluateToUndefined = false;
 };
 
 NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
@@ -309,7 +309,7 @@ NexlExpressionEvaluator.prototype.assembleChunks4CurrentAction = function () {
 	data.chunkSubstitutions = this.action.actionValue.chunkSubstitutions;
 	data.objInfo = this.makeObjInfo();
 
-	return new EvalAndSubstChunks(this.context, this.isEvaluateAsUndefined, data).evalAndSubstChunks();
+	return new EvalAndSubstChunks(this.context, this.isEvaluateToUndefined, data).evalAndSubstChunks();
 };
 
 NexlExpressionEvaluator.prototype.logActionWithValue = function () {
@@ -1334,7 +1334,7 @@ NexlExpressionEvaluator.prototype.expandObjectKeys = function () {
 	}
 
 	var objInfo = this.makeObjInfo();
-	var nexlEngine = new NexlEngine(this.context, this.isEvaluateAsUndefined);
+	var nexlEngine = new NexlEngine(this.context, this.isEvaluateToUndefined);
 
 	for (var key in this.result) {
 		// nexilized key
@@ -1382,12 +1382,12 @@ NexlExpressionEvaluator.prototype.makeDeepResolution = function () {
 	objInfo.this = this.lastObjResult;
 	objInfo.parent = this.lastObjResult === undefined ? this.objInfo.parent : this.lastObjResult[PARENT];
 
-	this.result = new NexlEngine(this.context, this.isEvaluateAsUndefined).processItem(this.result, objInfo);
+	this.result = new NexlEngine(this.context, this.isEvaluateToUndefined).processItem(this.result, objInfo);
 };
 
 NexlExpressionEvaluator.prototype.eval = function () {
 	this.init(0);
-	this.retrieveEvaluateAsUndefinedAction();
+	this.retrieveEvaluateToUndefinedAction();
 
 	winston.debug('-->> Evaluating [expression=%s]. This expression has [%s] action(s). Iterating over actions', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
 
@@ -1508,7 +1508,7 @@ NexlEngine.prototype.processStringItem = function (str, objInfo) {
 	data.objInfo = objInfo;
 
 	// evaluating
-	return new EvalAndSubstChunks(this.context, this.isEvaluateAsUndefined, data).evalAndSubstChunks();
+	return new EvalAndSubstChunks(this.context, this.isEvaluateToUndefined, data).evalAndSubstChunks();
 };
 
 NexlEngine.prototype.processItem = function (item, aObjInfo) {
@@ -1538,9 +1538,9 @@ NexlEngine.prototype.processItem = function (item, aObjInfo) {
 	return item;
 };
 
-function NexlEngine(context, isEvaluateAsUndefined) {
+function NexlEngine(context, isEvaluateToUndefined) {
 	this.context = context;
-	this.isEvaluateAsUndefined = isEvaluateAsUndefined;
+	this.isEvaluateToUndefined = isEvaluateToUndefined;
 }
 
 
@@ -1559,8 +1559,8 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	// replacing \n and \t with their real ASCII code
 	var item2Process = nexlEngineUtils.replaceSpecialChars(item);
 
-	// should item be evaluated as undefined if it contains undefined variables ?
-	var isEvaluateAsUndefined = nexlEngineUtils.hasEvaluateAsUndefinedFlag(context);
+	// should item be evaluated to undefined if it contains undefined variables ?
+	var isEvaluateToUndefined = nexlEngineUtils.hasEvaluateToUndefinedFlag(context);
 
 	// is item not specified, using a default nexl expression
 	if (item2Process === undefined) {
@@ -1569,7 +1569,7 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	}
 
 	// running nexl engine
-	return new NexlEngine(context, isEvaluateAsUndefined).processItem(item2Process);
+	return new NexlEngine(context, isEvaluateToUndefined).processItem(item2Process);
 };
 
 // exporting resolveJsVariables

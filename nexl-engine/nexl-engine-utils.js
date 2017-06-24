@@ -33,7 +33,7 @@ function deepMergeInner(obj1, obj2) {
 	return deepMerge(obj1, obj2);
 }
 
-function hasEvaluateAsUndefinedFlag(obj) {
+function hasEvaluateToUndefinedFlag(obj) {
 	return ( ( obj || {} ).nexl || {} ).EVALUATE_TO_UNDEFINED === true;
 }
 
@@ -46,10 +46,10 @@ function provideWithNexlAPI(context, nexlEngine) {
 		// merging externalArgs4Function to a context
 		context = deepMergeInner(context, externalArgs4Function);
 
-		var isEvaluateAsUndefined = hasEvaluateAsUndefinedFlag(context);
+		var isEvaluateToUndefined = hasEvaluateToUndefinedFlag(context);
 
 		// running nexl engine
-		var result = new nexlEngine(context, isEvaluateAsUndefined).processItem(nexlExpression);
+		var result = new nexlEngine(context, isEvaluateToUndefined).processItem(nexlExpression);
 
 		// restoring context
 		context = contextBackup;
@@ -332,7 +332,7 @@ function setReadOnlyProperty(obj, key, value) {
 // exports
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.hasEvaluateAsUndefinedFlag = hasEvaluateAsUndefinedFlag;
+module.exports.hasEvaluateToUndefinedFlag = hasEvaluateToUndefinedFlag;
 module.exports.produceKeyValuesPairs = produceKeyValuesPairs;
 module.exports.convertStrItems2Obj = convertStrItems2Obj;
 module.exports.cast = cast;

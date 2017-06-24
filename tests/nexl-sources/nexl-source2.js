@@ -48,8 +48,8 @@ UNITED_KEY_DEF = {
 
 unitedKey = '${UNITED_KEY_DEF<${KEY}[0]@${KEY}}';
 
-var evaluateAsUndefined1 = ['disconnect', 24, '${undefinedVariable}', null, false];
-evaluateAsUndefined2 = '${intItem} ${strItem} ${boolItem} ${undefinedVar}';
+var evaluateToUndefined1 = ['disconnect', 24, '${undefinedVariable}', null, false];
+evaluateToUndefined2 = '${intItem} ${strItem} ${boolItem} ${undefinedVar}';
 
 function reverseArray(arr) {
 	return arr.reverse();

@@ -4,35 +4,35 @@ module.exports = [];
 // !U tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
-	expression: '${evaluateAsUndefined2!U}',
+	expression: '${evaluateToUndefined2!U}',
 	result: undefined
 });
 
-// evaluate as undefined action -> array
+// evaluate to undefined action -> array
 module.exports.push({
-	expression: '${evaluateAsUndefined1!U&,} ${evaluateAsUndefined1&,}',
+	expression: '${evaluateToUndefined1!U&,} ${evaluateToUndefined1&,}',
 	result: 'disconnect,24,,,false disconnect,24,,,false'
 });
 
-// evaluate as undefined action -> object
+// evaluate to undefined action -> object
 module.exports.push({
 	expression: '${obj3!U}',
 	result: {item1: 'test', item2: undefined, item3: 34}
 });
 
-// evaluate as undefined action -> array
+// evaluate to undefined action -> array
 module.exports.push({
 	expression: '${undefArr}',
 	throwsException: true
 });
 
-// evaluate as undefined action -> array
+// evaluate to undefined action -> array
 module.exports.push({
 	expression: '${undefArr!U}',
 	result: ['hello', 71, undefined, undefined]
 });
 
-// evaluate as undefined action -> array
+// evaluate to undefined action -> array
 module.exports.push({
 	expression: '${undefArr}',
 	throwsException: true
@@ -1572,7 +1572,7 @@ module.exports.push({
 	result: 'j'
 });
 
-// evaluate as undefined for root expression
+// evaluate to undefined for root expression
 module.exports.push({
 	expression: 'hello ${world}',
 	args: {

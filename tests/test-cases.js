@@ -2434,6 +2434,12 @@ module.exports.push({
 
 // updAt()
 module.exports.push({
+	expression: '${fruits[]${fruits|_index_|_index_|updAt();};fruits}',
+	result: [0, 1, 2, 3, 4, 5, 6, 7]
+});
+
+// updAt()
+module.exports.push({
 	expression: '${fruits|@${Math.PI}#A+lol|@0|updAt();fruits}',
 	result: [3.141592653589793,
 		'lol',
@@ -2511,6 +2517,19 @@ module.exports.push({
 });
 
 module.exports.push({
+	expression: '${fruits|@Orange|@0|insAt();fruits}',
+	result: ['Orange',
+		'Mango',
+		'Lemon',
+		'Banana',
+		'Apple',
+		null,
+		undefined,
+		null,
+		undefined]
+});
+
+module.exports.push({
 	expression: '${@hello|obj1|@0|insAt()}',
 	result: 'hello'
 });
@@ -2545,6 +2564,11 @@ module.exports.push({
 module.exports.push({
 	expression: '${@hello|@1|@2|delAt()}',
 	result: 'hlo'
+});
+
+module.exports.push({
+	expression: '${fruits|@0|delAt()}',
+	result: ['Lemon', 'Banana', 'Apple', null, undefined, null, undefined]
 });
 
 /////////////////////////////////////////////

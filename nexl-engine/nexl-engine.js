@@ -696,6 +696,12 @@ NexlExpressionEvaluator.prototype.applyObjectOperationsAction = function () {
 			this.produceYAML();
 			return;
 		}
+
+		// ~CL clone object
+		case nexlExpressionsParser.OBJECT_OPERATIONS_OPTIONS.CLONE_OBJECT : {
+			this.result = nexlEngineUtils.deepMergeInner({}, this.result);
+			return;
+		}
 	}
 };
 
@@ -853,6 +859,12 @@ NexlExpressionEvaluator.prototype.applyArrayOperationsAction = function () {
 		// #F
 		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.GET_FIRST_OR_NOTHING: {
 			this.result = this.result.length === 1 ? this.result[0] : undefined;
+			return;
+		}
+
+		// #CL - clone array
+		case nexlExpressionsParser.ARRAY_OPERATIONS_OPTIONS.CLONE_ARRAY: {
+			this.result = this.result.slice(0);
 			return;
 		}
 	}
@@ -1316,7 +1328,6 @@ NexlExpressionEvaluator.prototype.expandObjectKeys = function () {
 		return;
 	}
 
-	var newResult = {};
 	var objInfo = this.makeObjInfo();
 	var nexlEngine = new NexlEngine(this.context, this.isEvaluateAsUndefined);
 
@@ -1324,18 +1335,26 @@ NexlExpressionEvaluator.prototype.expandObjectKeys = function () {
 		// nexilized key
 		var newKey = nexlEngine.processItem(key, objInfo);
 
+		if (newKey === undefined) {
+			delete this.result[key];
+			continue;
+		}
+
 		// key must be a primitive. checking...
 		if (!j79.isPrimitive(newKey)) {
 			throw util.format('Cannot assemble JavaScript object. The [%s] key is evaluated to a non-primitive data type %s', key, j79.getType(newKey));
 		}
 
-		newResult[newKey] = this.result[key];
+		// same key ? nothing changed
+		if (newKey == key) {
+			continue;
+		}
+
+		// deleting old key and assigning the new key
+		var value = this.result[key];
+		delete this.result[key];
+		this.result[newKey] = value;
 	}
-
-	// copying non enumerable __parent__ property from this.result to newResult
-	nexlEngineUtils.setReadOnlyProperty(newResult, PARENT, this.result[PARENT]);
-
-	this.result = newResult;
 };
 
 NexlExpressionEvaluator.prototype.makeObjInfo = function () {

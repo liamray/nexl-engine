@@ -3,6 +3,8 @@
     - added assign variables action = .Now it's possible to assign and override variables inside nexl expressions
     - added separator action ;
     - added inverted object property resolution action %
+    - added #CL clone array action
+    - added ~CL clone object action
     - nexl.functions.system renamed to nexl.funcs.sys ( nexl.functions.system is left for backward compatibility )
     - nexl.functions.user renamed to nexl.funcs.usr ( nexl.functions.user is left for backward compatibility )
     - inc(), dec(), div(), mult(), mod() functions now can accept multiple arguments

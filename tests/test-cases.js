@@ -73,12 +73,6 @@ module.exports.push({
 	result: undefined
 });
 
-// undefined
-module.exports.push({
-	expression: '${~O}',
-	result: {} // it must be a { 'obj': undefined }. but JSON.stringify() make an empty object of this ( there are few more module.exports like this here )
-});
-
 // empty array
 module.exports.push({
 	expression: '${#A}',
@@ -279,36 +273,6 @@ module.exports.push({
 	}]
 });
 
-// ~O action
-module.exports.push({
-	expression: '${intItem~O}',
-	result: {intItem: 71}
-});
-
-// ~O action
-module.exports.push({
-	expression: '${~O+${intItem~O}}',
-	result: {intItem: 71}
-});
-
-// ~O action
-module.exports.push({
-	expression: '${obj1.pack~O}',
-	result: {strong: 'balance', deer: 7}
-});
-
-// ~O action
-module.exports.push({
-	expression: '${obj1.pack.deer~O}',
-	result: {'obj1.pack.deer': 7}
-});
-
-// ~O action
-module.exports.push({
-	expression: '${HOSTS.APP_SERVER_INTERFACES.${keys}~O}',
-	result: {'HOSTS.APP_SERVER_INTERFACES.[]': 'yest'}
-});
-
 // #A action
 module.exports.push({
 	expression: '${HOSTS.APP_SERVER_INTERFACES.PROD.SECOND[0]#A}',
@@ -328,10 +292,6 @@ module.exports.push({
 });
 
 // keys and values
-module.exports.push({
-	expression: 'KEYS=[${obj1~K&,}] VALUES=[${obj1~V&,}]',
-	result: 'KEYS=[71,beneficial,test,(),disturbed,price,pack] VALUES=[berry,mint,righteous,trick,46,true,balance,7]'
-});
 
 // reverse resolution
 module.exports.push({
@@ -776,110 +736,6 @@ module.exports.push({
 	throwsException: true
 });
 
-// # array operations action
-module.exports.push({
-	expression: '${arr1#F}',
-	result: undefined
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr5#F}',
-	result: 'hello'
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr6#F}',
-	result: undefined
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr1#S}',
-	result: [79, false, "muscle", "queen"]
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr1#s}',
-	result: ["queen", "muscle", false, 79]
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr4#U#S}',
-	result: [16, 79, 99, "air", false, "muscle", "queen", "smooth", true, "true"]
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr4#D}',
-	result: ['queen', 79, false, true]
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr6#D}',
-	result: []
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr6#D!E}',
-	result: undefined
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${@test#A-test}',
-	result: []
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${arr4#U#S#CNT}',
-	result: 10,
-	throwsException: true
-});
-
-// # array operations action
-module.exports.push({
-	expression: '${obj1<${@mint#A+righteous}}',
-	result: ['beneficial', 'test']
-});
-
-
-// # array operations action
-module.exports.push({
-	expression: '${arr4#U#S#LEN}',
-	result: 10
-});
-
-// - eliminate array elements
-module.exports.push({
-	expression: '${arr1-false}', // not eliminating, because false is string
-	result: ['queen', 'muscle', 79, false]
-});
-
-// - eliminate array elements
-module.exports.push({
-	expression: '${fruits-${}-${@:null}}', // not eliminating, because false is string
-	result: ['Mango', 'Lemon', 'Banana', 'Apple']
-});
-
-// - eliminate multiple
-module.exports.push({
-	expression: '${arr1-${@false:bool}-79-${@79:num}-queen}',
-	result: ['muscle']
-});
-
-// - eliminate array elements ( eliminate itself )
-module.exports.push({
-	expression: '${arr1-${arr1}}',
-	result: []
-});
-
 // - eliminate object properties
 module.exports.push({
 	expression: '${obj1-\\()-71-mint-price}',
@@ -1088,12 +944,6 @@ module.exports.push({
 
 // bad action
 module.exports.push({
-	expression: '${~ ${}}',
-	throwsException: true
-});
-
-// bad action
-module.exports.push({
 	expression: '${#A# ${}}',
 	throwsException: true
 });
@@ -1131,12 +981,6 @@ module.exports.push({
 // bad array index
 module.exports.push({
 	expression: '${arr1[${Math.PI}]}',
-	throwsException: true
-});
-
-// bad action
-module.exports.push({
-	expression: '${~Q}',
 	throwsException: true
 });
 
@@ -1764,45 +1608,6 @@ module.exports.push({
 		intItem3: 333
 	},
 	result: 333
-});
-
-// ~X
-module.exports.push({
-	expression: '${obj5~X}',
-	result: "<?xml version='1.0'?>\n<obj5>\n    <beneficial>mint</beneficial>\n    <pack>\n        <strong>balance</strong>\n        <deer>7</deer>\n    </pack>\n    <obj3>\n        <item1>test</item1>\n        <item2>undefined</item2>\n        <item3>34</item3>\n    </obj3>\n    <test>undefined</test>\n    <berry>71</berry>\n</obj5>"
-});
-
-// ~X
-module.exports.push({
-	expression: '${HOSTS~X}',
-	result: "<?xml version='1.0'?>\n<HOSTS>\n    <APP_SERVER_INTERFACES>\n        <PROD>\n            <FIRST>hothead1</FIRST>\n            <FIRST>awakening1</FIRST>\n            <FIRST>dynamite1</FIRST>\n            <FIRST>military1</FIRST>\n            <SECOND>cuddly2</SECOND>\n            <SECOND>grease2</SECOND>\n            <SECOND>fate2</SECOND>\n            <SECOND>atmosphere2</SECOND>\n        </PROD>\n        <DEV>zombie</DEV>\n        <DEV>arrows</DEV>\n        <DEV>zebra</DEV>\n        <QA>\n            <FIRST>autonomous1</FIRST>\n            <FIRST>criminal1</FIRST>\n            <SECOND>adrenaline2</SECOND>\n            <SECOND>prophetic2</SECOND>\n        </QA>\n        <DRP-PROD>drp-prod</DRP-PROD>\n        <YEST>yest</YEST>\n        <STAGING>jstaging</STAGING>\n    </APP_SERVER_INTERFACES>\n    <INTERNET_INTERFACES>\n        <PROD>iMaximum</PROD>\n        <PROD>iPromised</PROD>\n        <PROD>iPilot</PROD>\n        <DEV>iHomeland</DEV>\n        <QA>iTruth</QA>\n        <QA>iSilver</QA>\n        <YEST>iYest</YEST>\n        <STAGING>iStaging</STAGING>\n        <SPECIAL>iDeer</SPECIAL>\n    </INTERNET_INTERFACES>\n</HOSTS>"
-});
-
-
-// ~P
-module.exports.push({
-	expression: '${obj5~P}',
-	result: "beneficial=mint\npack.strong=balance\npack.deer=7\nobj3.item1=test\nobj3.item2=undefined\nobj3.item3=34\ntest=undefined\nberry=71"
-});
-
-// ~P
-module.exports.push({
-	expression: '${HOSTS~P}',
-	result: "APP_SERVER_INTERFACES.PROD.FIRST=hothead1,awakening1,dynamite1,military1\nAPP_SERVER_INTERFACES.PROD.SECOND=cuddly2,grease2,fate2,atmosphere2\nAPP_SERVER_INTERFACES.DEV=zombie,arrows,zebra\nAPP_SERVER_INTERFACES.QA.FIRST=autonomous1,criminal1\nAPP_SERVER_INTERFACES.QA.SECOND=adrenaline2,prophetic2\nAPP_SERVER_INTERFACES.DRP-PROD=drp-prod\nAPP_SERVER_INTERFACES.YEST=yest\nAPP_SERVER_INTERFACES.STAGING=jstaging\nINTERNET_INTERFACES.PROD=iMaximum,iPromised,iPilot\nINTERNET_INTERFACES.DEV=iHomeland\nINTERNET_INTERFACES.QA=iTruth,iSilver\nINTERNET_INTERFACES.YEST=iYest\nINTERNET_INTERFACES.STAGING=iStaging\nINTERNET_INTERFACES.SPECIAL=iDeer"
-});
-
-
-// ~Y
-module.exports.push({
-	expression: '${obj5~Y}',
-	result: "beneficial: mint\npack:\n    strong: balance\n    deer: 7\nobj3:\n    item1: test\n    item2: null\n    item3: 34\ntest: null\nberry: 71\n"
-});
-
-// ~Y
-// todo : yaml bug
-module.exports.push({
-	expression: '${HOSTS~Y}',
-	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: {'0': hothead1, '1': awakening1, '2': dynamite1, '3': military1}, SECOND: {'0': cuddly2, '1': grease2, '2': fate2, '3': atmosphere2}}\n    DEV: {'0': zombie, '1': arrows, '2': zebra}\n    QA: {FIRST: {'0': autonomous1, '1': criminal1}, SECOND: {'0': adrenaline2, '1': prophetic2}}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: {'0': iMaximum, '1': iPromised, '2': iPilot}\n    DEV: iHomeland\n    QA: {'0': iTruth, '1': iSilver}\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
 });
 
 // sub expressions
@@ -3094,4 +2899,246 @@ module.exports.push({
 		46,
 		true,
 		{strong: 'balance', deer: 7}]
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ~ object operations tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${obj1~CL|@pack|@lol|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: {strong: 'balance', deer: 7}
+	}
+});
+
+module.exports.push({
+	expression: '${obj1|@pack|@lol|setVal();obj1}',
+	result: {
+		'71': 'berry',
+		beneficial: 'mint',
+		test: 'righteous',
+		'()': 'trick',
+		disturbed: 46,
+		price: true,
+		pack: 'lol'
+	}
+});
+
+module.exports.push({
+	expression: 'KEYS=[${obj1~K&,}] VALUES=[${obj1~V&,}]',
+	result: 'KEYS=[71,beneficial,test,(),disturbed,price,pack] VALUES=[berry,mint,righteous,trick,46,true,balance,7]'
+});
+
+// undefined
+module.exports.push({
+	expression: '${~O}',
+	result: {} // it must be a { 'obj': undefined }. but JSON.stringify() make an empty object of this ( there are few more module.exports like this here )
+});
+
+// ~O action
+module.exports.push({
+	expression: '${intItem~O}',
+	result: {intItem: 71}
+});
+
+// ~O action
+module.exports.push({
+	expression: '${~O+${intItem~O}}',
+	result: {intItem: 71}
+});
+
+// ~O action
+module.exports.push({
+	expression: '${obj1.pack~O}',
+	result: {strong: 'balance', deer: 7}
+});
+
+// ~O action
+module.exports.push({
+	expression: '${obj1.pack.deer~O}',
+	result: {'obj1.pack.deer': 7}
+});
+
+// ~O action
+module.exports.push({
+	expression: '${HOSTS.APP_SERVER_INTERFACES.${keys}~O}',
+	result: {'HOSTS.APP_SERVER_INTERFACES.[]': 'yest'}
+});
+
+// bad action
+module.exports.push({
+	expression: '${~ ${}}',
+	throwsException: true
+});
+
+// bad action
+module.exports.push({
+	expression: '${~Q}',
+	throwsException: true
+});
+
+// ~X
+module.exports.push({
+	expression: '${obj5~X}',
+	result: "<?xml version='1.0'?>\n<obj5>\n    <beneficial>mint</beneficial>\n    <pack>\n        <strong>balance</strong>\n        <deer>7</deer>\n    </pack>\n    <obj3>\n        <item1>test</item1>\n        <item2>undefined</item2>\n        <item3>34</item3>\n    </obj3>\n    <test>undefined</test>\n    <berry>71</berry>\n</obj5>"
+});
+
+// ~X
+module.exports.push({
+	expression: '${HOSTS~X}',
+	result: "<?xml version='1.0'?>\n<HOSTS>\n    <APP_SERVER_INTERFACES>\n        <PROD>\n            <FIRST>hothead1</FIRST>\n            <FIRST>awakening1</FIRST>\n            <FIRST>dynamite1</FIRST>\n            <FIRST>military1</FIRST>\n            <SECOND>cuddly2</SECOND>\n            <SECOND>grease2</SECOND>\n            <SECOND>fate2</SECOND>\n            <SECOND>atmosphere2</SECOND>\n        </PROD>\n        <DEV>zombie</DEV>\n        <DEV>arrows</DEV>\n        <DEV>zebra</DEV>\n        <QA>\n            <FIRST>autonomous1</FIRST>\n            <FIRST>criminal1</FIRST>\n            <SECOND>adrenaline2</SECOND>\n            <SECOND>prophetic2</SECOND>\n        </QA>\n        <DRP-PROD>drp-prod</DRP-PROD>\n        <YEST>yest</YEST>\n        <STAGING>jstaging</STAGING>\n    </APP_SERVER_INTERFACES>\n    <INTERNET_INTERFACES>\n        <PROD>iMaximum</PROD>\n        <PROD>iPromised</PROD>\n        <PROD>iPilot</PROD>\n        <DEV>iHomeland</DEV>\n        <QA>iTruth</QA>\n        <QA>iSilver</QA>\n        <YEST>iYest</YEST>\n        <STAGING>iStaging</STAGING>\n        <SPECIAL>iDeer</SPECIAL>\n    </INTERNET_INTERFACES>\n</HOSTS>"
+});
+
+
+// ~P
+module.exports.push({
+	expression: '${obj5~P}',
+	result: "beneficial=mint\npack.strong=balance\npack.deer=7\nobj3.item1=test\nobj3.item2=undefined\nobj3.item3=34\ntest=undefined\nberry=71"
+});
+
+// ~P
+module.exports.push({
+	expression: '${HOSTS~P}',
+	result: "APP_SERVER_INTERFACES.PROD.FIRST=hothead1,awakening1,dynamite1,military1\nAPP_SERVER_INTERFACES.PROD.SECOND=cuddly2,grease2,fate2,atmosphere2\nAPP_SERVER_INTERFACES.DEV=zombie,arrows,zebra\nAPP_SERVER_INTERFACES.QA.FIRST=autonomous1,criminal1\nAPP_SERVER_INTERFACES.QA.SECOND=adrenaline2,prophetic2\nAPP_SERVER_INTERFACES.DRP-PROD=drp-prod\nAPP_SERVER_INTERFACES.YEST=yest\nAPP_SERVER_INTERFACES.STAGING=jstaging\nINTERNET_INTERFACES.PROD=iMaximum,iPromised,iPilot\nINTERNET_INTERFACES.DEV=iHomeland\nINTERNET_INTERFACES.QA=iTruth,iSilver\nINTERNET_INTERFACES.YEST=iYest\nINTERNET_INTERFACES.STAGING=iStaging\nINTERNET_INTERFACES.SPECIAL=iDeer"
+});
+
+
+// ~Y
+module.exports.push({
+	expression: '${obj5~Y}',
+	result: "beneficial: mint\npack:\n    strong: balance\n    deer: 7\nobj3:\n    item1: test\n    item2: null\n    item3: 34\ntest: null\nberry: 71\n"
+});
+
+// ~Y
+// todo : yaml bug
+module.exports.push({
+	expression: '${HOSTS~Y}',
+	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: {'0': hothead1, '1': awakening1, '2': dynamite1, '3': military1}, SECOND: {'0': cuddly2, '1': grease2, '2': fate2, '3': atmosphere2}}\n    DEV: {'0': zombie, '1': arrows, '2': zebra}\n    QA: {FIRST: {'0': autonomous1, '1': criminal1}, SECOND: {'0': adrenaline2, '1': prophetic2}}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: {'0': iMaximum, '1': iPromised, '2': iPilot}\n    DEV: iHomeland\n    QA: {'0': iTruth, '1': iSilver}\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
+});
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// # array operations tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// # array operations action
+module.exports.push({
+	expression: '${arr1#F}',
+	result: undefined
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr5#F}',
+	result: 'hello'
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr6#F}',
+	result: undefined
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr1#S}',
+	result: [79, false, "muscle", "queen"]
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr1#s}',
+	result: ["queen", "muscle", false, 79]
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr4#U#S}',
+	result: [16, 79, 99, "air", false, "muscle", "queen", "smooth", true, "true"]
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr4#D}',
+	result: ['queen', 79, false, true]
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr6#D}',
+	result: []
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr6#D!E}',
+	result: undefined
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${@test#A-test}',
+	result: []
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${arr4#U#S#CNT}',
+	result: 10,
+	throwsException: true
+});
+
+// # array operations action
+module.exports.push({
+	expression: '${obj1<${@mint#A+righteous}}',
+	result: ['beneficial', 'test']
+});
+
+
+// # array operations action
+module.exports.push({
+	expression: '${arr4#U#S#LEN}',
+	result: 10
+});
+
+// - eliminate array elements
+module.exports.push({
+	expression: '${arr1-false}', // not eliminating, because false is string
+	result: ['queen', 'muscle', 79, false]
+});
+
+// - eliminate array elements
+module.exports.push({
+	expression: '${fruits-${}-${@:null}}', // not eliminating, because false is string
+	result: ['Mango', 'Lemon', 'Banana', 'Apple']
+});
+
+// - eliminate multiple
+module.exports.push({
+	expression: '${arr1-${@false:bool}-79-${@79:num}-queen}',
+	result: ['muscle']
+});
+
+// - eliminate array elements ( eliminate itself )
+module.exports.push({
+	expression: '${arr1-${arr1}}',
+	result: []
+});
+
+// #CL
+module.exports.push({
+	expression: '${arr1#CL-queen-muscle;arr1}',
+	result: ['queen', 'muscle', 79, false]
+});
+
+//
+module.exports.push({
+	expression: '${arr1-queen-muscle;arr1}',
+	result: [79, false]
 });

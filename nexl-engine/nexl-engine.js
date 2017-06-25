@@ -195,14 +195,6 @@ NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 	return undefined;
 };
 
-NexlExpressionEvaluator.prototype.logSilly = function (key, val) {
-	if (j79.isLogLevel('silly')) {
-		winston.debug('Resolved value=[%s] for key=[%s]', val, key);
-	} else {
-		winston.debug('Resolved value for key=[%s]', key);
-	}
-};
-
 NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	// skipping undefined key
 	if (key === undefined) {
@@ -224,7 +216,7 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		val = val === this.context ? undefined : val;
 		this.newResult.push(val);
 		this.thisOrParentAreApplied = true;
-		this.logSilly(PARENT, val);
+		winston.debug('Resolving %s element', PARENT);
 		return;
 	}
 
@@ -232,35 +224,35 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	if (key == THIS) {
 		this.newResult.push(this.this);
 		this.thisOrParentAreApplied = true;
-		this.logSilly(THIS, this.this);
+		winston.debug('Resolving %s element', THIS);
 		return;
 	}
 
 	// _item_
 	if (key == ITEM) {
 		this.newResult.push(this.objInfo.item);
-		this.logSilly(ITEM, this.objInfo.item);
+		winston.debug('Resolving %s element', ITEM);
 		return;
 	}
 
 	// _index_
 	if (key == INDEX) {
 		this.newResult.push(this.objInfo.index);
-		this.logSilly(INDEX, this.objInfo.index);
+		winston.debug('Resolving %s element', INDEX);
 		return;
 	}
 
 	// _key_
 	if (key == KEY) {
 		this.newResult.push(this.objInfo.key);
-		this.logSilly(KEY, this.objInfo.key);
+		winston.debug('Resolving %s element', KEY);
 		return;
 	}
 
 	// _value_
 	if (key == VALUE) {
 		this.newResult.push(this.objInfo.value);
-		this.logSilly(VALUE, this.objInfo.value);
+		winston.debug('Resolving %s element', VALUE);
 		return;
 	}
 
@@ -271,12 +263,6 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	if (newResult === undefined && this.result === this.context) {
 		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions', key);
 		newResult = this.try2ResolveNexlFuncs(key);
-	}
-
-	if (j79.isLogLevel('silly')) {
-		if (!j79.isFunction(newResult)) {
-			winston.debug('Resolved [%s] value for key=[%s]', newResult, key);
-		}
 	}
 
 	this.newResult.push(newResult);
@@ -317,19 +303,11 @@ NexlExpressionEvaluator.prototype.assembleChunks4CurrentAction = function () {
 	data.chunkSubstitutions = this.action.actionValue.chunkSubstitutions;
 	data.objInfo = this.makeObjInfo();
 
-	return new EvalAndSubstChunks(this.context, this.isEvaluateToUndefined, data).evalAndSubstChunks();
-};
-
-NexlExpressionEvaluator.prototype.logActionWithValue = function () {
+	var actionValue = new EvalAndSubstChunks(this.context, this.isEvaluateToUndefined, data).evalAndSubstChunks();
 	if (j79.isLogLevel('silly')) {
-		winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, JSON.stringify(this.action.actionValue), ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
-	} else {
-		winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, this.action.actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+		winston.debug('[actionValue=%s]', this.strigifySafely(actionValue));
 	}
-};
-
-NexlExpressionEvaluator.prototype.logActionWithoutValue = function () {
-	winston.debug('Evaluating [%s] action, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	return actionValue;
 };
 
 NexlExpressionEvaluator.prototype.applyPropertyResolutionAction = function () {
@@ -382,9 +360,6 @@ NexlExpressionEvaluator.prototype.evalFunctionAction = function () {
 	}
 
 	this.result = this.result.apply(this.context, params);
-	if (j79.isLogLevel('silly')) {
-		winston.debug('Function returned [%s] value', this.result);
-	}
 	this.needDeepResolution4NextActions = true;
 };
 
@@ -1200,126 +1175,108 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 	switch (this.action.actionId) {
 		// . property resolution action
 		case nexlExpressionsParser.ACTIONS.PROPERTY_RESOLUTION: {
-			this.logActionWithoutValue();
 			this.applyPropertyResolutionAction();
 			return;
 		}
 
 		// [] array indexes action
 		case nexlExpressionsParser.ACTIONS.ARRAY_INDEX: {
-			this.logActionWithoutValue();
 			this.applyArrayIndexesAction();
 			return;
 		}
 
 		// () function action
 		case nexlExpressionsParser.ACTIONS.FUNCTION_CALL: {
-			this.logActionWithoutValue();
 			this.evalFunctionAction();
 			return;
 		}
 
 		// @ default value action
 		case nexlExpressionsParser.ACTIONS.DEF_VALUE: {
-			this.logActionWithoutValue();
 			this.applyDefaultValueAction();
 			return;
 		}
 
 		// : cast action
 		case nexlExpressionsParser.ACTIONS.CAST: {
-			this.logActionWithValue();
 			this.applyCastAction();
 			return;
 		}
 
 		// ~K, ~V, ~O, ~X, ~P, ~Y, ~Z converters action
 		case nexlExpressionsParser.ACTIONS.OBJECT_OPERATIONS: {
-			this.logActionWithValue();
 			this.applyObjectOperationsAction();
 			return;
 		}
 
 		// < object key reverse resolution action
 		case nexlExpressionsParser.ACTIONS.OBJECT_KEY_REVERSE_RESOLUTION: {
-			this.logActionWithoutValue();
 			this.applyObjectKeyReverseResolutionAction();
 			return;
 		}
 
 		// #S, #s, #U, #D, #LEN, #A array operations action
 		case nexlExpressionsParser.ACTIONS.ARRAY_OPERATIONS: {
-			this.logActionWithValue();
 			this.applyArrayOperationsAction();
 			return;
 		}
 
 		// - eliminate elements
 		case nexlExpressionsParser.ACTIONS.ELIMINATE: {
-			this.logActionWithoutValue();
 			this.applyEliminateAction();
 			return;
 		}
 
 		// + append ( arrays, objects, primitives )
 		case nexlExpressionsParser.ACTIONS.APPEND_MERGE_CONCAT: {
-			this.logActionWithoutValue();
 			this.applyAppendMergeConcatAction();
 			return;
 		}
 
 		// & join array elements action
 		case nexlExpressionsParser.ACTIONS.JOIN_ARRAY_ELEMENTS: {
-			this.logActionWithoutValue();
 			this.applyJoinArrayElementsAction();
 			return;
 		}
 
 		// ^U, ^L, ^LEN, ^T, ^Z string operations action
 		case nexlExpressionsParser.ACTIONS.STRING_OPERATIONS: {
-			this.logActionWithValue();
 			this.applyStringOperationsAction();
 			return;
 		}
 
 		// !E, !U miscellaneous value operations
 		case nexlExpressionsParser.ACTIONS.MISCELLANEOUS_OPERATIONS: {
-			this.logActionWithValue();
 			this.miscellaneousOperations();
 			return;
 		}
 
 		// * mandatory value action
 		case nexlExpressionsParser.ACTIONS.MANDATORY_VALUE_VALIDATOR: {
-			this.logActionWithoutValue();
 			this.applyMandatoryValueValidatorAction();
 			return;
 		}
 
 		// | push current result to function parameters stack
 		case nexlExpressionsParser.ACTIONS.PUSH_FUNCTION_PARAM: {
-			this.logActionWithoutValue();
 			this.applyPushFunctionParamAction();
 			return;
 		}
 
 		// = assign variable value action
 		case nexlExpressionsParser.ACTIONS.ASSIGN_VARIABLE: {
-			this.logActionWithValue();
 			this.applyAssignVarAction();
 			return;
 		}
 
 		// ; actions separator
 		case nexlExpressionsParser.ACTIONS.SEPARATOR: {
-			this.logActionWithoutValue();
 			this.applySeparatorAction();
 			return;
 		}
 
 		// % inverted property resolution
 		case nexlExpressionsParser.ACTIONS.INVERTED_PROPERTY_RESOLUTION: {
-			this.logActionWithoutValue();
 			this.applyInvertedPropertyResolution();
 			return;
 		}
@@ -1410,6 +1367,51 @@ NexlExpressionEvaluator.prototype.makeDeepResolution = function () {
 	this.result = new NexlEngine(this.context, this.isEvaluateToUndefined).processItem(this.result, objInfo);
 };
 
+NexlExpressionEvaluator.prototype.strigifySafely = function (what) {
+	try {
+		return JSON.stringify(what);
+	} catch (e) {
+		winston.error('Failed to stringify result. Error message : ' + e);
+		return 'ERROR !';
+	}
+};
+
+NexlExpressionEvaluator.prototype.strigifyResult = function () {
+	if (this.result === this.context) {
+		return 'undefined';
+	}
+
+	return this.strigifySafely(this.result);
+};
+
+NexlExpressionEvaluator.prototype.logBefore = function () {
+	if (!j79.isLogLevel('debug')) {
+		return;
+	}
+
+	var actionValue = '';
+
+	if (this.action.actionValue && this.action.actionValue.chunks && this.action.actionValue.chunks.length > 0) {
+		actionValue = 'still not calculated';
+	} else {
+		actionValue = this.action.actionValue;
+	}
+
+	if (j79.isLogLevel('silly')) {
+		winston.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s], [resultBefore=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
+	} else {
+		winston.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	}
+};
+
+NexlExpressionEvaluator.prototype.logAfter = function () {
+	if (j79.isLogLevel('silly')) {
+		winston.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s], [resultAfter=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
+	} else {
+		winston.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	}
+};
+
 NexlExpressionEvaluator.prototype.eval = function () {
 	this.init(0);
 	this.retrieveEvaluateToUndefinedAction();
@@ -1421,8 +1423,9 @@ NexlExpressionEvaluator.prototype.eval = function () {
 		// current action
 		this.action = this.nexlExpressionMD.actions[this.actionNr];
 
-		// evaluating current action
+		this.logBefore();
 		this.applyAction();
+		this.logAfter();
 
 		// if last action is evaluated to object and current result is not context, save this.result
 		if (j79.isObject(this.result) && this.result !== this.context) {
@@ -1434,7 +1437,7 @@ NexlExpressionEvaluator.prototype.eval = function () {
 	this.makeDeepResolution();
 
 	if (j79.isLogLevel('silly')) {
-		winston.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s). [result=%s]', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length, JSON.stringify(this.result));
+		winston.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s). [finalResult=%s]', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length, this.strigifyResult());
 	} else {
 		winston.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s)', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
 	}

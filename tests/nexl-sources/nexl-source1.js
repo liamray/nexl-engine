@@ -158,5 +158,3 @@ iterationBody3 = '${_value_^U}';
 nexl.init = function () {
 	nexl.set('test', 'omglol');
 };
-
-nexl.init = '${@omg=test;}';

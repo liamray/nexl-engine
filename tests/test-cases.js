@@ -3198,6 +3198,11 @@ module.exports.push({
 });
 
 module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func4.js'}},
+	throwsException: true
+});
+
+module.exports.push({
 	nexlSource: {asFile: {fileName: 'nexl-sources/init/set1.js'}},
 	result: 'okokok'
 });

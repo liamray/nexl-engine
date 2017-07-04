@@ -21,6 +21,8 @@
     - fixed arrays and objects resolution bug ( every time was created a new instance of arrays and objects )
     - undefined operations is renamed to miscellaneous operations
     - improved logs at silly level
+    - added nexl.init which is nexl expression or function to be evaluated before nexl engine evaluates your expression
+    - added nexl.set(key, val) function to change variable values from nexl source ( for each request separately )
 
 2.2.1 | 26-MAY-2017
 ===================

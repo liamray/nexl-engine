@@ -3167,3 +3167,37 @@ module.exports.push({
 	expression: '${arr1-queen-muscle;arr1}',
 	result: [79, false]
 });
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// nexl.init tests
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-str1.js'}},
+	result: [1, 2, 'hello']
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-str2.js'}},
+	result: 1979
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func1.js'}},
+	result: [1, 2, 'hello']
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func2.js'}},
+	result: 1979
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func3.js'}},
+	result: 1979
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/init/set1.js'}},
+	result: 'okokok'
+});

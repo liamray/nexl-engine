@@ -38,7 +38,7 @@ function hasEvaluateToUndefinedFlag(obj) {
 }
 
 function provideWithNexlAPI(context, nexlEngine) {
-	// supplying nexl engine for functions in nexl-sources
+	// supplying nexlize() function
 	context.nexl.nexlize = function (nexlExpression, externalArgs4Function) {
 		// backing up current context before change
 		var contextBackup = context;
@@ -55,6 +55,11 @@ function provideWithNexlAPI(context, nexlEngine) {
 		context = contextBackup;
 		return result;
 	};
+
+	// supplying set() function
+	context.nexl.set = function (key, val) {
+		context[key] = val;
+	}
 }
 
 function makeContext(nexlSource, externalArgs, nexlEngine) {
@@ -79,10 +84,29 @@ function makeContext(nexlSource, externalArgs, nexlEngine) {
 	// giving an access to functions from nexl sources to nexl API
 	provideWithNexlAPI(context, nexlEngine);
 
-	//
+	// assign nexl system functions
 	nexlSystemFuncs.assign(context);
 
+	// initializing the context ( nexl.init )
+	initContext(context, nexlEngine);
+
 	return context;
+}
+
+function initContext(context, nexlEngine) {
+	// is nexl.init a string ?
+	if (j79.isString(context.nexl.init)) {
+		// evaluating nexl.init expression
+		new nexlEngine(context).processItem(context.nexl.init);
+		return;
+	}
+
+	// is nexl.init a function ?
+	if (j79.isFunction(context.nexl.init)) {
+		// evaluating nexl.init() function
+		new nexlEngine(context).processItem('${nexl.init()}');
+		return;
+	}
 }
 
 function supplyStandardLibs(context) {

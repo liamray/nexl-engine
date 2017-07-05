@@ -22,7 +22,8 @@
     - undefined operations is renamed to miscellaneous operations
     - improved logs at silly level
     - added nexl.init which is nexl expression or function to be evaluated before nexl engine evaluates your expression
-    - added nexl.set(key, val) function to change variable values from nexl source ( for each request separately )
+    - added nexl.set(key, val) nexl API function to change variable values in nexl source at runtime ( for each request separately )
+    - added nexl.get(key, val) nexl API function to retrieve variable values in nexl source at runtime ( for each request separately )
 
 2.2.1 | 26-MAY-2017
 ===================

@@ -62,6 +62,19 @@ function provideWithNexlAPI(context, nexlEngine) {
 	}
 }
 
+// when nexl object present in externalArgs, deepMerge() function spoils all stuff under nexl object when merging it to context
+function excludeNexlObjectFromExternalArgs(context, externalArgs) {
+	// "merging" externalArgs.nexl.EVALUATE_TO_UNDEFINED from externalArgs to context if exists
+	if (externalArgs && externalArgs.nexl && externalArgs.nexl.EVALUATE_TO_UNDEFINED === true) {
+		context.nexl.EVALUATE_TO_UNDEFINED = true;
+	}
+
+	// deleting nexl object from externalArgg
+	if (externalArgs) {
+		delete externalArgs['nexl'];
+	}
+}
+
 function makeContext(nexlSource, externalArgs, nexlEngine) {
 	// creating context
 	var context = nexlSourceUtils.createContext(nexlSource);
@@ -70,6 +83,9 @@ function makeContext(nexlSource, externalArgs, nexlEngine) {
 	if (j79.isObject(context.nexl.defaultArgs)) {
 		context = deepMergeInner(context, context.nexl.defaultArgs);
 	}
+
+	// excluding nexl object from external arguments because of deepMerge() function spoils nexl object after merge
+	excludeNexlObjectFromExternalArgs(context, externalArgs);
 
 	// merging external args to context
 	if (j79.isObject(externalArgs)) {

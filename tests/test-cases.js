@@ -3170,39 +3170,44 @@ module.exports.push({
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// nexl.init tests
+// nexl api tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-str1.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-str1.js'}},
 	result: [1, 2, 'hello']
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-str2.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-str2.js'}},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func1.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func1.js'}},
 	result: [1, 2, 'hello']
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func2.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func2.js'}},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func3.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func3.js'}},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/init-func4.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func4.js'}},
 	throwsException: true
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/init/set1.js'}},
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/set1.js'}},
 	result: 'okokok'
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/get1.js'}},
+	result: 1980
 });

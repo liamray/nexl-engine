@@ -37,7 +37,7 @@ function hasEvaluateToUndefinedFlag(obj) {
 	return ( ( obj || {} ).nexl || {} ).EVALUATE_TO_UNDEFINED === true;
 }
 
-function provideWithNexlAPI(context, nexlEngine) {
+function supplyNexlAPI(context, nexlEngine) {
 	// supplying nexlize() function
 	context.nexl.nexlize = function (nexlExpression, externalArgs4Function) {
 		// backing up current context before change
@@ -59,7 +59,12 @@ function provideWithNexlAPI(context, nexlEngine) {
 	// supplying set() function
 	context.nexl.set = function (key, val) {
 		context[key] = val;
-	}
+	};
+
+	// supplying get() function
+	context.nexl.get = function (key, val) {
+		return context[key];
+	};
 }
 
 // when nexl object present in externalArgs, deepMerge() function spoils all stuff under nexl object when merging it to context
@@ -98,7 +103,7 @@ function makeContext(nexlSource, externalArgs, nexlEngine) {
 	supplyStandardLibs(context);
 
 	// giving an access to functions from nexl sources to nexl API
-	provideWithNexlAPI(context, nexlEngine);
+	supplyNexlAPI(context, nexlEngine);
 
 	// assign nexl system functions
 	nexlSystemFuncs.assign(context);

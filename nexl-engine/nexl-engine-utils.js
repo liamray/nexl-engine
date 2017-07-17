@@ -105,7 +105,7 @@ function makeContext(nexlSource, externalArgs, nexlEngine) {
 	// giving an access to functions from nexl sources to nexl API
 	supplyNexlAPI(context, nexlEngine);
 
-	// assign nexl system functions
+	// assign nexl functions
 	nexlSystemFuncs.assign(context);
 
 	// initializing the context ( nexl.init )

@@ -182,7 +182,7 @@ NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 	}
 
 	if (this.context.nexl.funcs[key] !== undefined) {
-		winston.debug('Resolved nexl system function for key=[%s]', key);
+		winston.debug('Resolved nexl function for key=[%s]', key);
 		return this.context.nexl.funcs[key];
 	}
 

@@ -12,7 +12,7 @@ const j79 = require('j79-utils');
 const util = require('util');
 const deepMerge = require('deepmerge');
 
-var systemFunctions = {};
+var nexlFuncs = {};
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // helper functions
@@ -90,7 +90,7 @@ function isPositiveNr(nr) {
 // functions to assign to context
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-systemFunctions.updAt = function (arrOrStr, val, index) {
+nexlFuncs.updAt = function (arrOrStr, val, index) {
 	var type = j79.getType(arrOrStr);
 	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
 		return arrOrStr;
@@ -112,7 +112,7 @@ systemFunctions.updAt = function (arrOrStr, val, index) {
 	return arrOrStr;
 };
 
-systemFunctions.insAt = function (arrOrStr, val, index) {
+nexlFuncs.insAt = function (arrOrStr, val, index) {
 	var type = j79.getType(arrOrStr);
 	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
 		return arrOrStr;
@@ -134,7 +134,7 @@ systemFunctions.insAt = function (arrOrStr, val, index) {
 	return arrOrStr;
 };
 
-systemFunctions.delAt = function (arrOrStr, index, cnt) {
+nexlFuncs.delAt = function (arrOrStr, index, cnt) {
 	var type = j79.getType(arrOrStr);
 	if (type !== j79.TYPE_STRING && type !== j79.TYPE_ARRAY) {
 		return arrOrStr;
@@ -161,7 +161,7 @@ systemFunctions.delAt = function (arrOrStr, index, cnt) {
 	return arrOrStr;
 };
 
-systemFunctions.keyVals = function (obj, key) {
+nexlFuncs.keyVals = function (obj, key) {
 	if (!j79.isObject(obj)) {
 		j79.winston.debug('The keyVal() function is not applicable because first parameter is not an object. Skipping...');
 		return obj;
@@ -188,7 +188,7 @@ systemFunctions.keyVals = function (obj, key) {
 };
 
 // resolves key set from "obj" at "level" level
-systemFunctions.keys = function (obj, level) {
+nexlFuncs.keys = function (obj, level) {
 	if (!j79.isObject(obj)) {
 		return obj;
 	}
@@ -203,7 +203,7 @@ systemFunctions.keys = function (obj, level) {
 	for (var key in obj) {
 		var val = obj[key];
 		if (j79.isObject(val)) {
-			var tmp = systemFunctions.keys(val, level - 1);
+			var tmp = nexlFuncs.keys(val, level - 1);
 			result = result.concat(tmp);
 		}
 	}
@@ -212,7 +212,7 @@ systemFunctions.keys = function (obj, level) {
 };
 
 // resolves values from "obj" at "level" level
-systemFunctions.vals = function (obj, level) {
+nexlFuncs.vals = function (obj, level) {
 	if (!j79.isObject(obj)) {
 		return obj;
 	}
@@ -227,7 +227,7 @@ systemFunctions.vals = function (obj, level) {
 	for (var key in obj) {
 		var val = obj[key];
 		if (j79.isObject(val)) {
-			var tmp = systemFunctions.vals(val, level - 1);
+			var tmp = nexlFuncs.vals(val, level - 1);
 			result = result.concat(tmp);
 		}
 	}
@@ -236,7 +236,7 @@ systemFunctions.vals = function (obj, level) {
 };
 
 // makes obj from arguments
-systemFunctions.obj = function () {
+nexlFuncs.obj = function () {
 	var result = {};
 	for (var index = 0; index < arguments.length / 2; index++) {
 		var key = arguments[index * 2];
@@ -250,7 +250,7 @@ systemFunctions.obj = function () {
 };
 
 // makes array from arguments
-systemFunctions.arr = function () {
+nexlFuncs.arr = function () {
 	var result = [];
 	for (var index in arguments) {
 		result.push(arguments[index]);
@@ -258,7 +258,7 @@ systemFunctions.arr = function () {
 	return result;
 };
 
-systemFunctions.concat = function () {
+nexlFuncs.concat = function () {
 	if (arguments.length < 1) {
 		return;
 	}
@@ -285,7 +285,7 @@ systemFunctions.concat = function () {
 	return undefined;
 };
 
-systemFunctions.setKey = function (obj, currentKey, newKey) {
+nexlFuncs.setKey = function (obj, currentKey, newKey) {
 	if (j79.isObject(obj)) {
 		var val = obj[currentKey];
 		delete obj[currentKey];
@@ -295,7 +295,7 @@ systemFunctions.setKey = function (obj, currentKey, newKey) {
 	return obj;
 };
 
-systemFunctions.setVal = function (obj, key, val) {
+nexlFuncs.setVal = function (obj, key, val) {
 	if (j79.isObject(obj)) {
 		obj[key] = val;
 	}
@@ -303,7 +303,7 @@ systemFunctions.setVal = function (obj, key, val) {
 	return obj;
 };
 
-systemFunctions.makeObj = function (key, val) { // <---- DEPRECATED ! Use obj() function instead
+nexlFuncs.makeObj = function (key, val) { // <---- DEPRECATED ! Use obj() function instead
 	var result = {};
 
 	if (j79.isPrimitive(key)) {
@@ -320,7 +320,7 @@ systemFunctions.makeObj = function (key, val) { // <---- DEPRECATED ! Use obj() 
 };
 
 // replaces items in array or string
-systemFunctions.replaceAll = function (arrOrStr, searchItem, replace) {
+nexlFuncs.replaceAll = function (arrOrStr, searchItem, replace) {
 	if (j79.isArray(arrOrStr)) {
 		return replaceAll4Array(arrOrStr, searchItem, replace);
 	}
@@ -332,7 +332,7 @@ systemFunctions.replaceAll = function (arrOrStr, searchItem, replace) {
 	return arrOrStr;
 };
 
-systemFunctions.not = function (param) {
+nexlFuncs.not = function (param) {
 	if (j79.isBool(param)) {
 		return !param;
 	} else {
@@ -343,7 +343,7 @@ systemFunctions.not = function (param) {
 ///////////////////////////////////////////////////////////////////////////////
 // is*
 
-systemFunctions.isMatch = function (str, regex, flags) {
+nexlFuncs.isMatch = function (str, regex, flags) {
 	if (!j79.isString(str)) {
 		return str;
 	}
@@ -352,7 +352,7 @@ systemFunctions.isMatch = function (str, regex, flags) {
 };
 
 // is string or array contains value
-systemFunctions.isContains = function (arrOrStr, item) {
+nexlFuncs.isContains = function (arrOrStr, item) {
 	if (j79.isArray(arrOrStr) || j79.isString(arrOrStr)) {
 		return arrOrStr.indexOf(item) >= 0;
 	}
@@ -360,94 +360,94 @@ systemFunctions.isContains = function (arrOrStr, item) {
 	return arrOrStr;
 };
 
-systemFunctions.isEquals = function (item1, item2) {
+nexlFuncs.isEquals = function (item1, item2) {
 	return item1 === item2;
 };
 
-systemFunctions.isEq = function (item1, item2) {
+nexlFuncs.isEq = function (item1, item2) {
 	return item1 === item2;
 };
 
-systemFunctions.isGT = function (item1, item2) {
+nexlFuncs.isGT = function (item1, item2) {
 	return item1 > item2;
 };
 
-systemFunctions.isLT = function (item1, item2) {
+nexlFuncs.isLT = function (item1, item2) {
 	return item1 < item2;
 };
 
-systemFunctions.isGE = function (item1, item2) {
+nexlFuncs.isGE = function (item1, item2) {
 	return item1 >= item2;
 };
 
-systemFunctions.isLE = function (item1, item2) {
+nexlFuncs.isLE = function (item1, item2) {
 	return item1 <= item2;
 };
 
-systemFunctions.isBool = function (item) {
+nexlFuncs.isBool = function (item) {
 	return j79.isBool(item);
 };
 
-systemFunctions.isStr = function (item) {
+nexlFuncs.isStr = function (item) {
 	return j79.isString(item);
 };
 
-systemFunctions.isNum = function (item) {
+nexlFuncs.isNum = function (item) {
 	return j79.isNumber(item);
 };
 
-systemFunctions.isNull = function (item) {
+nexlFuncs.isNull = function (item) {
 	return item === null;
 };
 
-systemFunctions.isUndefined = function (item) {
+nexlFuncs.isUndefined = function (item) {
 	return item === undefined;
 };
 
-systemFunctions.isNaN = function (item) {
+nexlFuncs.isNaN = function (item) {
 	return item !== item;
 };
 
-systemFunctions.isPrimitive = function (item) {
+nexlFuncs.isPrimitive = function (item) {
 	return j79.isPrimitive(item);
 };
 
-systemFunctions.isArray = function (item) {
+nexlFuncs.isArray = function (item) {
 	return j79.isArray(item);
 };
 
-systemFunctions.isObject = function (item) {
+nexlFuncs.isObject = function (item) {
 	return j79.isObject(item);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // if*
 
-systemFunctions.ifMatch = function (str, regex, thenIf, elseIf) {
+nexlFuncs.ifMatch = function (str, regex, thenIf, elseIf) {
 	if (!j79.isString(str)) {
 		return str;
 	}
 
-	return systemFunctions.isMatch(str, regex) ? thenIf : elseIf;
+	return nexlFuncs.isMatch(str, regex) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNMatch = function (str, regex, thenIf, elseIf) {
-	return systemFunctions.ifMatch(str, regex, elseIf, thenIf);
+nexlFuncs.ifNMatch = function (str, regex, thenIf, elseIf) {
+	return nexlFuncs.ifMatch(str, regex, elseIf, thenIf);
 };
 
-systemFunctions.ifMatchEx = function (str, regex, flags, thenIf, elseIf) {
+nexlFuncs.ifMatchEx = function (str, regex, flags, thenIf, elseIf) {
 	if (!j79.isString(str)) {
 		return str;
 	}
 
-	return systemFunctions.isMatch(str, regex, flags) ? thenIf : elseIf;
+	return nexlFuncs.isMatch(str, regex, flags) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNMatchEx = function (str, regex, flags, thenIf, elseIf) {
-	return systemFunctions.ifMatchEx(str, regex, flags, elseIf, thenIf);
+nexlFuncs.ifNMatchEx = function (str, regex, flags, thenIf, elseIf) {
+	return nexlFuncs.ifMatchEx(str, regex, flags, elseIf, thenIf);
 };
 
-systemFunctions.ifContains = function (arrOrStr, item, thenIf, elseIf) {
+nexlFuncs.ifContains = function (arrOrStr, item, thenIf, elseIf) {
 	if (j79.isArray(arrOrStr) || j79.isString(arrOrStr)) {
 		return arrOrStr.indexOf(item) >= 0 ? thenIf : elseIf;
 	}
@@ -455,119 +455,119 @@ systemFunctions.ifContains = function (arrOrStr, item, thenIf, elseIf) {
 	return arrOrStr;
 };
 
-systemFunctions.ifNContains = function (arrOrStr, item, thenIf, elseIf) {
-	return systemFunctions.ifContains(arrOrStr, item, elseIf, thenIf);
+nexlFuncs.ifNContains = function (arrOrStr, item, thenIf, elseIf) {
+	return nexlFuncs.ifContains(arrOrStr, item, elseIf, thenIf);
 };
 
-systemFunctions.ifEquals = function (item1, item2, thenIf, elseIf) {
-	return systemFunctions.isEquals(item1, item2) ? thenIf : elseIf;
+nexlFuncs.ifEquals = function (item1, item2, thenIf, elseIf) {
+	return nexlFuncs.isEquals(item1, item2) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNEquals = function (item1, item2, thenIf, elseIf) {
-	return systemFunctions.ifEquals(item1, item2, elseIf, thenIf);
+nexlFuncs.ifNEquals = function (item1, item2, thenIf, elseIf) {
+	return nexlFuncs.ifEquals(item1, item2, elseIf, thenIf);
 };
 
-systemFunctions.ifEq = function (item1, item2, thenIf, elseIf) {
-	return systemFunctions.isEquals(item1, item2) ? thenIf : elseIf;
+nexlFuncs.ifEq = function (item1, item2, thenIf, elseIf) {
+	return nexlFuncs.isEquals(item1, item2) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNEq = function (item1, item2, thenIf, elseIf) {
-	return systemFunctions.ifEq(item1, item2, elseIf, thenIf);
+nexlFuncs.ifNEq = function (item1, item2, thenIf, elseIf) {
+	return nexlFuncs.ifEq(item1, item2, elseIf, thenIf);
 };
 
-systemFunctions.ifGT = function (item1, item2, thenIf, elseIf) {
+nexlFuncs.ifGT = function (item1, item2, thenIf, elseIf) {
 	return item1 > item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifLT = function (item1, item2, thenIf, elseIf) {
+nexlFuncs.ifLT = function (item1, item2, thenIf, elseIf) {
 	return item1 < item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifGE = function (item1, item2, thenIf, elseIf) {
+nexlFuncs.ifGE = function (item1, item2, thenIf, elseIf) {
 	return item1 >= item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifLE = function (item1, item2, thenIf, elseIf) {
+nexlFuncs.ifLE = function (item1, item2, thenIf, elseIf) {
 	return item1 <= item2 ? thenIf : elseIf;
 };
 
-systemFunctions.ifBool = function (item, thenIf, elseIf) {
-	return systemFunctions.isBool(item) ? thenIf : elseIf;
+nexlFuncs.ifBool = function (item, thenIf, elseIf) {
+	return nexlFuncs.isBool(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNBool = function (item, thenIf, elseIf) {
-	return systemFunctions.ifBool(item, elseIf, thenIf);
+nexlFuncs.ifNBool = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifBool(item, elseIf, thenIf);
 };
 
-systemFunctions.ifStr = function (item, thenIf, elseIf) {
-	return systemFunctions.isStr(item) ? thenIf : elseIf;
+nexlFuncs.ifStr = function (item, thenIf, elseIf) {
+	return nexlFuncs.isStr(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNStr = function (item, thenIf, elseIf) {
-	return systemFunctions.ifStr(item, elseIf, thenIf);
+nexlFuncs.ifNStr = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifStr(item, elseIf, thenIf);
 };
 
-systemFunctions.ifNum = function (item, thenIf, elseIf) {
-	return systemFunctions.isNum(item) ? thenIf : elseIf;
+nexlFuncs.ifNum = function (item, thenIf, elseIf) {
+	return nexlFuncs.isNum(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNNum = function (item, thenIf, elseIf) {
-	return systemFunctions.ifNum(item, elseIf, thenIf);
+nexlFuncs.ifNNum = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifNum(item, elseIf, thenIf);
 };
 
-systemFunctions.ifNull = function (item, thenIf, elseIf) {
-	return systemFunctions.isNull(item) ? thenIf : elseIf;
+nexlFuncs.ifNull = function (item, thenIf, elseIf) {
+	return nexlFuncs.isNull(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNNull = function (item, thenIf, elseIf) {
-	return systemFunctions.ifNull(item, elseIf, thenIf);
+nexlFuncs.ifNNull = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifNull(item, elseIf, thenIf);
 };
 
-systemFunctions.ifUndefined = function (item, thenIf, elseIf) {
-	return systemFunctions.isUndefined(item) ? thenIf : elseIf;
+nexlFuncs.ifUndefined = function (item, thenIf, elseIf) {
+	return nexlFuncs.isUndefined(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNUndefined = function (item, thenIf, elseIf) {
-	return systemFunctions.ifUndefined(item, elseIf, thenIf);
+nexlFuncs.ifNUndefined = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifUndefined(item, elseIf, thenIf);
 };
 
-systemFunctions.ifNaN = function (item, thenIf, elseIf) {
-	return systemFunctions.isNaN(item) ? thenIf : elseIf;
+nexlFuncs.ifNaN = function (item, thenIf, elseIf) {
+	return nexlFuncs.isNaN(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNNaN = function (item, thenIf, elseIf) {
-	return systemFunctions.ifNaN(item, elseIf, thenIf);
+nexlFuncs.ifNNaN = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifNaN(item, elseIf, thenIf);
 };
 
-systemFunctions.ifPrimitive = function (item, thenIf, elseIf) {
-	return systemFunctions.isPrimitive(item) ? thenIf : elseIf;
+nexlFuncs.ifPrimitive = function (item, thenIf, elseIf) {
+	return nexlFuncs.isPrimitive(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNPrimitive = function (item, thenIf, elseIf) {
-	return systemFunctions.ifPrimitive(item, elseIf, thenIf);
+nexlFuncs.ifNPrimitive = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifPrimitive(item, elseIf, thenIf);
 };
 
-systemFunctions.ifArray = function (item, thenIf, elseIf) {
-	return systemFunctions.isArray(item) ? thenIf : elseIf;
+nexlFuncs.ifArray = function (item, thenIf, elseIf) {
+	return nexlFuncs.isArray(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNArray = function (item, thenIf, elseIf) {
-	return systemFunctions.ifArray(item, elseIf, thenIf);
+nexlFuncs.ifNArray = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifArray(item, elseIf, thenIf);
 };
 
-systemFunctions.ifObject = function (item, thenIf, elseIf) {
-	return systemFunctions.isObject(item) ? thenIf : elseIf;
+nexlFuncs.ifObject = function (item, thenIf, elseIf) {
+	return nexlFuncs.isObject(item) ? thenIf : elseIf;
 };
 
-systemFunctions.ifNObject = function (item, thenIf, elseIf) {
-	return systemFunctions.ifObject(item, elseIf, thenIf);
+nexlFuncs.ifNObject = function (item, thenIf, elseIf) {
+	return nexlFuncs.ifObject(item, elseIf, thenIf);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 // math funcs
 
 // accepts multiple arguments
-systemFunctions.inc = function (number) {
+nexlFuncs.inc = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -584,7 +584,7 @@ systemFunctions.inc = function (number) {
 	return result;
 };
 
-systemFunctions.dec = function (number) {
+nexlFuncs.dec = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -601,7 +601,7 @@ systemFunctions.dec = function (number) {
 	return result;
 };
 
-systemFunctions.div = function (number) {
+nexlFuncs.div = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -614,7 +614,7 @@ systemFunctions.div = function (number) {
 	return result;
 };
 
-systemFunctions.mult = function (number) {
+nexlFuncs.mult = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -627,7 +627,7 @@ systemFunctions.mult = function (number) {
 	return result;
 };
 
-systemFunctions.mod = function (number) {
+nexlFuncs.mod = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -644,9 +644,9 @@ systemFunctions.mod = function (number) {
 // assigning system functions to nexl context
 ///////////////////////////////////////////////////////////////////////////////////////////
 module.exports.assign = function (context) {
-	for (var item in systemFunctions) {
-		context.nexl.funcs.sys[item] = systemFunctions[item];
+	for (var item in nexlFuncs) {
+		context.nexl.funcs[item] = nexlFuncs[item];
 	}
 };
 
-module.exports.nexlSystemFuncs = systemFunctions;
+module.exports.nexlFuncs = nexlFuncs;

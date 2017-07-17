@@ -247,13 +247,12 @@ function createContext(nexlSource) {
 
 	// system and user functions
 	context.nexl.funcs = {};
-	context.nexl.funcs.sys = {};
-	context.nexl.funcs.usr = {};
+	context.nexl.usr = {};
 
 	// nexl.functions.system and nexl.functions.user are deprecated and left for backward compatibility, probably will be removed in future versions, right for JUN-2017 )
-	context.nexl.functions = context.nexl.funcs;
-	context.nexl.functions.system = context.nexl.funcs.sys;
-	context.nexl.functions.user = context.nexl.funcs.usr;
+	context.nexl.functions = {};
+	context.nexl.functions.system = context.nexl.funcs;
+	context.nexl.functions.user = context.nexl.usr;
 
 	// assembling source code from JavaScript files
 	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();

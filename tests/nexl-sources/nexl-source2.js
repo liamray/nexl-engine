@@ -311,3 +311,7 @@ deepObject = {
 assignVars1 = '${var1}';
 
 undefArr = ['hello', '${intItem}', '${undefinedVar!U} hello', undefined];
+
+nexl.usr.usrFuncTest = function () {
+	return nexl.get('intItem');
+};

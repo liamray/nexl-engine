@@ -176,14 +176,14 @@ NexlExpressionEvaluator.prototype.retrieveEvaluateToUndefinedAction = function (
 };
 
 NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
-	if (this.context.nexl.funcs.usr[key] !== undefined) {
+	if (this.context.nexl.usr[key] !== undefined) {
 		winston.debug('Resolved nexl user function for key=[%s]', key);
-		return this.context.nexl.funcs.usr[key];
+		return this.context.nexl.usr[key];
 	}
 
-	if (this.context.nexl.funcs.sys[key] !== undefined) {
+	if (this.context.nexl.funcs[key] !== undefined) {
 		winston.debug('Resolved nexl system function for key=[%s]', key);
-		return this.context.nexl.funcs.sys[key];
+		return this.context.nexl.funcs[key];
 	}
 
 	if (this.context.Math[key] !== undefined) {
@@ -1606,4 +1606,4 @@ module.exports.resolveJsVariables = nexlSourceUtils.resolveJsVariables;
 // separates string items by dots ( if not escaped ) and puts them into nested objects
 module.exports.convertStrItems2Obj = nexlEngineUtils.convertStrItems2Obj;
 
-module.exports.nexlSystemFuncs = require('./nexl-engine-system-functoins').nexlSystemFuncs;
+module.exports.nexlFuncs = require('./nexl-functoins').nexlFuncs;

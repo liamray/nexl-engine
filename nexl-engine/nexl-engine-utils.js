@@ -10,7 +10,7 @@
 
 const nexlExpressionsParser = require('./nexl-expressions-parser');
 const nexlSourceUtils = require('./nexl-source-utils');
-const nexlSystemFuncs = require('./nexl-engine-system-functoins');
+const nexlSystemFuncs = require('./nexl-functoins');
 const j79 = require('j79-utils');
 const deepMerge = require('deepmerge');
 const util = require('util');

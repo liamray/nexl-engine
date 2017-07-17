@@ -1679,6 +1679,34 @@ module.exports.push({
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// testing user functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+module.exports.push({
+	expression: '${usrFuncTest()}',
+	result: 71
+});
+
+module.exports.push({
+	expression: '${|nexl.functions.user.testFunc1()}',
+	result: 'user.testFunc1'
+});
+
+module.exports.push({
+	expression: '${|testFunc1()}',
+	result: 'testFunc1'
+});
+
+module.exports.push({
+	expression: '${|testFunc2()}',
+	result: 'user.testFunc2'
+});
+
+module.exports.push({
+	expression: '${arr8|isContains()}',
+	result: 'Zhenya+'
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing system functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
@@ -1712,28 +1740,8 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${|testFunc1()}',
-	result: 'testFunc1'
-});
-
-module.exports.push({
-	expression: '${|nexl.functions.user.testFunc1()}',
-	result: 'user.testFunc1'
-});
-
-module.exports.push({
-	expression: '${|testFunc2()}',
-	result: 'user.testFunc2'
-});
-
-module.exports.push({
 	expression: '${|testFunc3()}',
 	result: 'testFunc3'
-});
-
-module.exports.push({
-	expression: '${arr8|isContains()}',
-	result: 'Zhenya+'
 });
 
 module.exports.push({
@@ -2185,37 +2193,37 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${obj1|@asd|nexl.funcs.sys.keys()}',
+	expression: '${obj1|@asd|nexl.funcs.keys()}',
 	result: ['71', 'beneficial', 'test', '()', 'disturbed', 'price', 'pack']
 });
 
 module.exports.push({
-	expression: '${deepObject|@0|nexl.funcs.sys.keys()}',
+	expression: '${deepObject|@0|nexl.funcs.keys()}',
 	result: ['cars', 'countries']
 });
 
 module.exports.push({
-	expression: '${deepObject|@0:num|nexl.funcs.sys.keys()}',
+	expression: '${deepObject|@0:num|nexl.funcs.keys()}',
 	result: ['cars', 'countries']
 });
 
 module.exports.push({
-	expression: '${deepObject|@1|nexl.funcs.sys.keys()}',
+	expression: '${deepObject|@1|nexl.funcs.keys()}',
 	result: ['name', 'USA', 'Australia']
 });
 
 module.exports.push({
-	expression: '${deepObject|@2|nexl.funcs.sys.keys()}',
+	expression: '${deepObject|@2|nexl.funcs.keys()}',
 	result: ['California', 'Florida', 'Alabama']
 });
 
 module.exports.push({
-	expression: '${deepObject|@3|nexl.funcs.sys.keys()}',
+	expression: '${deepObject|@3|nexl.funcs.keys()}',
 	result: []
 });
 
 module.exports.push({
-	expression: '${deepObject|@0|nexl.funcs.sys.vals()}',
+	expression: '${deepObject|@0|nexl.funcs.vals()}',
 	result: [{name: 'AYS'},
 		{
 			USA: {California: 1, Florida: 'test', Alabama: {}},
@@ -2484,7 +2492,7 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${intItem|intItem|intItem|intItem|nexl.funcs.sys.inc()}',
+	expression: '${intItem|intItem|intItem|intItem|nexl.funcs.inc()}',
 	result: 284
 });
 

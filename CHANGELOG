@@ -1,4 +1,4 @@
-2.3.0 | ??-???-????
+2.3.0 | 17-JUL-2017
 ===================
     - all functions and primitives under Math object can be used without Math prefix
     - added assign variables action = .Now it's possible to assign and override variables inside nexl expressions

@@ -735,7 +735,7 @@ module.exports.push({
 
 // Math.round() test
 module.exports.push({
-	expression: '${PI|inc()|round()}',
+	expression: '${PI|add()|round()}',
 	result: 4
 });
 
@@ -2395,7 +2395,7 @@ module.exports.push({
 ///////////////////////////////////////////////////
 // delAt()
 module.exports.push({
-	expression: '${fruits|@${fruits#LEN|dec()}|delAt()}',
+	expression: '${fruits|@${fruits#LEN|sub()}|delAt()}',
 	result: ['Mango', 'Lemon', 'Banana', 'Apple', null, undefined, null]
 });
 
@@ -2492,27 +2492,37 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${intItem|intItem|intItem|intItem|nexl.funcs.inc()}',
-	result: 284
-});
-
-module.exports.push({
-	expression: '${intItem|inc( ${@99:num} )}',
-	result: 170
-});
-
-module.exports.push({
 	expression: '${intItem|dec()}',
 	result: 70
 });
 
 module.exports.push({
-	expression: '${intItem|intItem|intItem|intItem|dec()}',
+	expression: '${intItem|add()}',
+	result: 72
+});
+
+module.exports.push({
+	expression: '${intItem|intItem|intItem|intItem|nexl.funcs.add()}',
+	result: 284
+});
+
+module.exports.push({
+	expression: '${intItem|add( ${@99:num} )}',
+	result: 170
+});
+
+module.exports.push({
+	expression: '${intItem|sub()}',
+	result: 70
+});
+
+module.exports.push({
+	expression: '${intItem|intItem|intItem|intItem|sub()}',
 	result: -142
 });
 
 module.exports.push({
-	expression: '${intItem|dec( ${@99:num} )}',
+	expression: '${intItem|sub( ${@99:num} )}',
 	result: -28
 });
 
@@ -2547,7 +2557,7 @@ module.exports.push({
 });
 
 module.exports.push({
-	expression: '${strItem|inc()}',
+	expression: '${strItem|add()}',
 	result: 'berry'
 });
 
@@ -2768,7 +2778,7 @@ module.exports.push({
 
 // buuble sort
 module.exports.push({
-	expression: '${arr10[]${arr10[^..-1]${_index_|inc()=nindex;arr10[ ${nindex} ]=nitem;_item_|nitem|arr10|ifGT()=tmpArr;arr10[${_index_}]=tmp;updAt( ${tmpArr}, ${nitem}, ${_index_} );updAt( ${tmpArr}, ${tmp}, ${nindex} );};};arr10}',
+	expression: '${arr10[]${arr10[^..-1]${_index_|add()=nindex;arr10[ ${nindex} ]=nitem;_item_|nitem|arr10|ifGT()=tmpArr;arr10[${_index_}]=tmp;updAt( ${tmpArr}, ${nitem}, ${_index_} );updAt( ${tmpArr}, ${tmp}, ${nindex} );};};arr10}',
 	result: [13, 14, 17, 31, 47, 61, 61, 64, 73, 74, 84, 88]
 });
 

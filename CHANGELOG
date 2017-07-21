@@ -1,4 +1,4 @@
-2.3.0 | 18-JUL-2017
+2.3.0 | 21-JUL-2017
 ===================
     - all functions and primitives under Math object can be used without Math prefix
     - added assign variables action = .Now it's possible to assign and override variables inside nexl expressions
@@ -7,7 +7,9 @@
     - added !CL clone action to clone array and object instances
     - nexl.functions.system moved to nexl.funcs ( nexl.functions.system is left for backward compatibility )
     - nexl.functions.user moved to nexl.usr ( nexl.functions.user is left for backward compatibility )
-    - inc(), dec(), div(), mult(), mod() functions now can accept multiple arguments
+    - inc() function renamed to add() ( add() function is left for backward compatibility )
+    - dec() function renamed to sub() ( dec() function is left for backward compatibility )
+    - add(), sub(), div(), mult(), mod() functions now can accept multiple arguments
     - added keyVals() nexl function to resolve key+value pairs from object
     - added concat() nexl function to concat primitives, array and objects. Function accepts multiple arguments
     - added updAt(), insAt(), delAt() nexl function to update/insert/delete array elements and strings

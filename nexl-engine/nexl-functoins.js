@@ -567,7 +567,7 @@ nexlFuncs.ifNObject = function (item, thenIf, elseIf) {
 // math funcs
 
 // accepts multiple arguments
-nexlFuncs.inc = function (number) {
+nexlFuncs.add = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -584,7 +584,9 @@ nexlFuncs.inc = function (number) {
 	return result;
 };
 
-nexlFuncs.dec = function (number) {
+nexlFuncs.inc = nexlFuncs.add; // left for backward compatibility
+
+nexlFuncs.sub = function (number) {
 	if (!j79.isNumber(number)) {
 		return number;
 	}
@@ -600,6 +602,7 @@ nexlFuncs.dec = function (number) {
 
 	return result;
 };
+nexlFuncs.dec = nexlFuncs.sub; // left for backward compatibility
 
 nexlFuncs.div = function (number) {
 	if (!j79.isNumber(number)) {

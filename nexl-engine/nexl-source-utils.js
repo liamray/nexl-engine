@@ -12,7 +12,6 @@ const esprima = require('esprima');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
-const vm = require('vm');
 const j79 = require('j79-utils');
 const winston = j79.winston;
 
@@ -236,37 +235,9 @@ function NexlSourceCodeAssembler(nexlSource) {
 	this.nexlSource = nexlSource;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function createContext(nexlSource) {
-	var context = {};
-
-	// nexl object
-	context.nexl = {};
-
-	// system and user functions
-	context.nexl.funcs = {};
-	context.nexl.usr = {};
-
-	// nexl.functions.system and nexl.functions.user are deprecated and left for backward compatibility, probably will be removed in future versions, right for JUN-2017 )
-	context.nexl.functions = {};
-	context.nexl.functions.system = context.nexl.funcs;
-	context.nexl.functions.user = context.nexl.usr;
-
-	// assembling source code from JavaScript files
-	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
-
-	try {
-		// assigning source code to context
-		vm.runInNewContext(sourceCode, context);
-	} catch (e) {
-		throw "Got a problem with a nexl source : " + e;
-	}
-
-	return context;
+function assembleSourceCode(nexlSource) {
+	return new NexlSourceCodeAssembler(nexlSource).assemble();
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -331,7 +302,7 @@ function parseAndPushSourceCodeItem(item, result) {
 }
 
 function resolveJsVariables(nexlSource) {
-	var sourceCode = new NexlSourceCodeAssembler(nexlSource).assemble();
+	var sourceCode = assembleSourceCode(nexlSource);
 
 	try {
 		var parsedCode = esprima.parse(sourceCode).body;
@@ -361,5 +332,5 @@ function resolveJsVariables(nexlSource) {
 // exports
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-module.exports.createContext = createContext;
+module.exports.assembleSourceCode = assembleSourceCode;
 module.exports.resolveJsVariables = resolveJsVariables;

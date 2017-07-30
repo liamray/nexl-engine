@@ -1582,7 +1582,7 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	}
 
 	// creating context
-	var context = nexlEngineUtils.makeContext(nexlSource, externalArgs, NexlEngine);
+	var context = nexlEngineUtils.createContext(nexlSource, externalArgs, NexlEngine);
 
 	// replacing \n and \t with their real ASCII code
 	var item2Process = nexlEngineUtils.replaceSpecialChars(item);

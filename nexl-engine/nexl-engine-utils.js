@@ -13,6 +13,7 @@ const nexlSourceUtils = require('./nexl-source-utils');
 const nexlSystemFuncs = require('./nexl-functoins');
 const j79 = require('j79-utils');
 const deepMerge = require('deepmerge');
+const vm = require('vm');
 const util = require('util');
 const winston = j79.winston;
 
@@ -37,100 +38,31 @@ function hasEvaluateToUndefinedFlag(obj) {
 	return ( ( obj || {} ).nexl || {} ).EVALUATE_TO_UNDEFINED === true;
 }
 
-function supplyNexlAPI(context, nexlEngine) {
-	// supplying nexlize() function
-	context.nexl.nexlize = function (nexlExpression, externalArgs4Function) {
-		// backing up current context before change
-		var contextBackup = context;
+/////////////////////////////////////////////////////////////////////////////////////
 
-		// merging externalArgs4Function to a context
-		context = deepMergeInner(context, externalArgs4Function);
-
-		var isEvaluateToUndefined = hasEvaluateToUndefinedFlag(context);
-
-		// running nexl engine
-		var result = new nexlEngine(context, isEvaluateToUndefined).processItem(nexlExpression);
-
-		// restoring context
-		context = contextBackup;
-		return result;
-	};
-
-	// supplying set() function
-	context.nexl.set = function (key, val) {
-		context[key] = val;
-	};
-
-	// supplying get() function
-	context.nexl.get = function (key, val) {
-		return context[key];
-	};
+// we need a contextWrapper to store there initFuncs
+function createContextWrapper() {
+	var contextWrapper = {};
+	contextWrapper.initFuncs = [];
+	contextWrapper.context = {};
+	return contextWrapper;
 }
 
-// when nexl object present in externalArgs, deepMerge() function spoils all stuff under nexl object when merging it to context
-function excludeNexlObjectFromExternalArgs(context, externalArgs) {
-	// "merging" externalArgs.nexl.EVALUATE_TO_UNDEFINED from externalArgs to context if exists
-	if (externalArgs && externalArgs.nexl && externalArgs.nexl.EVALUATE_TO_UNDEFINED === true) {
-		context.nexl.EVALUATE_TO_UNDEFINED = true;
-	}
+function attachStaticFields(context, externalArgs) {
+	// system and user functions
+	context.nexl.funcs = {};
+	context.nexl.usr = {};
 
-	// deleting nexl object from externalArgg
-	if (externalArgs) {
-		delete externalArgs['nexl'];
-	}
-}
-
-function makeContext(nexlSource, externalArgs, nexlEngine) {
-	// creating context
-	var context = nexlSourceUtils.createContext(nexlSource);
-
-	// merging defaultArgs to context
-	if (j79.isObject(context.nexl.defaultArgs)) {
-		context = deepMergeInner(context, context.nexl.defaultArgs);
-	}
-
-	// excluding nexl object from external arguments because of deepMerge() function spoils nexl object after merge
-	excludeNexlObjectFromExternalArgs(context, externalArgs);
-
-	// merging external args to context
-	if (j79.isObject(externalArgs)) {
-		context = deepMergeInner(context, externalArgs);
-	}
+	// nexl.functions.system and nexl.functions.user are deprecated and left for backward compatibility, probably will be removed in future versions, right for JUN-2017 )
+	context.nexl.functions = {};
+	context.nexl.functions.system = context.nexl.funcs;
+	context.nexl.functions.user = context.nexl.usr;
 
 	// supplying external args
 	context.nexl.args = externalArgs;
-
-	supplyStandardLibs(context);
-
-	// giving an access to functions from nexl sources to nexl API
-	supplyNexlAPI(context, nexlEngine);
-
-	// assign nexl functions
-	nexlSystemFuncs.assign(context);
-
-	// initializing the context ( nexl.init )
-	initContext(context, nexlEngine);
-
-	return context;
 }
 
-function initContext(context, nexlEngine) {
-	// is nexl.init a string ?
-	if (j79.isString(context.nexl.init)) {
-		// evaluating nexl.init expression
-		new nexlEngine(context).processItem(context.nexl.init);
-		return;
-	}
-
-	// is nexl.init a function ?
-	if (j79.isFunction(context.nexl.init)) {
-		// evaluating nexl.init() function
-		new nexlEngine(context).processItem('${nexl.init()}');
-		return;
-	}
-}
-
-function supplyStandardLibs(context) {
+function supplyStandardJSLibs(context) {
 	context.Number = Number;
 	context.Math = Math;
 	context.Date = Date;
@@ -139,6 +71,134 @@ function supplyStandardLibs(context) {
 	context.parseFloat = parseFloat;
 	context.parseInt = parseInt;
 }
+
+function addInitFunc(contextWrapper, func, priority) {
+	var p = j79.isNumber(priority) ? priority : 0;
+	contextWrapper.initFuncs.push(
+		{
+			func: func,
+			priority: p
+		}
+	);
+}
+
+function supplyNexlAPI(contextWrapper, nexlEngine) {
+	// supplying nexlize() function
+	contextWrapper.context.nexl.nexlize = function (nexlExpression, externalArgs4Function) {
+		// merging externalArgs4Function to a context
+		var newContext = deepMergeInner(contextWrapper.context, externalArgs4Function);
+
+		// is evaluate to undefined flag
+		var isEvaluateToUndefined = hasEvaluateToUndefinedFlag(newContext);
+
+		// running nexl engine
+		var result = new nexlEngine(newContext, isEvaluateToUndefined).processItem(nexlExpression);
+
+		// restoring context
+		contextWrapper.context = newContext;
+		return result;
+	};
+
+	// supplying set() function
+	contextWrapper.context.nexl.set = function (key, val) {
+		contextWrapper.context[key] = val;
+	};
+
+	// supplying get() function
+	contextWrapper.context.nexl.get = function (key) {
+		return contextWrapper.context[key];
+	};
+
+	contextWrapper.context.nexl.addInitFunc = function (func) {
+		var arg1 = arguments[0];
+		var arg2 = arguments[1];
+
+		if (j79.isFunction(arg1)) {
+			addInitFunc(contextWrapper, arg1, arg2);
+			return;
+		}
+
+		if (j79.isFunction(arg2)) {
+			addInitFunc(contextWrapper, arg2, arg1);
+			return;
+		}
+
+		throw 'Please provide a function as first or second argument for addInitFunc() function';
+	};
+}
+
+function attachNexlObject(contextWrapper, externalArgs, nexlEngine) {
+	// nexl object
+	contextWrapper.context.nexl = {};
+
+	// static fields like nexl.funcs
+	attachStaticFields(contextWrapper.context, externalArgs);
+	// standard JavaScript linraries like Math
+	supplyStandardJSLibs(contextWrapper.context);
+	// giving an access to functions from nexl sources to nexl API
+	supplyNexlAPI(contextWrapper, nexlEngine);
+	// assign nexl functions
+	nexlSystemFuncs.assign(contextWrapper.context);
+
+	return contextWrapper;
+}
+
+function embedNexlSource2Context(context, nexlSource) {
+	// assembling source code from JavaScript files
+	var sourceCode = nexlSourceUtils.assembleSourceCode(nexlSource);
+
+	try {
+		// assigning source code to context
+		vm.runInNewContext(sourceCode, context);
+	} catch (e) {
+		throw "Got a problem with a nexl source : " + e;
+	}
+}
+
+function postInitContext(contextWrapper, nexlEngine, externalArgs) {
+	// is nexl.init a string ?
+	if (j79.isString(contextWrapper.context.nexl.init)) {
+		// evaluating nexl.init expression
+		new nexlEngine(contextWrapper.context).processItem(contextWrapper.context.nexl.init);
+	}
+
+	// is nexl.init a function ?
+	if (j79.isFunction(contextWrapper.context.nexl.init)) {
+		// evaluating nexl.init() function
+		// new nexlEngine(contextWrapper.context).processItem('${nexl.init()}');
+		contextWrapper.context.nexl.init();
+	}
+
+	// merging defaultArgs to context
+	if (j79.isObject(contextWrapper.context.nexl.defaultArgs)) {
+		contextWrapper.context = deepMergeInner(contextWrapper.context, contextWrapper.context.nexl.defaultArgs);
+	}
+
+	// excluding nexl object from external arguments because of deepMerge() function spoils nexl object after merge
+	// excludeNexlObjectFromExternalArgs(context, externalArgs);
+
+	// merging external args to context
+	if (j79.isObject(externalArgs)) {
+		contextWrapper.context = deepMergeInner(contextWrapper.context, externalArgs);
+	}
+
+	// running initFuncs if present
+	for (var i = 0; i < contextWrapper.initFuncs.length; i++) {
+		var func = contextWrapper.initFuncs[i].func;
+		func();
+	}
+
+	return contextWrapper.context;
+}
+
+function createContext(nexlSource, externalArgs, nexlEngine) {
+	var contextWrapper = createContextWrapper();
+	attachNexlObject(contextWrapper, externalArgs, nexlEngine);
+	embedNexlSource2Context(contextWrapper.context, nexlSource);
+	return postInitContext(contextWrapper, nexlEngine, externalArgs);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 function replaceSpecialChar(item, char) {
 	var lastPos = 0;
@@ -382,6 +442,6 @@ module.exports.produceKeyValuesPairs = produceKeyValuesPairs;
 module.exports.convertStrItems2Obj = convertStrItems2Obj;
 module.exports.cast = cast;
 module.exports.deepMergeInner = deepMergeInner;
-module.exports.makeContext = makeContext;
+module.exports.createContext = createContext;
 module.exports.replaceSpecialChars = replaceSpecialChars;
 module.exports.setReadOnlyProperty = setReadOnlyProperty;

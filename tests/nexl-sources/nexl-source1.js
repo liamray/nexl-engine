@@ -158,3 +158,13 @@ iterationBody3 = '${_value_^U}';
 nexl.init = function () {
 	nexl.set('test', 'omglol');
 };
+
+nexl.addInitFunc(function () {
+	nexl.nexlize('${@blabla=OMG}', {OMG: 1});
+});
+
+nexl.addInitFunc(function () {
+	nexl.nexlize('${@OMG=blabla}', {});
+});
+
+nexl.nexlize('${@79=AYS}');

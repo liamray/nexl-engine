@@ -1,3 +1,7 @@
+2.3.1 | ???????????
+===================
+    - added nexl.addInitFunc([priority,] func) function
+
 2.3.0 | 21-JUL-2017
 ===================
     - all functions and primitives under Math object can be used without Math prefix

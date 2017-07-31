@@ -73,13 +73,18 @@ function supplyStandardJSLibs(context) {
 }
 
 function addInitFunc(contextWrapper, func, priority) {
-	var p = j79.isNumber(priority) ? priority : 0;
-	contextWrapper.initFuncs.push(
-		{
-			func: func,
-			priority: p
+	var item = {
+		func: func,
+		priority: j79.isNumber(priority) ? priority : 0
+	};
+
+	for (var i = 0; i < contextWrapper.initFuncs.length; i++) {
+		if (item.priority < contextWrapper.initFuncs[i].priority) {
+			break;
 		}
-	);
+	}
+
+	contextWrapper.initFuncs.splice(i, 0, item);
 }
 
 function supplyNexlAPI(contextWrapper, nexlEngine) {
@@ -109,6 +114,7 @@ function supplyNexlAPI(contextWrapper, nexlEngine) {
 		return contextWrapper.context[key];
 	};
 
+	// supplying addInitFunc() function
 	contextWrapper.context.nexl.addInitFunc = function (func) {
 		var arg1 = arguments[0];
 		var arg2 = arguments[1];
@@ -156,6 +162,16 @@ function embedNexlSource2Context(context, nexlSource) {
 }
 
 function postInitContext(contextWrapper, nexlEngine, externalArgs) {
+	// merging defaultArgs to context
+	if (j79.isObject(contextWrapper.context.nexl.defaultArgs)) {
+		contextWrapper.context = deepMergeInner(contextWrapper.context, contextWrapper.context.nexl.defaultArgs);
+	}
+
+	// merging external args to context
+	if (j79.isObject(externalArgs)) {
+		contextWrapper.context = deepMergeInner(contextWrapper.context, externalArgs);
+	}
+
 	// is nexl.init a string ?
 	if (j79.isString(contextWrapper.context.nexl.init)) {
 		// evaluating nexl.init expression
@@ -167,19 +183,6 @@ function postInitContext(contextWrapper, nexlEngine, externalArgs) {
 		// evaluating nexl.init() function
 		// new nexlEngine(contextWrapper.context).processItem('${nexl.init()}');
 		contextWrapper.context.nexl.init();
-	}
-
-	// merging defaultArgs to context
-	if (j79.isObject(contextWrapper.context.nexl.defaultArgs)) {
-		contextWrapper.context = deepMergeInner(contextWrapper.context, contextWrapper.context.nexl.defaultArgs);
-	}
-
-	// excluding nexl object from external arguments because of deepMerge() function spoils nexl object after merge
-	// excludeNexlObjectFromExternalArgs(context, externalArgs);
-
-	// merging external args to context
-	if (j79.isObject(externalArgs)) {
-		contextWrapper.context = deepMergeInner(contextWrapper.context, externalArgs);
 	}
 
 	// running initFuncs if present

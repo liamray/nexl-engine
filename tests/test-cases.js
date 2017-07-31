@@ -3229,3 +3229,23 @@ module.exports.push({
 	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/get1.js'}},
 	result: 1980
 });
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func1.js'}},
+	result: '1'
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func2.js'}},
+	result: '1'
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func3.js'}},
+	result: '[1234]'
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func4.js'}},
+	throwsException: true
+});

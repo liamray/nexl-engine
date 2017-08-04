@@ -1,3 +1,7 @@
+2.3.7 | 04-AUG-2017
+===================
+    - fixed logging timezone bug
+
 2.3.5 | 01-AUG-2017
 ===================
     - added nexl.addInitFunc([priority,] func) function

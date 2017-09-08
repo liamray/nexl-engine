@@ -1,3 +1,8 @@
+2.3.8 | 08-SEP-2017
+===================
+    - updated project author name ( Yevgeny Sergeyev -> Liam Ray )
+    - added charCodeAt() nexl function to retrieve character code at specified position in string
+
 2.3.7 | 04-AUG-2017
 ===================
     - fixed logging timezone bug

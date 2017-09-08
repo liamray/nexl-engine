@@ -1710,6 +1710,16 @@ module.exports.push({
 // testing system functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
+	expression: '${@hello|@0|charCodeAt()}',
+	result: 104
+});
+
+module.exports.push({
+	expression: '${@hello|@1:num|charCodeAt()}',
+	result: 101
+});
+
+module.exports.push({
 	expression: '${intItem|@ |strItem|concat()}',
 	result: '71 berry'
 });

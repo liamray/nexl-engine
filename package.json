@@ -1,6 +1,6 @@
 {
   "name": "nexl-engine",
-  "version": "2.3.7",
+  "version": "2.3.8",
   "description": "nexl scripting language processor",
   "main": "nexl-engine/nexl-engine.js",
   "scripts": {
@@ -34,20 +34,23 @@
     "devops"
   ],
   "license": "Apache 2.0",
-  "author": "Yevgeny Sergeyev",
+  "author": {
+    "name": "Liam Ray",
+    "email": "info@nexl-js.com"
+  },
   "homepage": "http://www.nexl-js.com",
   "files": [
     "nexl-engine"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/yevgeny-sergeyev/nexl-engine.git"
+    "url": "https://github.com/liamray/nexl-engine.git"
   },
   "dependencies": {
     "esprima": "^3.1.0",
     "path": "^0.12.7",
     "util": "^0.10.3",
-    "j79-utils": "1.3.0",
+    "j79-utils": "1.3.1",
     "deepmerge": "1.5.0",
     "js2xmlparser": "3.0.0",
     "yamljs": "0.2.10"

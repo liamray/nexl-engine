@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-engine-system-function
 
- Copyright (c) 2016-2017 Yevgeny Sergeyev
+ Copyright (c) 2016-2017 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 
@@ -283,6 +283,10 @@ nexlFuncs.concat = function () {
 	}
 
 	return undefined;
+};
+
+nexlFuncs.charCodeAt = function (str, index) {
+	return str.charCodeAt(parseInt(index));
 };
 
 nexlFuncs.setKey = function (obj, currentKey, newKey) {

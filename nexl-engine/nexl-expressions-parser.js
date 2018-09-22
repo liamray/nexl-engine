@@ -10,6 +10,7 @@
 
 const util = require('util');
 const j79 = require('j79-utils');
+var logger = require('./logger').logger();
 
 const ACTIONS = {
 	'PROPERTY_RESOLUTION': '.',
@@ -688,6 +689,10 @@ function ParseStr(str, stopAt) {
 	this.stopAt = stopAt;
 }
 
+function reloadLoggerInstance() {
+	logger = require('./logger').logger();
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // exports
@@ -708,3 +713,4 @@ module.exports.ARRAY_LAST_ITEM = ARRAY_LAST_ITEM;
 module.exports.parseStr = function (str) {
 	return new ParseStr(str).parse();
 };
+module.exports.reloadLoggerInstance = reloadLoggerInstance;

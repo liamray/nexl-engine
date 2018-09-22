@@ -15,7 +15,7 @@ const nexlExpressionsParser = require('./nexl-expressions-parser');
 const nexlEngineUtils = require('./nexl-engine-utils');
 const js2xmlparser = require("js2xmlparser");
 const YAML = require('yamljs');
-const winston = j79.winston;
+var logger = require('./logger').logger();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // consts
@@ -177,21 +177,21 @@ NexlExpressionEvaluator.prototype.retrieveEvaluateToUndefinedAction = function (
 
 NexlExpressionEvaluator.prototype.try2ResolveNexlFuncs = function (key) {
 	if (this.context.nexl.usr[key] !== undefined) {
-		winston.debug('Resolved nexl user function for key=[%s]', key);
+		logger.debug('Resolved nexl user function for key=[%s]', key);
 		return this.context.nexl.usr[key];
 	}
 
 	if (this.context.nexl.funcs[key] !== undefined) {
-		winston.debug('Resolved nexl function for key=[%s]', key);
+		logger.debug('Resolved nexl function for key=[%s]', key);
 		return this.context.nexl.funcs[key];
 	}
 
 	if (this.context.Math[key] !== undefined) {
-		winston.debug('Resolved Math function for key=[%s]', key);
+		logger.debug('Resolved Math function for key=[%s]', key);
 		return this.context.Math[key];
 	}
 
-	winston.debug('Nothing found in nexl user/system functions for key=[%s]', key);
+	logger.debug('Nothing found in nexl user/system functions for key=[%s]', key);
 	return undefined;
 };
 
@@ -199,14 +199,14 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	// skipping undefined key
 	if (key === undefined) {
 		this.newResult.push(this.result);
-		winston.debug('Key is undefined. Skipping...');
+		logger.debug('Key is undefined. Skipping...');
 		return;
 	}
 
 	// not a primitive ? make result undefined
 	if (!j79.isPrimitive(key)) {
 		this.newResult.push(undefined);
-		winston.debug('Key is not a primitive. Skipping...');
+		logger.debug('Key is not a primitive. Skipping...');
 		return;
 	}
 
@@ -216,7 +216,7 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 		val = val === this.context ? undefined : val;
 		this.newResult.push(val);
 		this.thisOrParentAreApplied = true;
-		winston.debug('Resolving %s element', PARENT);
+		logger.debug('Resolving %s element', PARENT);
 		return;
 	}
 
@@ -224,44 +224,44 @@ NexlExpressionEvaluator.prototype.resolveObject = function (key) {
 	if (key == THIS) {
 		this.newResult.push(this.this);
 		this.thisOrParentAreApplied = true;
-		winston.debug('Resolving %s element', THIS);
+		logger.debug('Resolving %s element', THIS);
 		return;
 	}
 
 	// _item_
 	if (key == ITEM) {
 		this.newResult.push(this.objInfo.item);
-		winston.debug('Resolving %s element', ITEM);
+		logger.debug('Resolving %s element', ITEM);
 		return;
 	}
 
 	// _index_
 	if (key == INDEX) {
 		this.newResult.push(this.objInfo.index);
-		winston.debug('Resolving %s element', INDEX);
+		logger.debug('Resolving %s element', INDEX);
 		return;
 	}
 
 	// _key_
 	if (key == KEY) {
 		this.newResult.push(this.objInfo.key);
-		winston.debug('Resolving %s element', KEY);
+		logger.debug('Resolving %s element', KEY);
 		return;
 	}
 
 	// _value_
 	if (key == VALUE) {
 		this.newResult.push(this.objInfo.value);
-		winston.debug('Resolving %s element', VALUE);
+		logger.debug('Resolving %s element', VALUE);
 		return;
 	}
 
 	var newResult = this.result[key];
-	winston.debug('Resolving value for key=[%s]', key);
+	logger.debug('Resolving value for key=[%s]', key);
 
 	// trying to resolve system and user functions from context
 	if (newResult === undefined && this.result === this.context) {
-		winston.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions', key);
+		logger.debug('Got undefined value for key=[%s]. Trying to resolve a value from user and system function definitions', key);
 		newResult = this.try2ResolveNexlFuncs(key);
 	}
 
@@ -305,7 +305,7 @@ NexlExpressionEvaluator.prototype.assembleChunks4CurrentAction = function () {
 
 	var actionValue = new EvalAndSubstChunks(this.context, this.isEvaluateToUndefined, data).evalAndSubstChunks();
 	if (j79.isLogLevel('silly')) {
-		winston.debug('[actionValue=%s]', this.strigifySafely(actionValue));
+		logger.debug('[actionValue=%s]', this.strigifySafely(actionValue));
 	}
 	return actionValue;
 };
@@ -315,7 +315,7 @@ NexlExpressionEvaluator.prototype.applyPropertyResolutionAction = function () {
 
 	// if not an object, skip action
 	if (!j79.isObject(this.result)) {
-		winston.debug('actionNr = [%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('actionNr = [%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -343,7 +343,7 @@ NexlExpressionEvaluator.prototype.evalFunctionAction = function () {
 	if (!j79.isFunction(this.result)) {
 		// reset function params stack
 		this.funcParamsStack = [];
-		winston.debug('[actionNr=%s] is not applicable because current value is not a function. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not a function. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -435,11 +435,11 @@ NexlExpressionEvaluator.prototype.applyArrayIterationIfApplicable = function () 
 		return;
 	}
 
-	winston.debug('Iterating over array elements. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	logger.debug('Iterating over array elements. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 
 	// is current value not an array ?
 	if (!j79.isArray(this.result)) {
-		winston.debug('Iteration is not applicable because current value is not an array. Skipping...');
+		logger.debug('Iteration is not applicable because current value is not an array. Skipping...');
 		return false;
 	}
 
@@ -491,11 +491,11 @@ NexlExpressionEvaluator.prototype.evalArrayIndexesAction4String = function () {
 NexlExpressionEvaluator.prototype.applyObjectIteration = function () {
 	var iterationExpression = this.action.actionValue.iterationExpression;
 	if (iterationExpression === undefined) {
-		winston.debug('Iteration expression is not specified for object. Skipping...');
+		logger.debug('Iteration expression is not specified for object. Skipping...');
 		return;
 	}
 
-	winston.debug('Iterating over object fields. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+	logger.debug('Iterating over object fields. [actionId=\'%s\'], [actionNr=%s/%s]', this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 
 	this.makeDeepResolution();
 
@@ -533,7 +533,7 @@ NexlExpressionEvaluator.prototype.applyArrayIndexesAction = function () {
 	}
 
 	if (j79.isLogLevel('debug')) {
-		winston.debug('[actionNr=%s] is not applicable because current value %s is not if array/string/object type. Skipping...', this.actionNr, j79.getType(this.result));
+		logger.debug('[actionNr=%s] is not applicable because current value %s is not if array/string/object type. Skipping...', this.actionNr, j79.getType(this.result));
 	}
 };
 
@@ -543,7 +543,7 @@ NexlExpressionEvaluator.prototype.applyDefaultValueAction = function () {
 	// is value not set for this.result ?
 	if (this.result !== undefined) {
 		// don't need to a apply default value action
-		winston.debug('[actionNr=%s] is not applicable because current value is not undefined. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not undefined. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -560,7 +560,7 @@ NexlExpressionEvaluator.prototype.convert2Object = function () {
 	this.makeDeepResolution4String();
 
 	if (j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is already object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is already object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -577,7 +577,7 @@ NexlExpressionEvaluator.prototype.resolveObjectKeys = function () {
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -592,7 +592,7 @@ NexlExpressionEvaluator.prototype.resolveObjectValues = function () {
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -606,7 +606,7 @@ NexlExpressionEvaluator.prototype.produceKeyValuesPairs = function () {
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -623,7 +623,7 @@ NexlExpressionEvaluator.prototype.produceXML = function () {
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -638,7 +638,7 @@ NexlExpressionEvaluator.prototype.produceYAML = function () {
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -719,7 +719,7 @@ NexlExpressionEvaluator.prototype.applyObjectKeyReverseResolutionAction = functi
 
 	// reverse resolution action is applying only for objects
 	if (!j79.isObject(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -745,7 +745,7 @@ NexlExpressionEvaluator.prototype.applyObjectKeyReverseResolutionAction = functi
 
 NexlExpressionEvaluator.prototype.convert2Array = function () {
 	if (j79.isArray(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is already array. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is already array. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -803,7 +803,7 @@ NexlExpressionEvaluator.prototype.applyArrayOperationsAction = function () {
 
 	// not an array ? bye bye
 	if (!j79.isArray(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an array. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an array. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -911,7 +911,7 @@ NexlExpressionEvaluator.prototype.applyEliminateAction = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
+	logger.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
 };
 
 NexlExpressionEvaluator.prototype.appendArrayElements = function () {
@@ -957,7 +957,7 @@ NexlExpressionEvaluator.prototype.applyAppendMergeConcatAction = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
+	logger.debug('[actionNr=%s] is not applicable because current value is of [%s] type. Skipping...', this.actionNr, j79.getType(this.result));
 };
 
 NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
@@ -965,7 +965,7 @@ NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
 
 	// not an array ? bye bye
 	if (!j79.isArray(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not an array. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not an array. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -994,7 +994,7 @@ NexlExpressionEvaluator.prototype.applyStringOperationsAction = function () {
 
 	// not a string ? good bye
 	if (!j79.isString(this.result)) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not a string. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not a string. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -1052,7 +1052,7 @@ NexlExpressionEvaluator.prototype.makeEmptyItemsUndefined = function () {
 		return;
 	}
 
-	winston.debug('[actionNr=%s] is not applicable because current value is not an empty string/array/object. Skipping...', this.actionNr);
+	logger.debug('[actionNr=%s] is not applicable because current value is not an empty string/array/object. Skipping...', this.actionNr);
 };
 
 NexlExpressionEvaluator.prototype.clone = function () {
@@ -1092,7 +1092,7 @@ NexlExpressionEvaluator.prototype.applyMandatoryValueValidatorAction = function 
 	this.makeDeepResolution4String();
 
 	if (this.result !== undefined) {
-		winston.debug('[actionNr=%s] is not applicable because current value is not undefined. Skipping...', this.actionNr);
+		logger.debug('[actionNr=%s] is not applicable because current value is not undefined. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -1143,7 +1143,7 @@ NexlExpressionEvaluator.prototype.applyInvertedPropertyResolution = function () 
 	this.makeDeepResolution4String();
 
 	if (!j79.isObject(this.result)) {
-		winston.debug('actionNr = [%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
+		logger.debug('actionNr = [%s] is not applicable because current value is not an object. Skipping...', this.actionNr);
 		return;
 	}
 
@@ -1371,7 +1371,7 @@ NexlExpressionEvaluator.prototype.strigifySafely = function (what) {
 	try {
 		return JSON.stringify(what);
 	} catch (e) {
-		winston.error('Failed to stringify result. Error message : ' + e);
+		logger.error('Failed to stringify result. Error message : ' + e);
 		return 'ERROR !';
 	}
 };
@@ -1398,17 +1398,17 @@ NexlExpressionEvaluator.prototype.logBefore = function () {
 	}
 
 	if (j79.isLogLevel('silly')) {
-		winston.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s], [resultBefore=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
+		logger.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s], [resultBefore=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
 	} else {
-		winston.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+		logger.debug('>> Evaluating [%s] action, [actionId=\'%s\'], [actionValue=%s], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, actionValue, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 	}
 };
 
 NexlExpressionEvaluator.prototype.logAfter = function () {
 	if (j79.isLogLevel('silly')) {
-		winston.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s], [resultAfter=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
+		logger.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s], [resultAfter=%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length, this.strigifyResult());
 	} else {
-		winston.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
+		logger.debug('<< The [%s] action is evaluated, [actionId=\'%s\'], [actionNr=%s/%s]', nexlExpressionsParser.ACTIONS_DESC[this.action.actionId], this.action.actionId, ( this.actionNr + 1 ), this.nexlExpressionMD.actions.length);
 	}
 };
 
@@ -1416,7 +1416,7 @@ NexlExpressionEvaluator.prototype.eval = function () {
 	this.init(0);
 	this.retrieveEvaluateToUndefinedAction();
 
-	winston.debug('-->> Evaluating [expression=%s]. This expression has [%s] action(s). Iterating over actions', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
+	logger.debug('-->> Evaluating [expression=%s]. This expression has [%s] action(s). Iterating over actions', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
 
 	// iterating over actions
 	for (this.actionNr = 0; this.actionNr < this.nexlExpressionMD.actions.length; this.actionNr++) {
@@ -1437,9 +1437,9 @@ NexlExpressionEvaluator.prototype.eval = function () {
 	this.makeDeepResolution();
 
 	if (j79.isLogLevel('silly')) {
-		winston.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s). [finalResult=%s]', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length, this.strigifyResult());
+		logger.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s). [finalResult=%s]', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length, this.strigifyResult());
 	} else {
-		winston.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s)', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
+		logger.debug('<<-- Finished evaluating [expression=%s] with [%s] action(s)', this.nexlExpressionMD.str, this.nexlExpressionMD.actions.length);
 	}
 
 	return this.result;
@@ -1578,7 +1578,7 @@ function NexlEngine(context, isEvaluateToUndefined) {
 
 module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	if (j79.isLogLevel('debug')) {
-		winston.debug('nexlizing... [nexl-source=%s], [item=%s], [externalArgs=%s]', JSON.stringify(nexlSource), JSON.stringify(item), JSON.stringify(externalArgs));
+		logger.debug('nexlizing... [nexl-source=%s], [item=%s], [externalArgs=%s]', JSON.stringify(nexlSource), JSON.stringify(item), JSON.stringify(externalArgs));
 	}
 
 	// creating context
@@ -1593,7 +1593,7 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	// is item not specified, using a default nexl expression
 	if (item2Process === undefined) {
 		item2Process = context.nexl.defaultExpression;
-		winston.debug('applying defaultExpression for item which was undefined. [defaultExpression=%s]', item2Process);
+		logger.debug('applying defaultExpression for item which was undefined. [defaultExpression=%s]', item2Process);
 	}
 
 	// running nexl engine
@@ -1607,3 +1607,12 @@ module.exports.resolveJsVariables = nexlSourceUtils.resolveJsVariables;
 module.exports.convertStrItems2Obj = nexlEngineUtils.convertStrItems2Obj;
 
 module.exports.nexlFuncs = require('./nexl-functoins').nexlFuncs;
+
+module.exports.setLogger = function (aLogger) {
+	require('./logger').setLogger(aLogger);
+	logger = aLogger;
+
+	nexlEngineUtils.reloadLoggerInstance();
+	nexlExpressionsParser.reloadLoggerInstance();
+	nexlSourceUtils.reloadLoggerInstance();
+};

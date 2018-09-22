@@ -15,7 +15,7 @@ const j79 = require('j79-utils');
 const deepMerge = require('deepmerge');
 const vm = require('vm');
 const util = require('util');
-const winston = j79.winston;
+var logger = require('./logger').logger();
 
 const SPECIAL_CHARS_MAP = {
 	'\\n': '\n',
@@ -246,28 +246,28 @@ function castInner(value, currentType, requiredTypeJs) {
 	// NUM -> BOOL
 	if (currentType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.NUM && requiredTypeJs === nexlExpressionsParser.JS_PRIMITIVE_TYPES.BOOL) {
 		result = (value !== 0);
-		winston.debug('Casting numeric to boolean, [result=%s]', result);
+		logger.debug('Casting numeric to boolean, [result=%s]', result);
 		return result;
 	}
 
 	// NUM -> STR
 	if (currentType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.NUM && requiredTypeJs === nexlExpressionsParser.JS_PRIMITIVE_TYPES.STR) {
 		result = value + '';
-		winston.debug('Casting numeric to boolean, [result=%s]', result);
+		logger.debug('Casting numeric to boolean, [result=%s]', result);
 		return result;
 	}
 
 	// BOOL -> NUM
 	if (currentType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.BOOL && requiredTypeJs === nexlExpressionsParser.JS_PRIMITIVE_TYPES.NUM) {
 		result = value ? 1 : 0;
-		winston.debug('Casting boolean to numeric, [result=%s]', result);
+		logger.debug('Casting boolean to numeric, [result=%s]', result);
 		return result;
 	}
 
 	// BOOL -> STR
 	if (currentType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.BOOL && requiredTypeJs === nexlExpressionsParser.JS_PRIMITIVE_TYPES.STR) {
 		result = value + '';
-		winston.debug('Casting boolean to string, [result=%s]', result);
+		logger.debug('Casting boolean to string, [result=%s]', result);
 		return result;
 	}
 
@@ -277,7 +277,7 @@ function castInner(value, currentType, requiredTypeJs) {
 		if (isNaN(result)) {
 			result = undefined;
 		}
-		winston.debug('Casting string to numeric, [result=%s]', result);
+		logger.debug('Casting string to numeric, [result=%s]', result);
 		return result;
 	}
 
@@ -292,12 +292,12 @@ function castInner(value, currentType, requiredTypeJs) {
 			result = true;
 		}
 
-		winston.debug('Casting string to boolean, [result=%s]', result);
+		logger.debug('Casting string to boolean, [result=%s]', result);
 
 		return result;
 	}
 
-	winston.debug('Current value of a %s type cannot be casted to %s. Skipping this action...', currentType, requiredTypeJs);
+	logger.debug('Current value of a %s type cannot be casted to %s. Skipping this action...', currentType, requiredTypeJs);
 
 	return value;
 }
@@ -306,7 +306,7 @@ function castInner(value, currentType, requiredTypeJs) {
 function cast(value, type) {
 	// if type is not specified
 	if (type === undefined) {
-		winston.debug('Type is not specified. Skipping typecast...');
+		logger.debug('Type is not specified. Skipping typecast...');
 		return value;
 	}
 
@@ -322,19 +322,19 @@ function cast(value, type) {
 
 	// if both types are same, return value as is
 	if (currentType === jsType) {
-		winston.debug('Source and destinations types are same [%s]. Skipping typecast...', jsType);
+		logger.debug('Source and destinations types are same [%s]. Skipping typecast...', jsType);
 		return value;
 	}
 
 	// cast to null
 	if (jsType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.NULL) {
-		winston.debug('Destination type is %s. Converting current value to %s', jsType, jsType);
+		logger.debug('Destination type is %s. Converting current value to %s', jsType, jsType);
 		return null;
 	}
 
 	// cast to undefined
 	if (jsType === nexlExpressionsParser.JS_PRIMITIVE_TYPES.UNDEFINED) {
-		winston.debug('Destination type is %s. Converting current value to %s', jsType, jsType);
+		logger.debug('Destination type is %s. Converting current value to %s', jsType, jsType);
 		return undefined;
 	}
 
@@ -436,6 +436,10 @@ function setReadOnlyProperty(obj, key, value) {
 	});
 }
 
+function reloadLoggerInstance() {
+	logger = require('./logger').logger();
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // exports
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -448,3 +452,4 @@ module.exports.deepMergeInner = deepMergeInner;
 module.exports.createContext = createContext;
 module.exports.replaceSpecialChars = replaceSpecialChars;
 module.exports.setReadOnlyProperty = setReadOnlyProperty;
+module.exports.reloadLoggerInstance = reloadLoggerInstance;

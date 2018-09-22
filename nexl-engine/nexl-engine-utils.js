@@ -131,6 +131,11 @@ function supplyNexlAPI(contextWrapper, nexlEngine) {
 
 		throw 'Please provide a function as first or second argument for addInitFunc() function';
 	};
+
+	// supplying print() function ( print to log )
+	contextWrapper.context.nexl.print = function (data) {
+		logger.debug('nexl.print() | [%s]', JSON.stringify(data));
+	};
 }
 
 function attachNexlObject(contextWrapper, externalArgs, nexlEngine) {

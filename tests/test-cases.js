@@ -2592,14 +2592,27 @@ module.exports.push({
 });
 
 module.exports.push({
-	throwsException: true,
-	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";'}}
+	throwsException: true, // basePath is not provided and relative path points to nowhere
+	nexlSource: {asText: {text: '"@ ../nexl-sources/nexl-source1.js";'}}
+});
+
+module.exports.push({
+	throwsException: true, // basePath provided as relative path
+	expression: '${strItem}',
+	result: 'berry',
+	nexlSource: {
+		basePath: '.',
+		asText: {text: '"@ nexl-sources/nexl-source1.js";'}
+	}
 });
 
 module.exports.push({
 	expression: '${strItem}',
 	result: 'berry',
-	nexlSource: {asText: {text: '"@ nexl-sources/nexl-source1.js";', path4imports: '.'}}
+	nexlSource: {
+		basePath: __dirname,
+		asText: {text: '"@ nexl-sources/nexl-source1.js";'}
+	}
 });
 
 module.exports.push({

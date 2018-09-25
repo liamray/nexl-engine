@@ -1,0 +1,4 @@
+counter++;
+nexl.print(counter);
+
+nexl.defaultExpression = '${counter}';

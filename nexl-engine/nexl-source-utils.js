@@ -93,6 +93,7 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function () {
 
 	// validating
 	if (!j79.isString(text)) {
+		logger.error('...');
 		throw util.format('[nexlSource.asText.text] must be of string type, but you provided it as [%s] type', j79.getType(text));
 	}
 
@@ -112,13 +113,7 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function () {
 			continue;
 		}
 
-		// directive has a relative path. is basePath provided ?
-		if (!this.nexlSource.basePath) {
-			logger.error('Source code contains reference to the [%s] file for import, but you didn\'t provide a [nexlSource.basePath]', path.basename(includeDirective.path));
-			throw util.format('Source code contains reference to the [%s] file for import, but you didn\'t provide a [nexlSource.basePath]', includeDirective.path);
-		}
-
-		var fullPath = path.join(this.nexlSource.basePath, includeDirective.path);
+		var fullPath = path.join(this.nexlSource.basePath || '', includeDirective.path);
 		includedText = this.assembleSourceCodeAsFile(fullPath);
 		text = text.replace(includeDirective.raw, includedText);
 	}
@@ -169,23 +164,16 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (fileName,
 		throw buildShortErrMsg(ancestor, "fileName is not provided in nexl source")
 	}
 
+	// assembling full path if basePath provided and fileName path is relative
+	if (this.nexlSource.basePath && !path.isAbsolute(fileName)) {
+		fileName = path.join(this.nexlSource.basePath, fileName);
+	}
+
 	// validating basePath
 	this.validateBasePath(fileName, ancestor);
 
 	// adding to registry
 	this.filesRegistry.push(j79.fixPathSlashes(fileName4Registry));
-
-	// is file exists ?
-	if (!fs.existsSync(fileName)) {
-		logger.error(buildErrMsg(ancestor, "The [%s] nexl source file doesn't exist", fileName));
-		throw buildShortErrMsg(ancestor, "The [%s] nexl source file doesn't exist", path.basename(fileName))
-	}
-
-	// is it file and not a directory or something else ?
-	if (!fs.lstatSync(fileName).isFile()) {
-		logger.error(buildErrMsg(ancestor, "The [%s] source is not a file", fileName));
-		throw buildShortErrMsg(ancestor, "The [%s] source is not a file", fileName);
-	}
 
 	// reading file content
 	var text;
@@ -230,12 +218,19 @@ NexlSourceCodeAssembler.prototype.assemble = function () {
 
 	// validating nexlSource
 	if (this.nexlSource === 'undefined') {
+		logger.error('...');
 		throw "nexl source is not provided";
 	}
 
 	// is both provided ?
 	if (this.nexlSource.asText && this.nexlSource.asFile) {
+		logger.error('...');
 		throw "You have to provide asText or asFile, but not both at a same time";
+	}
+
+	if (this.nexlSource.basePath && !path.isAbsolute(this.nexlSource.basePath)) {
+		logger.error('...');
+		throw 'basePath must be an absolute path';
 	}
 
 	// is nexl source code provided as text ?
@@ -248,6 +243,7 @@ NexlSourceCodeAssembler.prototype.assemble = function () {
 		return this.assembleSourceCodeAsFile(this.nexlSource.asFile.fileName);
 	}
 
+	logger.error('...');
 	throw "nexlSource doesn\'t contain either [asText] or [asFile] parameters";
 };
 

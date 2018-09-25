@@ -1,0 +1,3 @@
+'@ ../file04';
+counter++;
+nexl.print(counter);

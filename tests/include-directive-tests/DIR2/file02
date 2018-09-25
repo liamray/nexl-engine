@@ -1,0 +1,3 @@
+counter++;
+nexl.print(counter);
+'@ ../DIR1/SUBDIR1/file03';

@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = [];
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2597,7 +2599,7 @@ module.exports.push({
 });
 
 module.exports.push({
-	throwsException: true, // basePath provided as relative path
+	throwsException: true, // basePath must be only absolute path
 	expression: '${strItem}',
 	result: 'berry',
 	nexlSource: {
@@ -3270,5 +3272,67 @@ module.exports.push({
 
 module.exports.push({
 	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func4.js'}},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {asText: {text: '"@ include-directive-tests/DIR1/SUBDIR1/file00";'}},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {asFile: {fileName: path.join(__dirname, 'include-directive-tests/DIR1/SUBDIR1/file00')}},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		asFile: {fileName: './include-directive-tests/DIR1/SUBDIR1/file00'}
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		asFile: {fileName: '/include-directive-tests/DIR1/SUBDIR1/file00'}
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: path.normalize(path.join(__dirname, '..')),
+		asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {
+		asText: {text: 'counter = 0 ; "@ include-directive-tests/DIR1/file05"'}
+	},
+	result: 8
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: path.normalize(path.join(__dirname, 'include-directive-tests/DIR1')),
+		asText: {text: 'counter = 0 ; "@ file05"'}
+	},
 	throwsException: true
 });

@@ -7,7 +7,7 @@ const expressions = require('./test-cases');
 const winston = j79.winston;
 
 // nexl source file
-var nexlSourceDefault = {asFile: {fileName: 'nexl-sources/nexl-source1.js'}};
+var nexlSourceDefault = {filePath: 'nexl-sources/nexl-source1.js'};
 
 // comparing two javascript variables
 function compare(result, expectedResult) {

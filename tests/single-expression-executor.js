@@ -2,7 +2,7 @@ var ne = require('./../nexl-engine/nexl-engine');
 var j79 = require('j79-utils');
 
 var nexlSource;
-nexlSource = {asFile: {fileName: 'nexl-sources/nexl-source1.js'}};
+nexlSource = {filePath: 'nexl-sources/nexl-source1.js'};
 
 var externalArgs = {
 	obj7: {

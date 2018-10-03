@@ -2584,18 +2584,18 @@ module.exports.push({
 
 module.exports.push({
 	throwsException: true,
-	nexlSource: {asFile: {}, asText: {}}
+	nexlSource: {}
 });
 
 module.exports.push({
 	expression: '${abc}',
 	result: 1979,
-	nexlSource: {asText: {text: 'abc=1979;'}}
+	nexlSource: {fileContent: 'abc=1979;'}
 });
 
 module.exports.push({
 	throwsException: true, // basePath is not provided and relative path points to nowhere
-	nexlSource: {asText: {text: '"@ ../nexl-sources/nexl-source1.js";'}}
+	nexlSource: {fileContent: '"@ ../nexl-sources/nexl-source1.js";'}
 });
 
 module.exports.push({
@@ -2604,7 +2604,7 @@ module.exports.push({
 	result: 'berry',
 	nexlSource: {
 		basePath: '.',
-		asText: {text: '"@ nexl-sources/nexl-source1.js";'}
+		fileContent: '"@ nexl-sources/nexl-source1.js";'
 	}
 });
 
@@ -2613,19 +2613,19 @@ module.exports.push({
 	result: 'berry',
 	nexlSource: {
 		basePath: __dirname,
-		asText: {text: '"@ nexl-sources/nexl-source1.js";'}
+		fileContent: '"@ nexl-sources/nexl-source1.js";'
 	}
 });
 
 module.exports.push({
 	expression: '${y}',
 	result: 11,
-	nexlSource: {asFile: {fileName: 'nexl-sources/src1.js'}}
+	nexlSource: {filePath: 'nexl-sources/src1.js'}
 });
 
 module.exports.push({
 	throwsException: true,
-	nexlSource: {asFile: {fileName: 'c:\\111\\222.js'}}
+	nexlSource: {filePath: 'c:\\111\\222.js'}
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

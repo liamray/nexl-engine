@@ -67,7 +67,7 @@ function resolveIncludeDirectives(text, fileName) {
 	try {
 		var srcParsed = esprima.parse(text);
 	} catch (e) {
-		logger.error(buildErrMsg(fileName, 'Failed to parse JavaScript source code. Reason [%s]', e));
+		logger.error(buildErrMsg(fileName, 'Failed to parse JavaScript source code'));
 		throw buildShortErrMsg(fileName, 'Failed to parse JavaScript source code. Reason [%s]', e)
 	}
 
@@ -87,105 +87,77 @@ function resolveIncludeDirectives(text, fileName) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-NexlSourceCodeAssembler.prototype.assembleSourceCodeAsText = function () {
-	// the text
-	var text = this.nexlSource.asText.text;
-
-	// validating
-	if (!j79.isString(text)) {
-		logger.error('...');
-		throw util.format('[nexlSource.asText.text] must be of string type, but you provided it as [%s] type', j79.getType(text));
-	}
-
-	// resolving include directives
-	var includeDirectives = resolveIncludeDirectives(text);
-
-	var includedText;
-
-	// substituting include directives
-	for (var index in includeDirectives) {
-		var includeDirective = includeDirectives[index];
-
-		// does directive have an absolute path ?
-		if (path.isAbsolute(includeDirective.path)) {
-			includedText = this.assembleSourceCodeAsFile(includeDirective.path);
-			text = text.replace(includeDirective.raw, includedText);
-			continue;
-		}
-
-		var fullPath = path.join(this.nexlSource.basePath || '', includeDirective.path);
-		includedText = this.assembleSourceCodeAsFile(fullPath);
-		text = text.replace(includeDirective.raw, includedText);
-	}
-
-	return text;
-};
-
-NexlSourceCodeAssembler.prototype.validateBasePath = function (fileName, ancestor) {
-	// nothing to validate if basePath not provided
-	if (!this.nexlSource.basePath) {
+NexlSourceCodeAssembler.prototype.validateBasePath = function (fileItem) {
+	// is base path provided ?
+	if (!this.basePath) {
 		return;
 	}
 
-	if (!path.isAbsolute(fileName)) {
-		logger.error(buildErrMsg(ancestor, "must be a full path"));
-		throw buildShortErrMsg(ancestor, "must be a full path")
-	}
-
-	var fileNameNormalized = path.normalize(fileName);
-	var filePath = path.dirname(fileNameNormalized);
-	var basePath = path.normalize(this.nexlSource.basePath);
+	var justPath = path.dirname(fileItem.filePath);
 
 	// filePath must be a part of basePath
-	if (filePath.indexOf(basePath) !== 0) {
-		logger.error(buildErrMsg(ancestor, "out of the basePath"));
-		throw buildShortErrMsg(ancestor, "out of the basePath")
+	if (justPath.indexOf(this.basePath) !== 0) {
+		logger.error(buildErrMsg(fileItem.ancestor, util.format('The [%s] file is located out of [%s] base path and cannot be included', fileItem.filePath, this.basePath)));
+		throw buildShortErrMsg(fileItem.ancestor, 'The [%s] file you are trying to include is located out the base path and cannot be included', path.basename(fileItem.filePath));
 	}
 
-	logger.debug('The [%s] file is located under the [%s] base path', fileName, this.nexlSource.basePath);
+	logger.debug('Base path is [%s], file path is [%s]. File is under the base path', fileItem.filePath, this.basePath);
 };
 
-NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (fileName, ancestor) {
-	if (j79.isLogLevel('debug')) {
-		logger.debug(buildErrMsg(ancestor, 'Including [%s] file', fileName));
+NexlSourceCodeAssembler.prototype.resolveFileContent = function (fileItem) {
+	// is file content provided ?
+	if (fileItem.fileContent) {
+		return fileItem.fileContent;
 	}
 
-	var fileName4Registry = j79.fixPathSlashes(fileName);
+	// is filePath provided ?
+	if (!fileItem.filePath) {
+		logger.error(buildErrMsg(fileItem.ancestor, util.format('[fileContent] or [filePath] is not provided in nexl source. Nothing to assemble')));
+		throw buildShortErrMsg(fileItem.ancestor, '[fileContent] or [filePath] is not provided in nexl source');
+	}
 
 	// is already included ?
-	if (this.filesRegistry.indexOf(fileName4Registry) >= 0) {
-		logger.debug('The [%s] is already included. Skipping...', fileName);
+	if (this.filesRegistry.indexOf(fileItem.filePath) >= 0) {
+		logger.debug('The [%s] file is already included. Skipping...', fileItem.filePath);
 		return '';
 	}
 
-	// is file name specified ?
-	if (!j79.isValSet(fileName)) {
-		logger.error(buildErrMsg(ancestor, "fileName is not provided in nexl source"));
-		throw buildShortErrMsg(ancestor, "fileName is not provided in nexl source")
-	}
-
-	// assembling full path if basePath provided and fileName path is relative
-	if (this.nexlSource.basePath && !path.isAbsolute(fileName)) {
-		fileName = path.join(this.nexlSource.basePath, fileName);
-	}
-
-	// validating basePath
-	this.validateBasePath(fileName, ancestor);
-
 	// adding to registry
-	this.filesRegistry.push(j79.fixPathSlashes(fileName4Registry));
+	this.filesRegistry.push(fileItem.filePath);
 
-	// reading file content
-	var text;
+	// reading file content from file
 	try {
-		text = fs.readFileSync(fileName, "UTF-8");
+		return fs.readFileSync(fileItem.filePath, fileItem.fileEncoding || "UTF-8");
 	} catch (e) {
-		logger.error(buildErrMsg(ancestor, "Failed to read [%s] file content. Reason is [%s]", fileName, e));
-		throw buildShortErrMsg(ancestor, "Failed to read [%s] file content. Reason is [%s]", path.basename(fileName), e);
+		logger.error(buildErrMsg(fileItem.ancestor, "Failed to read [%s] file content. Reason is [%s]", fileName, e));
+		throw buildShortErrMsg(fileItem.ancestor, "Failed to read [%s] file content", path.basename(fileName));
 	}
+
+};
+
+NexlSourceCodeAssembler.prototype.resolveIncludeDirectiveFullPath = function (includeDirective, fileItem) {
+	if (path.isAbsolute(includeDirective.path)) {
+		return path.normalize(includeDirective.path);
+	}
+
+	// the path is relative; is fileItem.filePath provided ? we need it to calc full path of include directive relatively to filePath
+	if (!fileItem.filePath) {
+		logger.error(buildErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [fileName] is not provided to calculate the absolute path'));
+		throw buildShortErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [fileName] is not provided to calculate the absolute path');
+	}
+
+	var justFilePath = path.dirname(fileItem.filePath);
+	return path.join(justFilePath, includeDirective.path);
+};
+
+NexlSourceCodeAssembler.prototype.assembleInner = function (fileItem) {
+	// validating path constrain
+	this.validateBasePath(fileItem);
+
+	var text = this.resolveFileContent(fileItem);
 
 	// resolving include directives
-	var includeDirectives = resolveIncludeDirectives(text, fileName);
+	var includeDirectives = resolveIncludeDirectives(text, fileItem.fileName);
 
 	var includedText;
 
@@ -193,18 +165,13 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (fileName,
 	for (var index in includeDirectives) {
 		var includeDirective = includeDirectives[index];
 
-		// does directive have an absolute path ?
-		if (path.isAbsolute(includeDirective.path)) {
-			includedText = this.assembleSourceCodeAsFile(includeDirective.path, fileName);
-			text = text.replace(includeDirective.raw, includedText);
-			continue;
-		}
-
 		// resolve file path
-		var filePath = path.dirname(fileName);
+		includedText = this.assembleInner({
+			filePath: this.resolveIncludeDirectiveFullPath(includeDirective, fileItem),
+			ancestor: fileItem.filePath
+		});
 
-		var fullPath = path.join(filePath, includeDirective.path);
-		includedText = this.assembleSourceCodeAsFile(fullPath, fileName);
+		// replacing
 		text = text.replace(includeDirective.raw, includedText);
 	}
 
@@ -212,39 +179,19 @@ NexlSourceCodeAssembler.prototype.assembleSourceCodeAsFile = function (fileName,
 };
 
 NexlSourceCodeAssembler.prototype.assemble = function () {
-	logger.debug('Assembling', this.nexlSource, 'nexl source');
+	logger.debug('Assembling nexl source');
 
 	this.filesRegistry = [];
 
-	// validating nexlSource
-	if (this.nexlSource === 'undefined') {
-		logger.error('...');
-		throw "nexl source is not provided";
+	// resolving abs path for basePath if provided
+	if (this.nexlSource.basePath) {
+		this.basePath = path.resolve(this.nexlSource.basePath);
 	}
 
-	// is both provided ?
-	if (this.nexlSource.asText && this.nexlSource.asFile) {
-		logger.error('...');
-		throw "You have to provide asText or asFile, but not both at a same time";
-	}
-
-	if (this.nexlSource.basePath && !path.isAbsolute(this.nexlSource.basePath)) {
-		logger.error('...');
-		throw 'basePath must be an absolute path';
-	}
-
-	// is nexl source code provided as text ?
-	if (j79.isObject(this.nexlSource.asText)) {
-		return this.assembleSourceCodeAsText();
-	}
-
-	// is nexl source code provided as file ?
-	if (j79.isObject(this.nexlSource.asFile)) {
-		return this.assembleSourceCodeAsFile(this.nexlSource.asFile.fileName);
-	}
-
-	logger.error('...');
-	throw "nexlSource doesn\'t contain either [asText] or [asFile] parameters";
+	return this.assembleInner({
+		filePath: this.nexlSource.filePath ? path.resolve(this.nexlSource.filePath) : this.nexlSource.filePath,
+		fileContent: this.nexlSource.fileContent
+	});
 };
 
 function NexlSourceCodeAssembler(nexlSource) {

@@ -2594,16 +2594,42 @@ module.exports.push({
 });
 
 module.exports.push({
-	throwsException: true, // basePath is not provided and relative path points to nowhere
-	nexlSource: {fileContent: '"@ ../nexl-sources/nexl-source1.js";'}
+	throwsException: true, // wrong filePath
+	nexlSource: {
+		fileContent: '"@ ../nexl-sources/nexl-source1.js";',
+		filePath: '../nexl-sources/dummy.js'
+	}
 });
 
 module.exports.push({
-	throwsException: true, // basePath must be only absolute path
-	expression: '${strItem}',
-	result: 'berry',
+	expression: '${@test}',
+	result: 'test',
 	nexlSource: {
-		basePath: '.',
+		fileContent: '"@ nexl-sources/nexl-source1.js";',
+		filePath: 'dummy.js'
+	}
+});
+
+module.exports.push({
+	expression: '${@test}',
+	result: 'test',
+	nexlSource: {
+		fileContent: '"@ nexl-source1.js";',
+		filePath: 'nexl-sources/dummy.js'
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
+		fileContent: '"@ nexl-source1.js";',
+		filePath: 'dummy.js'
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
 		fileContent: '"@ nexl-sources/nexl-source1.js";'
 	}
 });
@@ -2612,21 +2638,161 @@ module.exports.push({
 	expression: '${strItem}',
 	result: 'berry',
 	nexlSource: {
+		basePath: '.',
+		filePath: './dummy-file.js',
+		fileContent: '"@ nexl-sources/nexl-source1.js";'
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
+		basePath: 'c:\\temp',
+		filePath: './dummy-file.js',
+		fileContent: '"@ nexl-sources/nexl-source1.js";'
+	}
+});
+
+module.exports.push({
+	expression: '${strItem}',
+	result: 'berry',
+	nexlSource: {
+		filePath: '../tests/dummy-file.js',
 		basePath: __dirname,
 		fileContent: '"@ nexl-sources/nexl-source1.js";'
 	}
 });
 
 module.exports.push({
+	expression: '${strItem}',
+	result: 'berry',
+	nexlSource: {
+		filePath: 'nexl-sources/nexl-source1.js',
+		basePath: __dirname
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
+		filePath: 'nexl-sources/nexl-source1.js',
+		basePath: 'c:\\temp'
+	}
+});
+
+module.exports.push({
 	expression: '${y}',
 	result: 11,
-	nexlSource: {filePath: 'nexl-sources/src1.js'}
+	nexlSource: {
+		filePath: 'nexl-sources/src1.js'
+	}
 });
 
 module.exports.push({
 	throwsException: true,
 	nexlSource: {filePath: 'c:\\111\\222.js'}
 });
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		filePath: 'include-directive-tests/DIR1/SUBDIR1/file00'
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		filePath: './include-directive-tests/DIR1/SUBDIR1/file00'
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: __dirname,
+		filePath: '/include-directive-tests/DIR1/SUBDIR1/file00'
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	result: 12,
+	nexlSource: {
+		basePath: path.normalize(path.join(__dirname, '..')),
+		filePath: 'include-directive-tests/DIR1/SUBDIR1/file00'
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
+		basePath: 'nexl-sources',
+		filePath: 'include-directive-tests/DIR1/SUBDIR1/file00'
+	}
+});
+
+module.exports.push({
+	throwsException: true,
+	nexlSource: {
+		basePath: 'c:\\temp',
+		filePath: 'include-directive-tests/DIR1/SUBDIR1/file00'
+	}
+});
+
+module.exports.push({
+	nexlSource: {
+		fileContent: 'counter = 0 ; "@ include-directive-tests/DIR1/file05"',
+		filePath: './dummy.js'
+	},
+	result: 8
+});
+
+module.exports.push({
+	nexlSource: {
+		basePath: path.normalize(path.join(__dirname, 'include-directive-tests/DIR1')),
+		fileContent: 'counter = 0 ; "@ file05"'
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {
+		filePath: 'include-directive-tests/DIR1/SUBDIR1/file00'
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		filePath: '"@ include-directive-tests/DIR1/SUBDIR1/file00";'
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {
+		fileContent: '"@ include-directive-tests/DIR1/SUBDIR1/file00";'
+	},
+	throwsException: true
+});
+
+module.exports.push({
+	nexlSource: {
+		fileContent: '"@ include-directive-tests/DIR1/SUBDIR1/file00";',
+		filePath: './dummy.js'
+	},
+	result: 12
+});
+
+module.exports.push({
+	nexlSource: {
+		filePath: path.join(__dirname, 'include-directive-tests/DIR1/SUBDIR1/file00')
+	},
+	result: 12
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // testing typecast
@@ -3216,123 +3382,61 @@ module.exports.push({
 // nexl api tests
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-str1.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-str1.js'},
 	result: [1, 2, 'hello']
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-str2.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-str2.js'},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func1.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-func1.js'},
 	result: [1, 2, 'hello']
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func2.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-func2.js'},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func3.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-func3.js'},
 	result: 1979
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/init-func4.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/init-func4.js'},
 	throwsException: true
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/set1.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/set1.js'},
 	result: 'okokok'
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/get1.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/get1.js'},
 	result: 1980
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func1.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/add-init-func1.js'},
 	result: '1'
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func2.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/add-init-func2.js'},
 	result: '1'
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func3.js'}},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/add-init-func3.js'},
 	result: '[1234]'
 });
 
 module.exports.push({
-	nexlSource: {asFile: {fileName: 'nexl-sources/nexl-api/add-init-func4.js'}},
-	throwsException: true
-});
-
-module.exports.push({
-	nexlSource: {asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}},
-	result: 12
-});
-
-module.exports.push({
-	nexlSource: {asText: {text: '"@ include-directive-tests/DIR1/SUBDIR1/file00";'}},
-	result: 12
-});
-
-module.exports.push({
-	nexlSource: {asFile: {fileName: path.join(__dirname, 'include-directive-tests/DIR1/SUBDIR1/file00')}},
-	result: 12
-});
-
-module.exports.push({
-	nexlSource: {
-		basePath: __dirname,
-		asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}
-	},
-	result: 12
-});
-
-module.exports.push({
-	nexlSource: {
-		basePath: __dirname,
-		asFile: {fileName: './include-directive-tests/DIR1/SUBDIR1/file00'}
-	},
-	result: 12
-});
-
-module.exports.push({
-	nexlSource: {
-		basePath: __dirname,
-		asFile: {fileName: '/include-directive-tests/DIR1/SUBDIR1/file00'}
-	},
-	throwsException: true
-});
-
-module.exports.push({
-	nexlSource: {
-		basePath: path.normalize(path.join(__dirname, '..')),
-		asFile: {fileName: 'include-directive-tests/DIR1/SUBDIR1/file00'}
-	},
-	throwsException: true
-});
-
-module.exports.push({
-	nexlSource: {
-		asText: {text: 'counter = 0 ; "@ include-directive-tests/DIR1/file05"'}
-	},
-	result: 8
-});
-
-module.exports.push({
-	nexlSource: {
-		basePath: path.normalize(path.join(__dirname, 'include-directive-tests/DIR1')),
-		asText: {text: 'counter = 0 ; "@ file05"'}
-	},
+	nexlSource: {filePath: 'nexl-sources/nexl-api/add-init-func4.js'},
 	throwsException: true
 });

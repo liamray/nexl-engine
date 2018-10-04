@@ -93,6 +93,11 @@ NexlSourceCodeAssembler.prototype.validateBasePath = function (fileItem) {
 		return;
 	}
 
+	// is filePath provided ?
+	if (!fileItem.filePath) {
+		return;
+	}
+
 	var justPath = path.dirname(fileItem.filePath);
 
 	// filePath must be a part of basePath
@@ -129,8 +134,8 @@ NexlSourceCodeAssembler.prototype.resolveFileContent = function (fileItem) {
 	try {
 		return fs.readFileSync(fileItem.filePath, fileItem.fileEncoding || "UTF-8");
 	} catch (e) {
-		logger.error(buildErrMsg(fileItem.ancestor, "Failed to read [%s] file content. Reason is [%s]", fileName, e));
-		throw buildShortErrMsg(fileItem.ancestor, "Failed to read [%s] file content", path.basename(fileName));
+		logger.error(buildErrMsg(fileItem.ancestor, "Failed to read [%s] file content. Reason is [%s]", fileItem.filePath, e));
+		throw buildShortErrMsg(fileItem.ancestor, "Failed to read [%s] file content", path.basename(fileItem.filePath));
 	}
 
 };
@@ -142,8 +147,8 @@ NexlSourceCodeAssembler.prototype.resolveIncludeDirectiveFullPath = function (in
 
 	// the path is relative; is fileItem.filePath provided ? we need it to calc full path of include directive relatively to filePath
 	if (!fileItem.filePath) {
-		logger.error(buildErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [fileName] is not provided to calculate the absolute path'));
-		throw buildShortErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [fileName] is not provided to calculate the absolute path');
+		logger.error(buildErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [filePath] is not provided to calculate the absolute path'));
+		throw buildShortErrMsg(fileItem.ancestor, '[fileContent] contains include directives with relative path, but [filePath] is not provided to calculate the absolute path');
 	}
 
 	var justFilePath = path.dirname(fileItem.filePath);
@@ -157,7 +162,7 @@ NexlSourceCodeAssembler.prototype.assembleInner = function (fileItem) {
 	var text = this.resolveFileContent(fileItem);
 
 	// resolving include directives
-	var includeDirectives = resolveIncludeDirectives(text, fileItem.fileName);
+	var includeDirectives = resolveIncludeDirectives(text, fileItem.filePath);
 
 	var includedText;
 

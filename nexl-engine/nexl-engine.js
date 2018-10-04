@@ -599,7 +599,6 @@ NexlExpressionEvaluator.prototype.resolveObjectValues = function () {
 	this.makeDeepResolution();
 
 	this.result = j79.obj2ArrayIfNeeded(this.result);
-	this.result = j79.unwrapFromArrayIfPossible(this.result);
 };
 
 NexlExpressionEvaluator.prototype.produceKeyValuesPairs = function () {

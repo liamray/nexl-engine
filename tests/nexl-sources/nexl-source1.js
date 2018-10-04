@@ -168,3 +168,7 @@ nexl.addInitFunc(function () {
 });
 
 nexl.nexlize('${@79=AYS}');
+
+objWithSinleValue = {
+	x: 1
+};

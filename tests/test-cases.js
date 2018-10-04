@@ -3181,6 +3181,18 @@ module.exports.push({
 	result: {} // it must be a { 'obj': undefined }. but JSON.stringify() make an empty object of this ( there are few more module.exports like this here )
 });
 
+// ~V action
+module.exports.push({
+	expression: '${objWithSinleValue~K}',
+	result: ['x']
+});
+
+// ~K action
+module.exports.push({
+	expression: '${objWithSinleValue~V}',
+	result: [1]
+});
+
 // ~O action
 module.exports.push({
 	expression: '${intItem~O}',

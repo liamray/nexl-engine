@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-expressions-parser
 
- Copyright (c) 2016-2017 Liam Ray
+ Copyright (c) 2016-2018 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 
@@ -200,7 +200,7 @@ ParseFunctionCall.prototype.parseFunctionCallInner = function () {
 		return;
 	}
 
-	throw util.format('Invalid nexl expression. Function arguments in nexl expression can be only another nexl expressions. Occurred in [%s] nexl expression at [%s] position', this.str, this.lastSearchPos);
+	throw util.format('Invalid nexl expression. Function arguments in nexl expression cannot refer to nexl expression(s). Occurred in [%s] nexl expression at [%s] position', this.str, this.lastSearchPos);
 };
 
 ParseFunctionCall.prototype.parse = function () {
@@ -398,7 +398,7 @@ ParseNexlExpression.prototype.resolveActionStaticValue = function (parsed) {
 		return parsed.chunks[0];
 	}
 
-	throw util.format('The [%s] action cannot contain internal expressions at [%s] position in [%s] expression. It must be a plain string', this.currentAction, this.lastSearchPos, this.str);
+	throw util.format('The [%s] action cannot contain internal expression(s) at a [%s] position in [%s] expression. It must be a plain string', this.currentAction, this.lastSearchPos, this.str);
 };
 
 ParseNexlExpression.prototype.addChunkedAction = function (parsed) {
@@ -521,7 +521,7 @@ ParseNexlExpression.prototype.parseNexlExpressionInner = function () {
 ParseNexlExpression.prototype.parse = function () {
 	// does expression start from ${ ?
 	if (this.str.indexOf(NEXL_EXPRESSION_OPEN, this.pos) !== this.pos) {
-		throw util.format('Invalid nexl expression. The [%s] expression doesn\'t start from [%s] characters', this.str.substr(this.pos), NEXL_EXPRESSION_OPEN);
+		throw util.format('Invalid nexl expression. The [%s] expression is not starting from the [%s] characters', this.str.substr(this.pos), NEXL_EXPRESSION_OPEN);
 	}
 
 	// skipping first ${ characters

@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-source-utils
 
- Copyright (c) 2016-2017 Liam Ray
+ Copyright (c) 2016-2018 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 
@@ -60,15 +60,15 @@ function resolveIncludeDirectiveDom(item) {
 }
 
 // parses javascript provided as text and resolves nexl include directives ( like "@import ../../src.js"; )
-function resolveIncludeDirectives(text, fileName) {
+function resolveIncludeDirectives(text, fileItem) {
 	var result = [];
 
 	// parse source code with esprima
 	try {
 		var srcParsed = esprima.parse(text);
 	} catch (e) {
-		logger.error(buildErrMsg(fileName, 'Failed to parse JavaScript source code'));
-		throw buildShortErrMsg(fileName, 'Failed to parse JavaScript source code. Reason [%s]', e)
+		logger.error(buildErrMsg(fileItem.ancestor, 'Failed to parse a [%s] JavaScript file. Reason : [%s]', fileItem.filePath, e));
+		throw buildShortErrMsg(fileItem.ancestor, 'Failed to parse a [%s] JavaScript file. Reason : [%s]', path.basename(fileItem.filePath), e)
 	}
 
 	// iterating over and looking for include directives
@@ -162,7 +162,7 @@ NexlSourceCodeAssembler.prototype.assembleInner = function (fileItem) {
 	var text = this.resolveFileContent(fileItem);
 
 	// resolving include directives
-	var includeDirectives = resolveIncludeDirectives(text, fileItem.filePath);
+	var includeDirectives = resolveIncludeDirectives(text, fileItem);
 
 	var includedText;
 

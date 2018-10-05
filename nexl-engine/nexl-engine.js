@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-engine
 
- Copyright (c) 2016-2017 Liam Ray
+ Copyright (c) 2016-2018 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 
@@ -383,7 +383,7 @@ NexlExpressionEvaluator.prototype.resolveRealArrayIndex = function (item) {
 
 	// validating ( must be an integer )
 	if (!j79.isNumber(arrayIndex) || (arrayIndex + '').indexOf('.') >= 0) {
-		throw util.format('The [%s] nexl expression used in array index cannot be evaluated as %s. It must be an integer number or "^" or "$" characters. Expressions is [%s], actionNr is [%s]', item.str, j79.getType(arrayIndex), this.nexlExpressionMD.str, this.actionNr + 1);
+		throw util.format('The [%s] nexl expression used in array index cannot be evaluated as %s. It must be an integer number or "^" or "$" characters. Expression is [%s], actionNr is [%s]', item.str, j79.getType(arrayIndex), this.nexlExpressionMD.str, this.actionNr + 1);
 	}
 
 	// for negative numbers recalculating them relating to the end
@@ -975,7 +975,7 @@ NexlExpressionEvaluator.prototype.applyJoinArrayElementsAction = function () {
 
 	// validating action value
 	if (!j79.isPrimitive(actionValue)) {
-		throw util.format('Array elements cannot be joined with %s type in [%s] expression. Use a primitive data types to join array elements', j79.getType(actionValue), this.nexlExpressionMD.str);
+		throw util.format('Array elements cannot be joined with %s type in [%s] expression. Use primitive data types to join array elements', j79.getType(actionValue), this.nexlExpressionMD.str);
 	}
 
 	this.result = this.result.join(actionValue);
@@ -1281,7 +1281,7 @@ NexlExpressionEvaluator.prototype.applyAction = function () {
 		}
 	}
 
-	throw util.format('The [%s] action in [%s] expression is reserved for future purposes. If you need to use this character in nexl expression, escape it', this.action.actionId, this.nexlExpressionMD.str);
+	throw util.format('The [%s] action in [%s] expression is reserved for future purposes. Escape it if you need to use this character in nexl expression', this.action.actionId, this.nexlExpressionMD.str);
 };
 
 NexlExpressionEvaluator.prototype.init = function (actionNr) {

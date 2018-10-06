@@ -4,7 +4,7 @@
     - allowed logger to being set up externally
     - added nexl.print() function
     - restricted root directory with [basePath] param
-    - fixed [~K] action
+    - fixed [~V] action
 
 2.3.8 | 09-SEP-2017
 ===================

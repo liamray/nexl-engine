@@ -1,3 +1,11 @@
+3.0.0 | 07-OCT-2018
+===================
+    - improved and simplified nexl source API
+    - allowed logger to being set up externally
+    - added nexl.print() function
+    - restricted root directory with [basePath] param
+    - fixed [~K] action
+
 2.3.8 | 09-SEP-2017
 ===================
     - updated project author name ( Yevgeny Sergeyev -> Liam Ray )

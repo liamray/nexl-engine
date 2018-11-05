@@ -13,7 +13,7 @@ const nexlSourceUtils = require('./nexl-source-utils');
 const nexlSystemFuncs = require('./nexl-functoins');
 const j79 = require('j79-utils');
 const deepMerge = require('deepmerge');
-const vm = require('vm');
+const vm2 = require('vm2');
 const util = require('util');
 var logger = require('./logger').logger();
 
@@ -63,9 +63,7 @@ function attachStaticFields(context, externalArgs) {
 }
 
 function supplyStandardJSLibs(context) {
-	context.Number = Number;
 	context.Math = Math;
-	context.Date = Date;
 	context.isFinite = isFinite;
 	context.isNaN = isNaN;
 	context.parseFloat = parseFloat;
@@ -158,12 +156,19 @@ function embedNexlSource2Context(context, nexlSource) {
 	// assembling source code from JavaScript files
 	var sourceCode = nexlSourceUtils.assembleSourceCode(nexlSource);
 
+	var theVM = new vm2.VM({
+		sandbox: context,
+		timeout: 1000
+	});
+
 	try {
 		// assigning source code to context
-		vm.runInNewContext(sourceCode, context);
+		theVM.run(sourceCode);
 	} catch (e) {
 		throw "Got a problem with a nexl source : " + e;
 	}
+
+	return theVM.run('this');
 }
 
 function postInitContext(contextWrapper, nexlEngine, externalArgs) {
@@ -202,7 +207,7 @@ function postInitContext(contextWrapper, nexlEngine, externalArgs) {
 function createContext(nexlSource, externalArgs, nexlEngine) {
 	var contextWrapper = createContextWrapper();
 	attachNexlObject(contextWrapper, externalArgs, nexlEngine);
-	embedNexlSource2Context(contextWrapper.context, nexlSource);
+	contextWrapper.context = embedNexlSource2Context(contextWrapper.context, nexlSource);
 	return postInitContext(contextWrapper, nexlEngine, externalArgs);
 }
 

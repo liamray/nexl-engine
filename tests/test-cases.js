@@ -3271,7 +3271,7 @@ module.exports.push({
 // todo : yaml bug
 module.exports.push({
 	expression: '${HOSTS~Y}',
-	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: {'0': hothead1, '1': awakening1, '2': dynamite1, '3': military1}, SECOND: {'0': cuddly2, '1': grease2, '2': fate2, '3': atmosphere2}}\n    DEV: {'0': zombie, '1': arrows, '2': zebra}\n    QA: {FIRST: {'0': autonomous1, '1': criminal1}, SECOND: {'0': adrenaline2, '1': prophetic2}}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: {'0': iMaximum, '1': iPromised, '2': iPilot}\n    DEV: iHomeland\n    QA: {'0': iTruth, '1': iSilver}\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
+	result: "APP_SERVER_INTERFACES:\n    PROD: {FIRST: [hothead1, awakening1, dynamite1, military1], SECOND: [cuddly2, grease2, fate2, atmosphere2]}\n    DEV: [zombie, arrows, zebra]\n    QA: {FIRST: [autonomous1, criminal1], SECOND: [adrenaline2, prophetic2]}\n    DRP-PROD: drp-prod\n    YEST: yest\n    STAGING: jstaging\nINTERNET_INTERFACES:\n    PROD: [iMaximum, iPromised, iPilot]\n    DEV: iHomeland\n    QA: [iTruth, iSilver]\n    YEST: iYest\n    STAGING: iStaging\n    SPECIAL: iDeer\n"
 });
 
 

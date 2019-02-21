@@ -59,7 +59,7 @@ function resolveIncludeDirectiveDom(item) {
 	}
 }
 
-// parses javascript provided as text and resolves nexl include directives ( like "@import ../../src.js"; )
+// parses JavaScript provided as text and resolves nexl include directives ( like "@import ../../src.js"; )
 function resolveIncludeDirectives(text, fileItem) {
 	var result = [];
 

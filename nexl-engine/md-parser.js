@@ -1,3 +1,12 @@
+/**************************************************************************************
+ nexl-source metadata parse ( parses JavaScript files )
+
+ Copyright (c) 2016-2020 Liam Ray
+ License : Apache 2.0
+ WebSite : http://www.nexl-js.com
+
+ **************************************************************************************/
+
 // todo: supply dummy function params
 // todo: test with nexl-engine test sources
 // todo: make tests for each source separately ( the real test )
@@ -12,15 +21,9 @@ Expressions builder ( navigation bar )
 - mandatory operation
  */
 
-
 const esprima = require('esprima');
-const fs = require('fs');
+const nexlSourceUtils = require('./nexl-source-utils');
 const j79 = require('j79-utils');
-
-let fileContent;
-fileContent = fs.readFileSync('C:\\WORKSPACES\\applications\\javascript\\db-express\\source.js') + '';
-fileContent = fs.readFileSync('C:\\TEMP\\all.txt') + '';
-
 
 function resolveObjProps(item) {
     const result = [];
@@ -62,9 +65,11 @@ function pushMDItem(md, item) {
 }
 
 function parseMD(source) {
+    const fileContent = nexlSourceUtils.assembleSourceCode(source);
+
     const result = [];
 
-    const parsed = esprima.parse(source);
+    const parsed = esprima.parse(fileContent);
     parsed.body.forEach(item => {
         // is function declaration ?
         if (item.type === 'FunctionDeclaration') {
@@ -155,14 +160,6 @@ function md2Expressions(md) {
     });
     return result;
 }
-
-const result = parseMD(fileContent);
-
-const expressions = md2Expressions(result);
-
-expressions.forEach(item => {
-    console.log(item);
-});
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

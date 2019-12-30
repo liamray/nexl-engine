@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-engine
 
- Copyright (c) 2016-2018 Liam Ray
+ Copyright (c) 2016-2020 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 
@@ -1601,7 +1601,7 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 };
 
 // meta data parser
-module.exports.parseMD = md.parseMD;
+module.exports.parseMD = mdParser.parseMD;
 
 // separates string items by dots ( if not escaped ) and puts them into nested objects
 module.exports.convertStrItems2Obj = nexlEngineUtils.convertStrItems2Obj;

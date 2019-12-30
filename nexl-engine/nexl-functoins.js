@@ -1,7 +1,7 @@
 /**************************************************************************************
  nexl-engine-system-function
 
- Copyright (c) 2016-2018 Liam Ray
+ Copyright (c) 2016-2020 Liam Ray
  License : Apache 2.0
  WebSite : http://www.nexl-js.com
 

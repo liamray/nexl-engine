@@ -12,10 +12,11 @@ const util = require('util');
 const j79 = require('j79-utils');
 const nexlSourceUtils = require('./nexl-source-utils');
 const nexlExpressionsParser = require('./nexl-expressions-parser');
+const mdParser = require('./md-parser');
 const nexlEngineUtils = require('./nexl-engine-utils');
 const js2xmlparser = require("js2xmlparser");
 const YAML = require('yamljs');
-var logger = require('./logger').logger();
+let logger = require('./logger').logger();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // consts
@@ -1599,8 +1600,8 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 	return new NexlEngine(context, isEvaluateToUndefined).processItem(item2Process);
 };
 
-// exporting resolveJsVariables
-module.exports.resolveJsVariables = nexlSourceUtils.resolveJsVariables;
+// meta data parser
+module.exports.parseMD = md.parseMD;
 
 // separates string items by dots ( if not escaped ) and puts them into nested objects
 module.exports.convertStrItems2Obj = nexlEngineUtils.convertStrItems2Obj;

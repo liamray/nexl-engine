@@ -1616,3 +1616,5 @@ module.exports.setLogger = function (aLogger) {
 	nexlExpressionsParser.reloadLoggerInstance();
 	nexlSourceUtils.reloadLoggerInstance();
 };
+
+module.exports.OPERATIONS_ESCAPED = nexlExpressionsParser.OPERATIONS_ESCAPED;

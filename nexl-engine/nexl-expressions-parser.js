@@ -10,6 +10,7 @@
 
 const util = require('util');
 const j79 = require('j79-utils');
+const RegexEscape = require('regex-escape');
 var logger = require('./logger').logger();
 
 const ACTIONS = {
@@ -138,7 +139,9 @@ const COMMA = ',';
 
 
 const ACTION_VALUES = j79.getObjectValues(ACTIONS);
+// todo: use OPERATIONS_ESCAPED, wrap it with ([]) and make a regex, and then '...'.replace(regex, '$1')
 const ACTIONS_REGEX = makeActionsRegex();
+const OPERATIONS_ESCAPED = RegexEscape(Object.keys(ACTIONS_DESC).join(''));
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -709,6 +712,8 @@ module.exports.ACTIONS_DESC = ACTIONS_DESC;
 
 module.exports.ARRAY_FIRST_ITEM = ARRAY_FIRST_ITEM;
 module.exports.ARRAY_LAST_ITEM = ARRAY_LAST_ITEM;
+
+module.exports.OPERATIONS_ESCAPED = OPERATIONS_ESCAPED;
 
 module.exports.parseStr = function (str) {
 	return new ParseStr(str).parse();

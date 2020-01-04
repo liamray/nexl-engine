@@ -1,16 +1,13 @@
 const nexlEngine = require('../nexl-engine/nexl-engine');
+
 let source;
-source = {filePath: 'nexl-sources/nexl-source1.js'};
 source = {filePath: 'md-sources/md-src1.js'};
+source = {filePath: 'nexl-sources/nexl-source1.js'};
 
 const result = nexlEngine.parseMD(source);
 
-
-function escapeKey(key) {
-	return key.replace(/-/g, '\\-');
-}
-
 function md2Expressions(md) {
+	const opRegex = new RegExp(`([${nexlEngine.OPERATIONS_ESCAPED}])`, 'g');
 	const result = [];
 	md.forEach(item => {
 		if (item.type === 'Function') {
@@ -23,7 +20,7 @@ function md2Expressions(md) {
 
 		if (item.type === 'Object' && item.keys) {
 			item.keys.forEach(key => {
-				const keyEscaped = escapeKey(key);
+				const keyEscaped = key.replace(opRegex, '\\$1');
 				result.push(`\${${item.name}.${keyEscaped}}`);
 			});
 		}
@@ -31,5 +28,4 @@ function md2Expressions(md) {
 	return result;
 }
 
-const expressions = md2Expressions(result);
-console.log(expressions);
+md2Expressions(result).forEach(item => console.log(item));

@@ -25,14 +25,10 @@ const e2 = "a";
 const f2 = true;
 const g2 = {a: 1, zzz: "100", yyy: {}};
 const h2 = [];
-const i2 = () => {
-};
-const j2 = (aaa, bbb, ccc) => {
-};
-const k2 = function () {
-};
-const l2 = function (ggg, hhh, jjj) {
-};
+const i2 = () => {};
+const j2 = (aaa, bbb, ccc) => {};
+const k2 = function () {};
+const l2 = function (ggg, hhh, jjj) {};
 const m2 = Math;
 const n2 = a1;
 
@@ -44,14 +40,10 @@ let e3 = "a";
 let f3 = true;
 let g3 = {a: 1, zzz: "100", yyy: {}};
 let h3 = [];
-let i3 = () => {
-};
-let j3 = (aaa, bbb, ccc) => {
-};
-let k3 = function () {
-};
-let l3 = function (ggg, hhh, jjj) {
-};
+let i3 = () => {};
+let j3 = (aaa, bbb, ccc) => {};
+let k3 = function () {};
+let l3 = function (ggg, hhh, jjj) {};
 let m3 = Math;
 let n3 = a1;
 
@@ -64,14 +56,10 @@ var e4 = "a";
 var f4 = true;
 var g4 = {a: 1, zzz: "100", yyy: {}};
 var h4 = [];
-var i4 = () => {
-};
-var j4 = (aaa, bbb, ccc) => {
-};
-var k4 = function () {
-};
-var l4 = function (ggg, hhh, jjj) {
-};
+var i4 = () => {};
+var j4 = (aaa, bbb, ccc) => {};
+var k4 = function () {};
+var l4 = function (ggg, hhh, jjj) {};
 var m4 = Math;
 var n4 = a1;
 

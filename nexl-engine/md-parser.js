@@ -69,6 +69,72 @@ function resolveArgs(params) {
 	return result;
 }
 
+function handleExpressionStatement(item, result) {
+	if (item.type !== 'ExpressionStatement') {
+		return;
+	}
+
+	// is assignment expression ?
+	if (item.type !== 'ExpressionStatement' || item.expression.type !== 'AssignmentExpression') {
+		return;
+	}
+
+	// has any data ?
+	if (!item.expression || !item.expression.left || !item.expression.right) {
+		return;
+	}
+
+	// object
+	if (item.expression.right.type === 'ObjectExpression') {
+		pushMDItem(result, {
+			name: resolveName(item.expression.left),
+			keys: resolveObjProps(item.expression.right),
+			type: 'Object'
+		});
+		return;
+	}
+
+	// array
+	if (item.expression.right.type === 'ArrayExpression') {
+		pushMDItem(result, {
+			name: resolveName(item.expression.left),
+			type: 'Array'
+		});
+		return;
+	}
+
+	// function
+	if (item.expression.right.type === 'FunctionExpression' || item.expression.right.type === 'ArrowFunctionExpression') {
+		pushMDItem(result, {
+			name: resolveName(item.expression.left),
+			type: 'Function',
+			args: resolveArgs(item.expression.right.params)
+		});
+		return;
+	}
+
+	const element = {
+		name: resolveName(item.expression.left),
+		type: ({}).toString.call(item.expression.right.value).match(/\s([a-zA-Z]+)/)[1]
+	};
+
+	if (element.name === undefined) {
+		return;
+	}
+
+	if (element.type === 'Undefined' || element.type === 'Null') {
+		delete element.type;
+	}
+
+	pushMDItem(result, element);
+}
+
+function handleVariableDeclaration(item, result) {
+	if (item.type === 'VariableDeclaration') {
+		handleExpressionStatement(item, result);
+	}
+}
+
 function parseMD(source) {
 	const fileContent = nexlSourceUtils.assembleSourceCode(source);
 
@@ -85,60 +151,8 @@ function parseMD(source) {
 			});
 		}
 
-		// is assignment expression ?
-		if (item.type !== 'ExpressionStatement' || item.expression.type !== 'AssignmentExpression') {
-			return;
-		}
-
-		// has any data ?
-		if (!item.expression || !item.expression.left || !item.expression.right) {
-			return;
-		}
-
-		// object
-		if (item.expression.right.type === 'ObjectExpression') {
-			pushMDItem(result, {
-				name: resolveName(item.expression.left),
-				keys: resolveObjProps(item.expression.right),
-				type: 'Object'
-			});
-			return;
-		}
-
-		// array
-		if (item.expression.right.type === 'ArrayExpression') {
-			pushMDItem(result, {
-				name: resolveName(item.expression.left),
-				type: 'Array'
-			});
-			return;
-		}
-
-		// function
-		if (item.expression.right.type === 'FunctionExpression' || item.expression.right.type === 'ArrowFunctionExpression') {
-			pushMDItem(result, {
-				name: resolveName(item.expression.left),
-				type: 'Function',
-				args: resolveArgs(item.expression.right.params)
-			});
-			return;
-		}
-
-		const element = {
-			name: resolveName(item.expression.left),
-			type: ({}).toString.call(item.expression.right.value).match(/\s([a-zA-Z]+)/)[1]
-		};
-
-		if (element.name === undefined) {
-			return;
-		}
-
-		if (element.type === 'Undefined' || element.type === 'Null') {
-			delete element.type;
-		}
-
-		pushMDItem(result, element);
-
+		handleExpressionStatement(item, result);
+		handleVariableDeclaration(item, result);
 	});
 
 	return result;

@@ -1,10 +1,8 @@
 const nexlEngine = require('../nexl-engine/nexl-engine');
 
 let source;
-source = {filePath: 'md-sources/md-src1.js'};
 source = {filePath: 'nexl-sources/nexl-source1.js'};
-
-const result = nexlEngine.parseMD(source);
+source = {filePath: 'md-sources/md-src1.js'};
 
 function md2Expressions(md) {
 	const opRegex = new RegExp(`([${nexlEngine.OPERATIONS_ESCAPED}])`, 'g');
@@ -28,4 +26,7 @@ function md2Expressions(md) {
 	return result;
 }
 
-md2Expressions(result).forEach(item => console.log(item));
+
+const result = nexlEngine.parseMD(source);
+result.forEach(item => console.log(item));
+// md2Expressions(result).forEach(item => console.log(item));

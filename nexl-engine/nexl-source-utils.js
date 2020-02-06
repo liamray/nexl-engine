@@ -130,12 +130,18 @@ NexlSourceCodeAssembler.prototype.resolveFileContent = function (fileItem) {
 	// adding to registry
 	this.filesRegistry.push(fileItem.filePath);
 
+	// is file exists ?
+	if (!fs.existsSync(fileItem.filePath)) {
+		logger.error(buildErrMsg(fileItem.ancestor, `The [${fileItem.filePath}] file doesn't exist and cannot be included`));
+		throw buildShortErrMsg(fileItem.ancestor, `The [${path.basename(fileItem.filePath)}] file doesn't exist and cannot be included`);
+	}
+
 	// reading file content from file
 	try {
 		return fs.readFileSync(fileItem.filePath, fileItem.fileEncoding || "UTF-8");
 	} catch (e) {
-		logger.error(buildErrMsg(fileItem.ancestor, "Failed to read [%s] file content. Reason is [%s]", fileItem.filePath, e));
-		throw buildShortErrMsg(fileItem.ancestor, "Failed to read [%s] file content", path.basename(fileItem.filePath));
+		logger.error(buildErrMsg(fileItem.ancestor, "Failed to read the [%s] file. Reason: [%s]", fileItem.filePath, e));
+		throw buildShortErrMsg(fileItem.ancestor, "Failed to read the [%s] file", path.basename(fileItem.filePath));
 	}
 
 };

@@ -1,7 +1,7 @@
 {
   "name": "nexl-engine",
   "version": "3.3.0",
-  "description": "The core module of nexl ( nexl-js ) package for parsing and executing nexl expressions",
+  "description": "The core module of nexl ( nexl-js ) package for parsing and executing nexl expressions. Based on vm2 sandbox.",
   "main": "nexl-engine/nexl-engine.js",
   "scripts": {
     "test": "cd tests && node nexl-engine-tests.js"

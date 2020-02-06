@@ -1096,7 +1096,7 @@ NexlExpressionEvaluator.prototype.applyMandatoryValueValidatorAction = function 
 		return;
 	}
 
-	var defaultErrorMessage = util.format('The [%s] expression cannot be evaluated to undefined ( it has a mandatory value validator ). Probably you have to provide it as external arg or check why it calculated to undefined', this.nexlExpressionMD.str);
+	var defaultErrorMessage = util.format(' The [%s] expression calculated as [undefined] value but has a [*] mandatory value validator', this.nexlExpressionMD.str);
 
 	// does this action have a custom error message ?
 	if (this.action.actionValue.chunks[0] === '') {

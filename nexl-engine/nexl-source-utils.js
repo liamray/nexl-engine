@@ -215,92 +215,6 @@ function assembleSourceCode(nexlSource) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function parseAndPushVariableItem(varDeclaration, result) {
-	for (var i = 0; i < varDeclaration.declarations.length; i++) {
-		var item = varDeclaration.declarations[i];
-		var variableInfo = {};
-
-		variableInfo.name = item.id.name;
-		if (item.init !== null) {
-			variableInfo.type = item.init.type;
-		}
-
-		result.push(variableInfo);
-	}
-}
-
-function parseAndPushExpressionItem(item, result) {
-	if (item.expression.left === undefined || item.expression.left.name === undefined) {
-		return;
-	}
-
-	var variableInfo = {
-		type: item.expression.right.type,
-		name: item.expression.left.name
-	};
-
-	result.push(variableInfo);
-}
-
-function parseAndPushFunctionItem(item, result) {
-	var variableInfo = {
-		type: item.type,
-		name: item.id.name,
-		params: []
-	};
-
-	for (var param in item.params) {
-		variableInfo.params.push(item.params[param].name);
-	}
-
-	result.push(variableInfo);
-}
-
-function parseAndPushSourceCodeItem(item, result) {
-	switch (item.type) {
-		case 'VariableDeclaration': {
-			parseAndPushVariableItem(item, result);
-			return;
-		}
-
-		case 'ExpressionStatement' : {
-			parseAndPushExpressionItem(item, result);
-			return;
-		}
-
-		case 'FunctionDeclaration' : {
-			parseAndPushFunctionItem(item, result);
-			return;
-		}
-	}
-}
-
-function resolveJsVariables(nexlSource) {
-	var sourceCode = assembleSourceCode(nexlSource);
-
-	try {
-		var parsedCode = esprima.parse(sourceCode).body;
-	} catch (e) {
-		logger.error('Failed to parse JavaScript file. Reason : %s. nexlSource is [%s]', e, JSON.stringify(nexlSource));
-		var errMsg = util.format('Failed to parse JavaScript file. Reason : %s', e);
-		if (nexlSource.asFile.fileName) {
-			errMsg = util.format('%s. file name is [%s]', errMsg, path.basename(nexlSource.asFile.fileName1));
-		}
-		throw errMsg;
-	}
-
-	var result = [];
-
-	logger.debug('Resolving JavaScript variables for [%s] nexl source', nexlSource);
-
-	for (var i = 0; i < parsedCode.length; i++) {
-		var item = parsedCode[i];
-		parseAndPushSourceCodeItem(item, result);
-	}
-
-	return result;
-}
-
 function reloadLoggerInstance() {
 	logger = require('./logger').logger();
 }
@@ -310,5 +224,4 @@ function reloadLoggerInstance() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.assembleSourceCode = assembleSourceCode;
-module.exports.resolveJsVariables = resolveJsVariables;
 module.exports.reloadLoggerInstance = reloadLoggerInstance;

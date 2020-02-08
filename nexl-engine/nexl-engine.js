@@ -1604,7 +1604,7 @@ module.exports.nexlize = function (nexlSource, item, externalArgs) {
 module.exports.parseMD = mdParser.parseMD;
 
 // separates string items by dots ( if not escaped ) and puts them into nested objects
-module.exports.convertStrItems2Obj = nexlEngineUtils.convertStrItems2Obj;
+module.exports.handleArgs = nexlEngineUtils.handleArgs;
 
 module.exports.nexlFuncs = require('./nexl-functoins').nexlFuncs;
 

@@ -352,7 +352,7 @@ function cast(value, type) {
 }
 
 
-function convertStrItem2Obj(item, val, obj) {
+function hadnleArg(item, val, obj) {
 	var currentRef = obj;
 	var currentItem = item;
 
@@ -406,14 +406,30 @@ function extractTypeAndCast(value) {
 	return cast(newValue, nexlType);
 }
 
+
+function resolveObjValue(obj, key) {
+	const val = obj[key];
+	if (j79.isString(val)) {
+		return val;
+	}
+
+	if (j79.isArray(val) && val.length > 0) {
+		const result = val[0];
+		logger.warn(`The [${key}] argument provided several times. Using the first [value=${result}]`);
+		return result;
+	}
+
+	throw `The [${key}] argument should be of a string type. Got a value of the [${j79.getType(val)}] type.`;
+}
+
 // example obj =  { 'a.b.c.d': 10 }
 // output : { a: {b: {c:{ d: 10}}}}
-function convertStrItems2Obj(obj) {
+function handleArgs(obj) {
 	var result = {};
 	for (var key in obj) {
-		var val = obj[key];
+		let val = resolveObjValue(obj, key);
 		val = extractTypeAndCast(val);
-		convertStrItem2Obj(key, val, result);
+		hadnleArg(key, val, result);
 	}
 
 	return result;
@@ -456,7 +472,7 @@ function reloadLoggerInstance() {
 
 module.exports.hasEvaluateToUndefinedFlag = hasEvaluateToUndefinedFlag;
 module.exports.produceKeyValuesPairs = produceKeyValuesPairs;
-module.exports.convertStrItems2Obj = convertStrItems2Obj;
+module.exports.handleArgs = handleArgs;
 module.exports.cast = cast;
 module.exports.deepMergeInner = deepMergeInner;
 module.exports.createContext = createContext;

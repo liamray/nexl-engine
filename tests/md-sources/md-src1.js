@@ -3,6 +3,7 @@ b1 = undefined;
 c1 = NaN;
 d1 = 1;
 e1 = "a";
+e1 = "b";
 f1 = true;
 g1 = {a: 1, zzz: "100", yyy: {}};
 h1 = [];

@@ -61,7 +61,21 @@ function resolveType(item) {
 	return ({}).toString.call(item).match(/\s([a-zA-Z]+)/)[1];
 }
 
+function alreadyExists(md, item) {
+	for (let index in md) {
+		if (md[index].name === item.name) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 function pushMDItem(md, item) {
+	if (alreadyExists(md, item)) {
+		return;
+	}
+
 	if (item.name) {
 		md.push(item);
 	}

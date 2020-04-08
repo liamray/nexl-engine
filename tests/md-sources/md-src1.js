@@ -1,3 +1,4 @@
+a;
 a1 = null;
 b1 = undefined;
 c1 = NaN;
@@ -33,6 +34,7 @@ const l2 = function (ggg, hhh, jjj) {};
 const m2 = Math;
 const n2 = a1;
 
+let a3;
 let a3 = null;
 let b3 = undefined;
 let c3 = NaN;
@@ -49,6 +51,7 @@ let m3 = Math;
 let n3 = a1;
 
 
+var a4;
 var a4 = null;
 var b4 = undefined;
 var c4 = NaN;

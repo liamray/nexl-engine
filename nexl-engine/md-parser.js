@@ -152,7 +152,7 @@ function handleVariableDeclaration(item, result) {
 		return;
 	}
 
-	if (!item.declarations || item.declarations.length !== 1) {
+	if (!item.declarations || item.declarations.length !== 1 || !item.declarations[0].init) {
 		return;
 	}
 

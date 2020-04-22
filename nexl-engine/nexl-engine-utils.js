@@ -158,14 +158,16 @@ function embedNexlSource2Context(context, nexlSource) {
 
 	var theVM = new vm2.VM({
 		sandbox: context,
-		timeout: 1000
+		timeout: 1000,
+		eval: false,
+		wasm: false
 	});
 
 	try {
 		// assigning source code to context
 		theVM.run(sourceCode);
 	} catch (e) {
-		throw "Got a problem with a nexl source : " + e;
+		throw "Got a problem with a JavaScript file : " + e;
 	}
 
 	return theVM.run('this');

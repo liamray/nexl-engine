@@ -123,7 +123,7 @@ NexlSourceCodeAssembler.prototype.resolveFileContent = function (fileItem) {
 
 	// is already included ?
 	if (this.filesRegistry.indexOf(fileItem.filePath) >= 0) {
-		logger.debug('The [%s] file is already included. Skipping...', fileItem.filePath);
+		logger.warn('The [%s] file is already included. Skipping...', fileItem.filePath);
 		return '';
 	}
 

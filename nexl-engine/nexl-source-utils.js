@@ -8,7 +8,7 @@
  Set of utility functions for nexl-source
  **************************************************************************************/
 
-const esprima = require('esprima');
+const acorn = require('acorn');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
@@ -63,9 +63,9 @@ function resolveIncludeDirectiveDom(item) {
 function resolveIncludeDirectives(text, fileItem) {
 	var result = [];
 
-	// parse source code with esprima
+	// parsing source code with acorn
 	try {
-		var srcParsed = esprima.parse(text);
+		var srcParsed = acorn.parse(text);
 	} catch (e) {
 		logger.error(buildErrMsg(fileItem.ancestor, 'Failed to parse a [%s] JavaScript file. Reason : [%s]', fileItem.filePath, e));
 		throw buildShortErrMsg(fileItem.ancestor, 'Failed to parse a [%s] JavaScript file. Reason : [%s]', path.basename(fileItem.filePath), e)

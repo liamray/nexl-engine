@@ -7,9 +7,6 @@
 
  **************************************************************************************/
 
-// todo: test with nexl-engine test sources
-// todo: make tests for each source separately ( the real test )
-
 /*
 Expressions builder ( navigation bar )
 - all expressions without operations
@@ -20,7 +17,7 @@ Expressions builder ( navigation bar )
 - mandatory operation
  */
 
-const esprima = require('esprima');
+const acorn = require('acorn');
 const nexlSourceUtils = require('./nexl-source-utils');
 const j79 = require('j79-utils');
 
@@ -206,7 +203,7 @@ function parseMD(source) {
 
 	const result = [];
 
-	const parsed = esprima.parse(fileContent);
+	const parsed = acorn.parse(fileContent);
 	parsed.body.forEach(item => {
 		// is function declaration ?
 		if (item.type === 'FunctionDeclaration') {

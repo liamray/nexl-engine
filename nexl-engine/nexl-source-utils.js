@@ -12,7 +12,6 @@ const acorn = require('acorn');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
-const j79 = require('j79-utils');
 var logger = require('./logger').logger();
 
 
@@ -220,8 +219,82 @@ function reloadLoggerInstance() {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getVarDeclaration(item, varName) {
+	if (item.type === 'ExpressionStatement') {
+		return (item.expression && item.expression.left && item.expression.left.name === varName) ? {
+			start: item.expression.start,
+			end: item.expression.end
+		} : undefined;
+	}
+
+	if (item.type === 'VariableDeclaration') {
+		// iterating over declarations
+		let itemCandidate;
+		item.declarations.forEach(declaration => {
+			if (declaration.id && declaration.id.name === varName) {
+				itemCandidate = {start: declaration.start, end: declaration.end};
+			}
+		});
+		return itemCandidate;
+	}
+
+}
+
+function replaceAt(string, start, end, replace) {
+	return string.substring(0, start) + replace + string.substring(end + 1);
+}
+
+// params are: filePath, fileEncoding, varName, varValue
+function updateParticularVariable(params) {
+	// loading a file
+	let fileContent;
+	try {
+		fileContent = fs.readFileSync(params.filePath, params.fileEncoding || "UTF-8");
+	} catch (e) {
+		// todo: format the (e) before throwing
+		throw `Failed to load file content. [filePath=${params.filePath}]. Reason: [${e}]`;
+	}
+
+	// parsing js file content
+	let parsed;
+	try {
+		parsed = acorn.parse(fileContent);
+	} catch (e) {
+		// todo: format the (e) before throwing
+		throw `Failed to parse a JavaScript [filePath=${params.filePath}]. Reason: [${e}]`;
+	}
+
+	// searching for occurrences. if there are few vars with the same name, using the last one
+	let varDef;
+	parsed.body.forEach(item => {
+		let varDefCandidate = getVarDeclaration(item, params.varName);
+		varDef = (varDefCandidate === undefined) ? varDef : varDefCandidate;
+	});
+
+	//
+	const varValue = JSON.stringify(params.varValue, null, 2);
+	const replacement = `${params.varName} = ${varValue}`;
+	if (varDef) {
+		// replacing existing var def
+		fileContent = replaceAt(fileContent, varDef.start, varDef.end - 1, replacement);
+	} else {
+		// adding var declaration to the end
+		fileContent += '\n' + replacement;
+	}
+
+	try {
+		fs.writeFileSync(params.filePath, fileContent, {encoding: params.fileEncoding || "UTF-8"});
+	} catch (e) {
+		// todo: format the (e) before throwing
+		throw `Failed to write file content. [filePath=${params.filePath}]. Reason: [${e}]`;
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // exports
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports.assembleSourceCode = assembleSourceCode;
 module.exports.reloadLoggerInstance = reloadLoggerInstance;
+module.exports.updateParticularVariable = updateParticularVariable;

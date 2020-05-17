@@ -249,10 +249,10 @@ function updateParticularVariable(params) {
 	// loading a file
 	let fileContent;
 	try {
-		fileContent = fs.readFileSync(params.filePath, params.fileEncoding || "UTF-8");
+		fileContent = fs.existsSync(params.filePath) ? fs.readFileSync(params.filePath, params.fileEncoding || "UTF-8") : '';
 	} catch (e) {
-		// todo: format the (e) before throwing
-		throw `Failed to load file content. [filePath=${params.filePath}]. Reason: [${e}]`;
+		logger.error(e);
+		throw `Failed to load file content. [filePath=${params.filePath}]. Reason: [${e.message}]`;
 	}
 
 	// parsing js file content
@@ -260,8 +260,8 @@ function updateParticularVariable(params) {
 	try {
 		parsed = acorn.parse(fileContent);
 	} catch (e) {
-		// todo: format the (e) before throwing
-		throw `Failed to parse a JavaScript [filePath=${params.filePath}]. Reason: [${e}]`;
+		logger.error(e);
+		throw `Failed to parse a JavaScript [filePath=${params.filePath}]. Reason: [${e.message}]`;
 	}
 
 	// searching for occurrences. if there are few vars with the same name, using the last one
@@ -279,14 +279,14 @@ function updateParticularVariable(params) {
 		fileContent = replaceAt(fileContent, varDef.start, varDef.end - 1, replacement);
 	} else {
 		// adding var declaration to the end
-		fileContent += '\n' + replacement;
+		fileContent += `\n${replacement};`;
 	}
 
 	try {
 		fs.writeFileSync(params.filePath, fileContent, {encoding: params.fileEncoding || "UTF-8"});
 	} catch (e) {
-		// todo: format the (e) before throwing
-		throw `Failed to write file content. [filePath=${params.filePath}]. Reason: [${e}]`;
+		logger.error(e);
+		throw `Failed to write file content. [filePath=${params.filePath}]. Reason: [${e.message}]`;
 	}
 }
 

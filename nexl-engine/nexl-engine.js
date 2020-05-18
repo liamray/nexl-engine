@@ -1617,4 +1617,6 @@ module.exports.setLogger = function (aLogger) {
 	nexlSourceUtils.reloadLoggerInstance();
 };
 
+module.exports.updateParticularVariable = nexlSourceUtils.updateParticularVariable;
+
 module.exports.OPERATIONS_ESCAPED = nexlExpressionsParser.OPERATIONS_ESCAPED;

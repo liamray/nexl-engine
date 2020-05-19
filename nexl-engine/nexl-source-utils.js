@@ -272,14 +272,14 @@ function updateParticularVariable(params) {
 	});
 
 	//
-	const varValue = JSON.stringify(params.varValue, null, 2);
+	const varValue = JSON.stringify(params.varValue);
 	const replacement = `${params.varName} = ${varValue}`;
 	if (varDef) {
 		// replacing existing var def
 		fileContent = replaceAt(fileContent, varDef.start, varDef.end - 1, replacement);
 	} else {
 		// adding var declaration to the end
-		fileContent += `\n${replacement};`;
+		fileContent += (fileContent === '') ? `${replacement};` : `\n${replacement};`;
 	}
 
 	try {

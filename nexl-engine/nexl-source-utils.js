@@ -131,8 +131,14 @@ NexlSourceCodeAssembler.prototype.resolveFileContent = function (fileItem) {
 
 	// is file exists ?
 	if (!fs.existsSync(fileItem.filePath)) {
-		logger.error(buildErrMsg(fileItem.ancestor, `The [${fileItem.filePath}] file doesn't exist and cannot be included`));
-		throw buildShortErrMsg(fileItem.ancestor, `The [${path.basename(fileItem.filePath)}] file doesn't exist and cannot be included`);
+		// is include directive?
+		if (fileItem.ancestor) {
+			logger.error(buildErrMsg(fileItem.ancestor, `The [${fileItem.filePath}] file doesn't exist and cannot be included`));
+			throw buildShortErrMsg(fileItem.ancestor, `The [${path.basename(fileItem.filePath)}] file doesn't exist and cannot be included`);
+		} else {
+			logger.error(buildErrMsg(fileItem.ancestor, `The [${fileItem.filePath}] file doesn't exist`));
+			throw buildShortErrMsg(fileItem.ancestor, `The [${path.basename(fileItem.filePath)}] file doesn't exist`);
+		}
 	}
 
 	// reading file content from file
